@@ -1,0 +1,90 @@
+Name: ___________________                                     ID: ____________
+
+COMP5201                       Assignment 2                          Fall 2020
+Issued: September 29, 2020                               Due: October 20, 2020
+Submit electronically.  No extension will be granted.
+
+1. [24 marks] Digital Logic.
+
+a) 'X' is the ternary connective such that 'Xpqr' is logically equivalent to
+'p /\ (p + q + r)'. '+' is 'xor'.  'F' and 'T' denote the 0-ary connectives
+'false' and true, respectively.  Whenever possible, put letters in
+alphabetical order, and put letters before any 0-place connectives.
+
+Using {'X', 'F', 'T'}, synthesize:                  ~p |= =| X ____ ____ ____
+
+Using {'X', 'T'}, synthesize:                   p /\ q |= =| X ____ ____ ____
+
+Using {'X', '~', 'T'}, synthesize:         p \/ q |= =| ____ X ____ ____ ____
+
+b) 'Y' is the ternary connective such that 'Ypqr' is logically equivalent to
+'p /\ (q <--> r)'.  'p <--> q' is true iff 'p' and 'q' have the same truth
+value.  'F' and 'T' denote the two 0-ary connectives 'false' and 'true',
+respectively.  Whenever possible, put letters in alphabetical order, and put
+letters before any 0-place connectives.
+
+Using {'Y', 'F', 'T'}, synthesize:                  ~p |= =| Y ____ ____ ____
+
+Using {'Y', 'F', 'T'}, synthesize:              p /\ q |= =| Y ____ ____ ____
+
+Using {'Y', '~', 'F'}, synthesize:          p \/ q |= =| ___ Y ____ ____ ____
+
+2. [16 marks] Binary and Hexadecimal Numbers.
+
+Convert each of the following six binary or hexadecimal natural numbers into
+decimal.  Show work.  For the last number, show either scientific notation
+with six decimal places, or the exact integer.
+
+a) Binary numbers: 1111, 1111 1110, 1111 1110 1101 0111
+
+b) Hexadecimal numbers: af, afba, afba 51de
+
+3. [25 marks] Fractional Numbers and Blackboard Notation.
+
+Infinite binary expansions of rational numbers are either pure recurring or
+mixed recurring depending on whether the cycle starts immediately after the
+point.
+
+a) [math] Show the infinite binary expansion of 6 4/9 without normalization.
+
+b) [math] Show this infinite binary expansion in hexadecimal without
+normalization.
+
+c) [math] Show the infinite binary expansion of 6 4/9 with normalization.  Do
+not forget the scale factor.  (This is a _scaled_ infinite binary expansion).
+
+d) [math] Show this infinite binary expansion in hexadecimal.  Again, do not
+forget the scale factor, which may be shown in decimal.
+
+e) Show the normalized (binary) blackboard notation that best approximates
+6 4/9.  The fractional field is 16 bits.  Show all 16 bits.  Now, show just
+the 16-bit (4-hexit) fractional field in hexadecimal.
+
+4. [15 marks] Integer Multiplication I.
+
+a) Multiply the following 10-bit binary natural numbers.  The multiplicand
+is 10011 11100 (27c hex) and the multiplier is 11010 (1a hex).   Show, in
+hexadecimal, i) the initial value of the accumulator, and ii) each term
+added to the accumulator, and the partial sum after the addition.  The last
+addition yields the final value.
+
+b) Redo the multiplication steps exactly as in question 4 a), but initialize
+the accumulator to s = 11011 (1b hex) instead of 0.  Show the same
+intermediate and final values.  (This is called "fused multiply-add"). 
+
+5. [20 marks] Integer Multiplication II.
+
+a) Show that, regardless of the initial n-bit value of the accumulator, the
+fused multiply-add result of two n-bit natural-number operands is always
+representable in 2n bits.  Now, suppose n = 16.  Starting from the largest
+possible FMA result, what is the hexadecimal representation of the largest
+n = 16-bit number that can _still_ be added without producing overflow?
+
+b) A modular-adder device 'M' operates with 16-bit registers.  You give it
+two 16-bit natural numbers 'a' and 'b'.  It adds them, divides by 2^16,
+keeps the quotient 'q' a secret, and publishes the remainder 'r'.  Hint:
+Before answering, experiment with small addition tables.
+
+i)  If a = 31,465 and r = 53,576, what are 'b' and 'q'?
+
+ii) If a = 35,492 and r = 11,087, what are 'b' and 'q'?
