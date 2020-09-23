@@ -1,0 +1,94 @@
+MIPS is a RISC assembly language
+
+
+Registers are the fastest memory in the computer
+Some of them are reserved but most of them are accessible to the programmer
+
+They are like variables.
+Variables are stored in RAM (Random Access Memory) while registers are stored in the processor.
+
+We can manipulate registers directly with assembly.
+
+$zero can't be used
+
+
+$at is Assembler Temporary it is used by the assembler, you don't have permission to use this one
+
+$v0 and $v1 are used to return arguments. They have a special purpose. 
+They allow to return informations back.
+
+$ax registers are used for arguments. Whenever you want to pass arguments to a function you use them.
+
+$s and $t are Temporary
+
+$tx registers are used to store information. Any type of information.
+They follow a convention. These registers can be modified by a function.
+They are not preserved accross call
+
+
+$sx are similar to the t registers. They registers allow you to save the value of the color.
+You are supposed to save them to the stack.
+They are preserved accross call
+
+$k0 and $k1 are used for the kernel
+
+______________________________________HELLO WORLD PROGRAM______________________________________ 
+
+.data
+	myMessage: .asciiz "Hello World !\n"
+
+
+.text
+	li $v0, 4
+	la $a0, myMessage
+	syscall
+
+______________________________________HELLO WORLD EXPLAINED______________________________________ 
+
+
+Two sections of the program:
+
+.data
+	The information is stored in Random Access Memory
+
+.text
+	Contains the instructions
+		
+	
+	When you want to print out text:
+
+		Put the value 4 in $v0:			li $v0, 4
+			-> The system will know you want to print a value on the screen
+		What value ? myMessage from RAM		la $a0, myMessage
+
+			-> myMessage 
+
+	li: Load Immediate
+	la: Load Address
+
+______________________________________PRINT A CHARACTER______________________________________ 
+
+.data
+
+	myCharacter: .byte 'm'
+	
+.text
+
+	li $v0, 4
+	la $a0, myCharacter
+	syscall
+
+______________________________________PRINT AN INTEGER______________________________________ 
+
+
+
+
+
+
+
+
+
+
+
+
+
