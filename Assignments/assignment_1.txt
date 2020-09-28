@@ -13,15 +13,43 @@ by the number of processors.  The theoretical maximum speedup is 200 times.
 How many real processors are needed to achieve at least 75% of the maximum
 speedup?  How many real processors are needed to achieve at least 90% of
 the maximum speedup?
- - at least 75% of the maximum speedup:               P = 597 processors
+________________________________
+Theoretical max speed is 200 times:
+=> Serial portion is 1/200 = 0.5 but Portion A speeds up by 1.5: 1.5*0.5 = 0.75
+=> Serial portion is 0.75 <=> Parallel portion is 100 - 0.75 = 99.25
+________________________________
+75% of max speed is 0.75*200 = 150
+Solve equation 150 = 100/((0.75/1.5)+((100-0.75)/n))
+n = 595.5 => number of cores is 596
 
- - at least 90% of the maximum speedup:               P = 1791 processors
+ - at least 75% of the maximum speedup:               P = 596 processors
+
+________________________________
+90% of max speed is 0.90*200 = 180
+Solve equation 180 = 100/((0.75/1.5)+((100-0.75)/n))
+n = 1786.5 => number of cores is 1787
+
+ - at least 90% of the maximum speedup:               P = 1787 processors
 
 b) Portion A of program P takes 'x' seconds; portion B takes 'y' seconds.
 'x + y = 100'.  A is wholly sequential, while B is wholly parallel.  With
 an infinite number of processors, we get a speedup of 's'.  It takes 7 1/3
 imaginary processors (8 real processors) to achieve a speedup of at least
 's/2'.  What are the values of 'x' and 'y'?  (They are integers).
+________________________________
+We have:
+	x + y = 100
+	speedup is given by p = (x + y)/(x+(y/p)) where p is the number of processors
+We know that:
+	(x + y)/(x + (y/(7+1/3)) = s/2
+
+	(x + y)/x ~ s
+
+if we solve the equation 
+	2 (x + y)/(x + (y/(7+1/3)) = (x + y)/x 
+	
+	for x + y = 100 we get the solution x = 12 & y = 88
+________________________________
                                                                (x,y)  = (12,88)
 2. [16 marks] Performance and Power Efficiency.
 
@@ -89,17 +117,47 @@ interpretation of Greek prefixes.  I.e., K = 2^10, M = 2^20, etc.  In this
 question, register bit sizes need not be a power of two.
 
 a) What is the minimum size of an address register for a computer with 8 GBs
-of memory? 
-                                                        answer = _____ bits
+of memory?
+________________________________
+
+1GB = 2^30 bytes
+=> 8GB = 8*2^30 bytes
+       = 8 589 934 592 bytes
+log_base_2(8 589 934 592) = 33
+________________________________
+                                                        answer = 33 bits
 b) What is the minimum size of an address register for a computer with 35 TBs
 of memory?
-                                                        answer = _____ bits
+________________________________
+
+1TB = 2^40 bytes
+=> 35TB = 35*2^40 bytes
+       	= 38 482 906 972 160 bytes
+log_base_2(38 482 906 972 160) = 45.129
+Not an integer value so we have to round it up to 46			       
+________________________________
+                                                        answer = 46 bits
 c) What is the minimum size of an address register for a computer with 1.05
 EBs of memory?
-                                                        answer = _____ bits
+________________________________
+
+1EB = 2^60 bytes
+=> 1.05EB = 1.05*2^60 bytes
+log_base_2(1.05*2^60) = 60.07
+Not an integer value so we have to round it up to 61			       
+________________________________
+                                                        answer = 61 bits
 d) What is the minimum size of an address register for a computer with 0.5
 (1/2) EB of memory?
-                                                        answer = _____ bits
+________________________________
+
+1EB = 2^60 bytes
+0.5*2^60 = 1*2^59
+=> 0.5 EB = 2^59 bytes
+log_base_2(2^59) = 59
+Not an integer value so we have to round it up to 61			       
+________________________________
+                                                        answer = 59 bits
 6. [20 marks] Utility-Cost Tradeoffs
 
 A single NEC SX-9 vector processor unit (VPU) has a peak arithmetic
@@ -112,19 +170,58 @@ achievable GFs/s = min{ai*bw, peak GFs/s}.  (For this question, pretend a
 memory system comes with interconnect included).
 
 a) What is the minimum ai that achieves peak arithmetic performance on an
-SX-9 VPU?                                             ai = _____ flops/byte
+SX-9 VPU?
+________________________________
+
+Arithmetic Performance as AP, Arithmetic Intensity as AI and Bandwith as B:
+AI = AP/B
+AI = 102.4/162 = 0.632 
+________________________________
+	                                             ai = 0.632 flops/byte
 
 b) What is the power efficiency of this computer system at peak performance?
-                                                      pe = _____ GFs/s/W
+________________________________
+
+Power Efficiency as PE :
+PE = AP/W = 102.4/95 = 1.078
+________________________________
+                                                      pe = 1.078 GFs/s/W
 
 c) A special customer buys two memory systems for the one VPU, thus doubling
 both the peak bandwidth and the power dissipated by the memory.  What is the
 new minimum ai that achieves peak arithmetic performance?
-                                                      ai = _____ flops/byte
+________________________________
+
+Just like for the previous answer (a):
+AI = AP/B
+if AI' = AP/B' and B' = 2B:
+AI' = AB/(B*2)
+AI' = 102.4/(162*2) = 102.4/324 = 0.316 (is equal to AI/2)
+________________________________
+                                                      ai = 0.316 flops/byte
 
 d) What is the power efficiency of the new system at peak performance?
-                                                      pe = _____ GFs/s/W
+________________________________
+
+We have a new Power Intensity: 
+=> PE': 
+		PE' = AP'/W'
+		AP' = AI' * B'
+AI' = 0.316
+=> AP' = 0.316*324 = 102.384
+
+W' = 40 + 55*2 = 150
+
+PE' = 102.384/150 = 0,68256
+________________________________
+                                                      pe = 1.0777 GFs/s/W
 
 e) Since higher power efficiency is a good thing, why would a customer spend
 more money to get less of it?
+________________________________
 
+Increasing Arithmetical Intensity requires a higher Arithmetical Performance
+and/or a bigger Bandwidth. It may be a decision to 'sacrifice' power efficiency
+just to increase Arithemetical Intensity without having to replace every component,
+but only the bottleneck ones (here, the bandwidth).
+________________________________
