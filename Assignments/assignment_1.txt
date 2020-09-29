@@ -60,10 +60,36 @@ generate 14 GFs/s and dissipate 2 W (watts) of power.  Beta cores generate
 while still achieving a power efficiency of at least 7.39 GFs/s/W.
 Electrical considerations dictate that precisely 500 cores be turned on.
 a) Indicate the number of cores turned on.
-                                          _____ alpha cores, _____ beta cores
+________________________________
+
+x: alpha cores
+y: beta cores
+E: efficiency
+We have x + y = 500
+
+E is given by equation:
+	(14x + y)/(2x + 0.1y) = 7.39
+    <=>	(14x + y)/(2x + 0.1y) = 739/100
+    <=>	100(14x + y) = 739(2x + 0.1y)
+    Solving the equations gives:
+				
+				x = 125.36
+				y = 374.64
+________________________________
+                                          125 alpha cores, 375 beta cores
 
 b) What is chip peak performance and chip power dissipation?
-                                                         _____ TFs/s, _____ W
+________________________________
+
+We have 7.39 GFs/Watts
+
+TFs = (125*14) + (375*1) = 2125 GFs
+
+Watts = (125*2) + (375*0.1) = 62.5 Watts
+________________________________
+
+
+                                                         2.125 TFs/s, _____ W
 3. [20 marks] MIPS Assembly Language.
 
 Consider the C++ program fragment:
@@ -85,6 +111,32 @@ add.d f4,f0,f2    // put the sum 'f0 + f2' into 'f4'
 addi  r1,r1,n     // add integer 'n' to 'r1'
 subi  r1,r1,n     // subtract integer 'n' from 'r1'
 bne   r1,r2,loop  // if 'r1 /= r2' then goto 'loop'
+
+________________________________
+
+Answer:
+
+set     f0, 0.0 		// set 'f0' to 0.0
+set     r1, 1024 		// set register 1 (r1) to beginning of array (a) at byte address 1024
+set     r2, 2048 		// set register 2 (r2) to the beingging of array (b) at byte address 2048
+addi    r2, r2, 248 		// n-1 is the 31st element; we know that a floating point integer is 8 bytes, we need to set the pointer to 2048+(31x8)
+addi    r3, r1, 256 		// set r3 to the end of array (a) which is 1024+(32x8)
+
+loop:   l.d f4, 0(r1) 		// get value of a[j]
+        l.d f6, 0(r2) 		// get value of b[n-j-1] or b[31] in the first iteration
+        mul.d   f2, f4, f6 	// sum = a[j] * b[n-j-1] into f2
+        add.d f0, f0, f2 	// old sum += sum from loop
+        addi r1, 8 		// bump a[0] to next value in array, or next 8 bytes to a[1]
+        subi r2, 8 		// decrease b[31] to b[30], or 8 previous bytes 
+        bne r1, r3, loop 	// when r1 == r3, we know we reached the end of array (a) and exit the loop
+
+
+________________________________
+
+
+
+
+
 
 4. [16 marks] Dealing with Overhead.
 
@@ -212,9 +264,9 @@ AI' = 0.316
 
 W' = 40 + 55*2 = 150
 
-PE' = 102.384/150 = 0,68256
+PE' = 102.384/150 = 0.68256
 ________________________________
-                                                      pe = 1.0777 GFs/s/W
+                                                      pe = 0.68256 GFs/s/W
 
 e) Since higher power efficiency is a good thing, why would a customer spend
 more money to get less of it?
