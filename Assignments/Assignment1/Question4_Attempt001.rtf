@@ -1,0 +1,46 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1404\cocoasubrtf470
+{\fonttbl\f0\fmodern\fcharset0 CourierNewPSMT;\f1\fswiss\fcharset0 Helvetica;\f2\froman\fcharset0 TimesNewRomanPSMT;
+}
+{\colortbl;\red255\green255\blue255;\red68\green68\blue68;}
+\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\deftab720
+\pard\tx916\tx1832\tx2748\tx3664\tx4580\tx5496\tx6412\tx7328\tx8244\tx9160\tx10076\tx10992\tx11908\tx12824\tx13740\tx14656\pardeftab720\ri0\partightenfactor0
+
+\f0\fs20 \cf0 \
+If (Context Switch Time) < (RPC Time), Do Context Switch. \
+If (Context Switch Time) > (RPC Time), Do Spin Wait.\
+\
+Main question to answer: What is the time for a context switch? \
+\
+Cost(think of cost as time) of a context switch = 4 * (Cost of moving the register file contents out of, or into, the processor)\
+\
+The core has 128 64-bit registers. In Bytes, this would be 128(2^7)* 2^3 = 2^10 Bytes\
+\
+Gen 1: BW(speed of which data can be moved) = 28Gbs/S\
+\
+\pard\pardeftab720\ri0\partightenfactor0
+\cf0 Cost(Time) of moving register file contents =(2^10Bytes/(28x10^9 Bytes/S)
+\f1\fs24  
+\f2 = 
+\f0 36.57x10^-9s\
+\
+Cost of context switch = 4* (36.57X10^-9) = 0.00000014628 or 1.46 * 10^-7\
+\
+\pard\pardeftab720\ri0\partightenfactor0
+\cf2 Since this cost of the context switch is less than the RPC, we should do a context switch in this case. \
+\
+Gen 2:\
+\
+\pard\tx916\tx1832\tx2748\tx3664\tx4580\tx5496\tx6412\tx7328\tx8244\tx9160\tx10076\tx10992\tx11908\tx12824\tx13740\tx14656\pardeftab720\ri0\partightenfactor0
+
+\fs20 \cf0 BW(speed of which data can be moved) = 256 Gbs/S\
+\
+\pard\pardeftab720\ri0\partightenfactor0
+\cf0 Cost(Time) of moving register file contents =(2^10Bytes/(256x10^9 Bytes/S)
+\f1\fs24  
+\f2 = 
+\f0 0.000000004 s (4 *10^-9)\
+\
+Cost of context switch = 4* (4X10^-9) = 0.000000016 or 1.6 *10^-8 \
+\pard\pardeftab720\ri0\partightenfactor0
+\cf2 Since this cost of the context switch is less than the RPC in both cases, we should do a context switch in both cases. }

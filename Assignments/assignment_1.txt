@@ -14,20 +14,24 @@ How many real processors are needed to achieve at least 75% of the maximum
 speedup?  How many real processors are needed to achieve at least 90% of
 the maximum speedup?
 ________________________________
+
 Theoretical max speed is 200 times:
 => Serial portion is 1/200 = 0.5 but Portion A speeds up by 1.5: 1.5*0.5 = 0.75
 => Serial portion is 0.75 <=> Parallel portion is 100 - 0.75 = 99.25
 ________________________________
+
 75% of max speed is 0.75*200 = 150
 Solve equation 150 = 100/((0.75/1.5)+((100-0.75)/n))
 n = 595.5 => number of cores is 596
+________________________________
 
  - at least 75% of the maximum speedup:               P = 596 processors
-
 ________________________________
+
 90% of max speed is 0.90*200 = 180
 Solve equation 180 = 100/((0.75/1.5)+((100-0.75)/n))
 n = 1786.5 => number of cores is 1787
+________________________________
 
  - at least 90% of the maximum speedup:               P = 1787 processors
 
@@ -72,7 +76,6 @@ E is given by equation:
     <=>	(14x + y)/(2x + 0.1y) = 739/100
     <=>	100(14x + y) = 739(2x + 0.1y)
     Solving the equations gives:
-				
 				x = 125.36
 				y = 374.64
 ________________________________
@@ -85,11 +88,10 @@ We have 7.39 GFs/Watts
 
 TFs = (125*14) + (375*1) = 2125 GFs
 
-Watts = (125*2) + (375*0.1) = 62.5 Watts
+Watts = (125*2) + (375*0.1) = 285.5 Watts
 ________________________________
+                                                         2.125 TFs/s, 285.5 W
 
-
-                                                         2.125 TFs/s, _____ W
 3. [20 marks] MIPS Assembly Language.
 
 Consider the C++ program fragment:
@@ -117,25 +119,20 @@ ________________________________
 Answer:
 
 set     f0, 0.0 		// set 'f0' to 0.0
-set     r1, 1024 		// set register 1 (r1) to beginning of array (a) at byte address 1024
-set     r2, 2048 		// set register 2 (r2) to the beingging of array (b) at byte address 2048
-addi    r2, r2, 248 		// n-1 is the 31st element; we know that a floating point integer is 8 bytes, we need to set the pointer to 2048+(31x8)
-addi    r3, r1, 256 		// set r3 to the end of array (a) which is 1024+(32x8)
+set     r1, 1024 		// set register 1 r1 to beginning of array (a) at byte address 1024
+set     r2, 2048 		// set register 2 r2 to beingging of array (b) at byte address 2048
+addi    r2, r2, 248 		// n-1 is the 31st element; a floating point integer is 8 bytes, we need to set the pointer to 2048 + (31x8)
+addi    r3, r1, 256 		// set r3 to the end of array (a) which is 1024 + (32x8)
 
-loop:   l.d f4, 0(r1) 		// get value of a[j]
-        l.d f6, 0(r2) 		// get value of b[n-j-1] or b[31] in the first iteration
-        mul.d   f2, f4, f6 	// sum = a[j] * b[n-j-1] into f2
-        add.d f0, f0, f2 	// old sum += sum from loop
-        addi r1, 8 		// bump a[0] to next value in array, or next 8 bytes to a[1]
-        subi r2, 8 		// decrease b[31] to b[30], or 8 previous bytes 
-        bne r1, r3, loop 	// when r1 == r3, we know we reached the end of array (a) and exit the loop
-
-
+loop:   
+	l.d f4, 0(r1) 		// get value of a[j]
+	l.d f6, 0(r2) 		// get value of b[n-j-1] or b[31] in the first iteration
+	mul.d   f2, f4, f6 	// sum = a[j] * b[n-j-1] into f2
+	add.d f0, f0, f2 	// old sum += sum from loop
+	addi r1, 8 		// bump a[0] to next value in array, or next 8 bytes to a[1]
+	subi r2, 8 		// decrease b[31] to b[30], or 8 previous bytes 
+	bne r1, r3, loop 	// when r1 == r3, we know we reached the end of array (a) and exit the loop
 ________________________________
-
-
-
-
 
 
 4. [16 marks] Dealing with Overhead.
@@ -159,6 +156,40 @@ choice between two options.  It can either spin, doing no useful work, or
 it can context switch to thread t2, hoping that thread t2 can do some
 useful work while thread t1 is waiting.  You must find the intelligent
 option for thread t1 in each of the two generations. 
+
+________________________________
+
+Time for a context switch: t
+Bandwidth: b
+
+time = 4*(cost of moving the register file content into/out of the CPU)
+
+there are 128*64-bit registers 
+	=> 128(2^7)* 2^3 
+	=  2^10 bytes
+
+first gen:
+	b 	= 28 GB/s
+	time 	= 2^10/(28*10^9)
+		= 3.657 × 10^-8
+	cost	= 4(3.657 × 10^-8) = 1.4628*10^-6
+		= 0.0000014628
+
+4*3.6571 × 10^-8 > 4 * 10^-7
+We prefer a RPC to a context switch in this case
+
+second gen:
+	b 	= 256 GB/s
+	cost	= 2^10/(256*10^9) 
+		= 4*10^-9
+		= 0.000000004
+total cost	= 4*0.000000004
+		= 0.000000016
+
+0.000000016 < 4 * 10^-7
+
+We also prefer a context switch to a RPC
+________________________________
 
 5. [12 marks] Address-register Sizes.
 
