@@ -1,5 +1,4 @@
-Name: ___________________                                     ID: ____________
-
+Name: Hugo Joncour                                     ID: 40139230
 COMP5201                       Assignment 2                          Fall 2020
 Issued: September 29, 2020                               Due: October 20, 2020
 Submit electronically.  No extension will be granted.
