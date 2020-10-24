@@ -1,0 +1,63 @@
+Fundamental Cache Equations
+___________________________
+
+Every cache is an array of _elements_.  What an element is, and how a
+cache-array index is computed from the relevant memory address, differ between
+two cache families.  Both families will be introduced.  However, the unit of
+data transfer between memory and cache, for both families, is the _line_.
+Memory is byte addressed, and a line contains some fixed number of bytes,
+chosen by the cache designer.  The cache equations below specify which lines
+--which might be called memory slices---are to be copied into which cache
+elements, i.e., which cache-array elements.
+
+Generally true (both families)
+______________
+
+0) byte number   = memory address `mod` the number of bytes
+                   in a line
+
+1) line number   = memory address `div` the number of bytes
+                   in a line
+
+2) element index = line number `mod` the number of elements
+                   in the cache
+
+3) tag value     = line number `div` the number of elements
+                   in the cache
+
+In a direct-mapped cache, the array elements are _frames_,
+but, in an m-way set-associative cache, the array elements
+are _sets_ of frames.
+
+When a line is copied from memory into the cache, it is,
+according to these equations, placed in one of the cache
+elements.
+
+Because many lines are mapped to the same element, a tag
+value is used to identify which line got copied.  This is
+required to be able to look up lines in caches.
+
+This is the punch line.  When you understand these equations,
+you understand how caches work.
+
+----
+
+I will rewrite the last two equations in a family-specific way.
+
+family 1: direct-mapped cache
+_____________________________
+
+2) frame index   = line number `mod` the number of frames
+                   in the cache
+
+3) tag value     = line number `div` the number of frames
+                   in the cache
+
+family 2: set-associative cache
+_______________________________
+
+2) set index     = line number `mod` the number of sets
+                   in the cache
+
+3) tag value     = line number `div` the number of sets
+

@@ -178,7 +178,7 @@ first gen:
 4*3.6571 × 10^-8 > 4 * 10^-7
 We prefer a RPC to a context switch in this case
 
-second gen:
+second gen:											
 	b 	= 256 GB/s
 	cost	= 2^10/(256*10^9) 
 		= 4*10^-9
@@ -189,6 +189,25 @@ total cost	= 4*0.000000004
 0.000000016 < 4 * 10^-7
 
 We also prefer a context switch to a RPC
+
+CORRECTION
+
+New generation context switch:
+
+1.6*10^-8 << 4 * 10 ^-7s the context switch overhead 4% is worth it
+
+4096/256*10^9 = 1.6*10^-8
+
+
+
+
+
+
+
+
+
+
+
 ________________________________
 
 5. [12 marks] Address-register Sizes.
