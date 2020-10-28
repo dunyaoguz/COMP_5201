@@ -1,0 +1,11 @@
+COURSE:    COMP5201
+
+DAY:       December 15, 2020 (Tuesday)
+
+TIME:      7:00 - 10:00 p.m.
+
+PROFESSOR: David K. Probst
+
+PLATFORM:  Not yet specified (probably Moodle) 
+
+PROCTORED: No
