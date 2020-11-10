@@ -1,0 +1,2564 @@
+From probst at cse.concordia.ca  Sat Oct  3 19:55:03 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Sat, 03 Oct 2020 19:55:03 -0400
+Subject: [comp5201-f20] Zoom link for Tuesday's class
+Message-ID: <5f790f57.Qlnpu8PWGhXaoYPl%probst@cse.concordia.ca>
+
+
+DAVID K. PROBST is inviting you to a scheduled Zoom meeting.
+
+Topic: DAVID K. PROBST's COMP5201 Zoom Meeting
+Time: Oct 6, 2020 05:45 PM Montreal
+
+Join Zoom Meeting
+https://concordia-ca.zoom.us/j/83474576072?pwd=MGxDTFU1THhOUi95NS9nWkMzbmw5Zz09
+
+Meeting ID: 834 7457 6072
+Passcode: 638467
+
+
+From probst at cse.concordia.ca  Sat Oct  3 21:50:11 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Sat, 03 Oct 2020 21:50:11 -0400
+Subject: [comp5201-f20] on synthesis exercises
+Message-ID: <5f792a53.pK6P459M9VQAf2dN%probst@cse.concordia.ca>
+
+
+Synthesis Exercise
+__________________
+
+>From {'<-->', '+'}, synthesize '~'.
+
+Step 1:  F |= =| p + p
+
+Step 2: ~p |= =| p <--> F
+
+Above, I am allowing previous steps to be used in later steps.
+
+Suppose I _don't_ allow previous steps to be used.
+
+        ~p |= =| p <--> (p + p)
+
+Obviously, if I remove either connective from my "starter set",
+I _cannot_ synthesize '~'.
+
+How did I "derive" step 1?  I didn't.  I used my head.  I said
+"What about 'p + p'?  Oh good, that works".
+
+That is to say, I guessed a solution, and then convinced myself
+that it was correct.
+
+In the real world, this is called "problem solving".
+
+Some people check their answers with truth tables.  I prefer to
+guess and then check my guesses by reasoning in my head.
+
+You do whatever makes you feel comfortable.
+
+
+From probst at cse.concordia.ca  Tue Oct  6 12:24:54 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Tue, 06 Oct 2020 12:24:54 -0400
+Subject: [comp5201-f20] partially rewritten lecture 5 for tonight's class
+Message-ID: <5f7c9a56.toreTkuOOM73sLN5%probst@cse.concordia.ca>
+
+
+Lecture 5  Computer Organization and Design                    DKP/Fall 2020
+_________
+
+It is not immediately obvious that Moore's law should favor one type of
+processor architecture over another.  Why, starting in 1980, did killer
+micros have such success?  Which processor architectures died off?  What
+is a killer micro, anyway?  Does _every_ microprocessor count as a killer
+micro?  Here is a subjective answer.
+
+The Cray vector architectures died out because they were too expensive,
+and also because parallel vector processors (i.e., computers) ran into
+trouble scaling to larger number of processors.  But parallel vector
+processors were supercomputers, pioneering advanced architectural ideas
+with exotic technologies.  More down to earth, DEC's Vax architecture ran
+into trouble because its complex instruction set made it very hard to
+implement fast pipelining.  (The Vax can stand for other machines that
+lost their appeal).  In 1980, the idea of RISC (reduced instruction set
+computing) architecture gained ground, and led to radical simplifications
+in the implementation of pipelining.
+
+In the 1970s, machines had hundreds of different instructions, in a variety
+of formats, leading to thousands of distinct combinations when
+addressing-mode variations were taken into account.  Interpretation of all
+possible combinations of opcodes and operands required very complex control
+circuitry.  Early VLSI chips simply did not have enough room to hold both
+this massive control circuitry and a register file with sufficiently many
+registers.  RISC machines were successful because they radically reduced
+the amount of control circuitry, i.e., they reduced the control _overhead_.
+Moreover, the simplicity of control in RISC machines allowed a fully
+hardwired implementation of the control circuitry, breaking with the
+tradition of microprogrammed control.  This dramatically increased 
+execution speed.
+
+The distinction between RISC and CISC has not stayed hard and fast since
+1980, especially after the introduction of Intel chips in the 1990s that
+were CISC on the outside, and RISC on the inside.  In all fairness, we have
+to count more recent Intel and AMD processors as killer micros.  This is so
+even if they have processor architectures only a mother could love.  Another
+concern is that CISC processors are incredibly expensive and time-consuming
+to design.  You almost have to admire Intel for not being killed by the
+complexity of its own designs.  Whether this is a good starting point for
+multicore, or, indeed, for any _system on a chip_, is another question
+entirely.  Finally, describing CISC architectures to students is not exactly
+enjoyable.
+
+We can sketch some of the core ideas in RISC design philosophy, which is
+both an approach to instruction-set design, and a set of implementation
+strategies.
+
+1. There shall be a small set of instructions, each of which can be executed
+in approximately the same amount of time using hardwired control (you may
+need several RISC instructions to do the work of one complex instruction).
+
+2. The architecture shall be a _load/store_ architecture that confines
+memory-address calculation, and memory-latency delays, to a small set of
+load and store instructions, with all other (register-register) instructions
+obtaining their operands from faster, and compactly addressable, processor
+registers.
+
+3. There shall be a limited number of simple addressing modes that eliminate
+or speed up address calculations for the vast majority of cases.
+
+4. There shall be simple, uniform instruction formats that facilitate
+extraction/decoding of the various fields.  This allows overlap between
+opcode interpretation and register readout.
+
+Admittedly, what ultimately counts are the run times of our programs.  What
+matters is not whether the computer executes 10 billion simple instructions,
+or 5 billion complex instructions, but simply what the total run time is.
+
+We can characterize RISC architectures in slightly different language
+(redundancy is not bad):
+
+1. All operations on data apply to data in registers.
+
+2. The only operators that affect memory are loads (which move data from
+memory to a register) and stores (which move data from a register to memory).
+
+3. The instruction formats are few in number, with all instructions typically
+being one size.
+
+RISC architectures include MIPS, ARM, PowerPC, PA-RISC, SPARC, and the
+now-defunct Alpha.  However, if MIPS and ARM own the embedded market, the
+most powerful large-scale computers today appear to be hybrids of Intel chips,
+or AMD chips, and Nvidia chips.  Why this is so is a long story.
+
+Terminology
+___________
+
+Early descriptions of processor microarchitecture emphasized the distinction
+between (active) control circuitry and (passive) datapath circuitry that just
+followed orders.  As time went on, many control functions were incorporated
+into the datapath.  Even so, the conceptual need for distinct control circuitry
+remained because, while we can imagine an intelligent datapath that can analyze
+and control aspects of executing individual instructions, only separate control
+circuitry can maintain a more global picture of how different instructions
+should interact.  I somewhat deemphasize the distinction between datapath and
+control because i) I have no interest in drawing circuit diagrams showing
+data and control wires, and ii) in 2020, it is nearly impossible to say where
+the datapath ends and the control circuitry begins.
+
+Moreover, all datapaths soon became pipelined.  Today, it is more natural to
+speak of an instruction-execution pipeline with some control functionality that
+makes use of various on-chip hardware resources and is ultimately guided by
+control circuitry that is _notionally_ outside the pipeline.
+
+RISC pipelines were immediately successful yet they did not stand still.
+Rather, they continued to evolve as heavier and heavier performance demands
+were placed on them.  This continued until the first RISC inflection point in
+the 1990s.  In fact, the RISC microachitecture dominant in the 21st century is
+radically different from the one dominant in the 20th century (the multilevel
+cache was the troublemaker).  RISC 1.0 has in-order instruction-execution
+pipelines: machine instructions are executed in _program order_.  RISC 2.0
+has out-of-order instruction-execution pipelines: machine instructions are
+executed _out of program order_ using dataflow ideas to overcome the strict
+von Neumann control flow in RISC 1.0.  We start with the simpler RISC 1.0.  
+
+RISC Instruction Execution
+__________________________
+
+We now study the MIPS RISC instruction-execution pipeline (at least in the
+form that was popular in the 1980s).  We waste no time on nonpipelined
+datapaths.  First,we need the concept of _pipeline_.
+
+Consider a computer system that takes in operations on the left, computes
+them, and then pushes out results on the right.  In a pipeline, we may push
+in new operations on the left long before getting the results of previous
+operations pushed out on the right.  A pipeline is characterized by three
+parameters: First, there is the peak input bandwidth (the maximum rate the
+pipeline will tolerate).  Second, there is the operation latency (the time
+for an operation to complete).  Third, there is the pipeline occupancy (the
+number of uncompleted operations in the pipeline at any one time).
+
+Pipelines take time to reach their equilibrium state.  We may feed operations
+into an empty pipeline, but need to wait until we get our first result.  It
+is only after the pipeline has reached its equilbrium state that the result
+bandwidth on the right will exactly match the input bandwidth on the left.
+Here is a picture:
+                          pipeline
+
+                     +-----------------+
+                -->  |  -->  -->  -->  |  -->
+bandwidth = 2        | concurrency = 6 |        bandwidth = 2
+                -->  |  -->  -->  -->  |  -->
+                     +-----------------+
+ 
+                       latency = 3
+
+Suppose initially the pipeline is empty and we apply a sustained input
+bandwidth of two operations per cycle.  Eventually, the pipeline will reach
+equlilibrium and we will receive a a sustained output of two results per
+cycle.  In the picture, it looks like we are supplying peak input bandwidth
+but I never said this.  In general (Little's Law), at equilibrium, the
+occupancy (concurrency) of the pipeline is the latency-bandwidth product.
+
+Pipelining has performance consequences.  In the picture above, system
+throughput (result bandwidth) is 2 results per cycle.  In contrast, if we
+were to wait for the previous result(s) before supplying new input,
+throughput would drop to 2/3 result per cycle.  In general, pipelining a
+system multiplies the throughput by the latency.  
+
+The MIPS 'fdxmw' instruction-execution pipeline is a special case of the
+general pipeline sketched above.  At equilibrium, the input bandwidth is 1,
+the output bandwidth is 1, the latency is 5, and the occupancy (concurrency)
+is 5.   
+
+Here is a picture of the MIPS RISC 1.0 pipeline.
+
++-------------------------------------------------------------------------+ P
+|     <I-cache>               <Register file>                 <D-cache>   | r
+|                                                                         | o
+|                             <Control circuitry>                         | c
+|              +-+           +-+           +-+           +-+              | e
+|     <f-box>  | |  <d-box>  | |  <x-box>  | |  <m-box>  | |  <w-box>     | s
+|              +-+           +-+           +-+           +-+              | s
+|              f/d           d/x           x/m           m/w              | o
++-------------------------------------------------------------------------+ r
+
+Boxes are shown using angular brackets and box names.  Latches are shown as
+short rectangles.  Crudely, you may view boxes as combinational logic, and
+latches as collections of pipeline registers.  Job descriptions follow.
+
+1. The f-box reads the memory address of the next instruction from the PC
+register, and fetches it from memory, or from the I-cahe.  It then updates
+PC by adding 4.  Each box must complete its work, including all latching,
+in one clock cycle.  Here, the fetched instruction is latched in the f/d latch.
+
+2. The d-box has multiple tasks.  It must decode the instruction, noting the
+operands (register and immediate), and the destination register (if any).  It
+also localizes any register operands in the instruction from the register file.
+The d-box also processes conditional branches.  Consider 'bne r1,r2,loop'.
+The d-box tests inequality of the two registers it has localized.  If they are
+unequal, the branch is deemed taken, and the d-box adds the offset (a multiple
+of the immediate 'loop') to the base register PC.  A number of things are
+latched by the d-box in the d/x latch.
+
+3. The x-box is actually a case statement, which requires control input.
+
+i) In a memory reference, we add the base register and the offset to compute
+the memory address.
+
+ii) In a register-register instruction, we perform the operation specified 
+by the opcode.
+
+iii) In a register-immediate instruction, we perform the operation specified
+by the opcode, using the immediate as one operand value.
+
+Think of the x-box as a collection of functional units, perhaps an integer unit,
+a floating-point unit, a register shifter, a logic unit, etc.  So the x-box
+begins to seem somewhat ghostly if you think about it too carefully.  The x-box
+result is latched in the x/m latch.
+
+4. The m-box is another case statement, and requires control.  If the
+instruction is a load, the m-box reads from memory, or from the D-cache, and
+latches the result in the m/w latch.  If the instruction is a store, the m-box
+writes to memory, or to the D-cache, taking the value to be stored from some
+pipeline latch.  Otherwise, the m-box does nothing.  When data flows from the
+x-box to the w-box during such a case, this is called "bypassing".
+
+5. The w-box does the same thing if the instruction is a load, or an ALU
+instruction, which necessarily produces a result; namely, it takes either the
+loaded value, or the ALU result, either of which can be found in the m/w latch,
+and writes it to the destination register.
+
+Not all instructions use all five boxes.  A conditional branch uses only the
+f-box and the d-box.  A store uses f, d, x, and m.  An ALU instruction uses
+f, d, x, and w.  Only a load uses f, d, x, m, and w.
+
+Boxes and Latches Form a Pipeline (in all modern computers)
+_________________________________
+
+         1 2 3 4 5 6 7 8 9
+instr 1  f d x m w
+instr 2    f d x m w
+instr 3      f d x m w
+instr 4        f d x m w
+instr 5          f d x m w
+...                ...
+
+There is one tricky point.  Since there are cycles in which both the d-box and
+the w-box access the RF, we _write_ in the first half of the cycle, and _read_
+in the second half of the cycle.
+
+Latches are also an intrapipeline communication mechanism.  Any value latched
+by the end of cycle 'n' moves to the next latch by the end of cycle 'n+1'.
+This is called _fowarding_.  Think of the pipeline as a river which is
+constantly flowing to the right.
+
+Sometimes the pipeline must _stall_.  There are three possible reasons:
+
+a) hardware unavailable ("structural hazard")
+
+b) data unavailable ("data-dependance hazard")
+
+c) branch decision unavailable ("control hazard")
+
+                                     d
+How bad are stalls?  Answer: su = ------- .  We need to minimize stalls.
+                                  1 + s/i
+
+More precisely, the speedup is the depth of the pipeline divided by 1 plus
+the average number of stall cycles per instruction.
+
+In RISC 1.0, the only data dependence that can cause problems is the _flow
+dependence_, in which an earlier instruction produces a value that is
+consumed by a later instruction.  (In RISC 2.0, we need to worry about the
+other two data dependences).  Actually, the MIPS RISC 1.0 pipeline with
+multicycle operations can have other types of data dependence, but we will
+just ignore this.
+
+Sometimes we get lucky.  Consider:
+
+              1 2 3 4 5 6 7 8 9  1   2   3   4   5  6  7  8  9
+add r1,r2,r3  f d x n w          f | d | x | n | w
+add r4,r1,r4    f d x n w            f   d  \x  \n  w
+add r5,r1,r5      f d x n w              f   d   x  n  w
+add r6,r1,r6        f d x n w                f   d--x  n  w
+add r7,r1,r7          f d x n w                  f  d--x  n  w
+
+Let's follow 'r1'.  It is in the x/m latch at the start of cycle 4.  It is in
+the m/w latch at the start of cycle 5.  It is sent to the RF in cycle 5, but
+also retrieved from the RF in cycle 5, and available in the d/x latch at the
+start of cycle 6.  Finally, 'r1' is retrieved from the RF in cycle 6, and is
+available in the d/x latch at the start of cycle 7.
+
+There are no stalls here because the x-box is in the middle.
+
+At other times we have no choice but to stall.  Because I hate
+oversimplification, I am going to give 'mul.d' two x-boxes (for now)..
+
+                1 2 3 4 5 6 7 8 9  1   2   3   4   5   6   7   8   9
+l.d   f0,0(r1)  f d x m w          f | d | x | m | w
+                                               -
+l.d   f2,0(r2)    f d x m w            f | d | x | m | w
+                                                   -  \_
+mul.d f4,f0,f2      f d s x x n w          .   f | d---x | x | n | w
+
+This is more interesting.  'f0' is sent to the RF in cycle 5, but also
+retrieved from the RF in cycle 5, and available in the d/x latch at the start
+of cycle 6.  'f2' is in latch m/w at the start of cycle 6, and is retrieved
+from that latch in cycle 6.
+
+There is a _load stall_ here because the m-box is slightly to the right.
+
+Does this seem like black magic?  The rule is: If a box will perform an
+operation in cycle 'n', and one of its operands is available in a latch at
+the start of cycle 'n', then the box may retrieve and use that operand in
+cycle 'n'.  A box may retrieve two operands from the same or different
+latches in the same cycle.
+
+Here is another example.  Now, I have put 4 x-boxes in 'mul.d'.
+
+                1 2 3 4 5 6 7 8 9 0 1 2  1 2 3 4 5 6 7 8 9 0 1 2
+mul.d f4,f0,f2  f d x x x x n w          f d x x x x n w
+mul.d f6,f4,f8    f d s s s x x x x n w    . . . f d x x x x n w
+
+This is a simple latch retrieval.  In cycle 7, the x-box pulls 'f4' out of
+the x/m latch which is available there at the start of cycle 7.
+
+All the dependences we have seen so far are _flow dependences_, also known
+as _producer-consumer dependences_.
+
+Here is an example of a branch stall, together with a flow-dependence stall.
+
+                  1 2 3 4 5  1 2 3 4 5
+add   r1,r1,8     f d x n w  f d x n w
+bne   r1,r2,label   f s d      . f d
+mul.d f4,f0,f2          f f        f f
+
+Here, I have drawn the case where the branch is taken.  The 'mul.d' is fetched
+in cycle 4, but this is not the next instruction that will be executed.  So we
+have to fetch again to get the instruction with the label 'label'.  In the
+real world, branches are sometimes taken and sometimes not taken.  In my notes,
+I always draw the worst-case scenario where a second fetch is required.  This
+is called a _branch stall_.
+
+There is a branch stall because the d-box is slightly to the left.
+
+The policy illustrated here is the _predict-not-taken_ policy.  The processor
+fetches the next instruction as if the branch is not taken.  If that turns out
+to be true, there is no branch stall.  Only if the branch is taken is it
+necessary to refetch.
+
+It is time to be more honest about the x-box.  Since it is really a virtual
+collection of different functional units, we may have two x-boxes active
+in the same cycle.  Consider:
+
+                1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 0 | 1 | 2 | 3 
+l.d   f0,0(r1)  f | d | xi| m1| m2| w |   |   |   |   |   |   |   
+               ---------------------------------------------------
+l.d   f2,0(r2)    | f | d | xi| m1| m2| w |   |   |   |   |   |
+               ---------------------------------------------------
+mul.d f4,f0,f2    |   | . | . | f | d | x1| x2| x3| x4| n | w |        
+               ---------------------------------------------------
+s.d   f4,0(r1)    |   |   |   |   | . | . | f | d | xi| m1| m2|
+
+Here, memory references have two m-boxes, and floating-point multiplies
+have four x-boxes.  What this means is that I have replaced two pipeline
+boxes by embedded _internal pipelines_.  The numbers are self-explanatory.
+Remember that address calculation is an integer operation, which can be
+handled by the integer-arithmetic functional unit, here called 'xi'.
+In cycle 10, there is no "structural" conflict between 'xi' and the
+floating-point-arithmetic functional unit, which is still active.
+
+We make the major assumption that all arithmetic functional units, whether
+one box or many, are _fully pipelined_.
+
+Moreover, there is no "structural" conflict between a box doing nothing,
+and that same box doing something.  This situation sometimes occurs with
+the m-box.
+
+Information Flow
+________________
+
+Consider the x-, m-, and w-boxes.  Here is a brief description of the data
+flow.  If the x-box is to act on some value or values, it must receive it
+(or them).  Also, it may receive a further data value that specifies more
+precisely the action to be performed (e.g., the number of bits to shift).
+In a store instruction, the m-box receives a data value from the pipeline,
+namely, the value to be stored.  It also receives a data value that is the
+memory address of where in memory the first value is to be stored.  In a
+load instruction, the m-box only receives the memory address.  When the
+instruction contains a destination register, the w-box receives both a data
+value and a register name from the pipeline.  This is what is to be written
+back and where it is to be written back to.  Obviously, one only feeds data
+to a box when one intends that box to do something.
+
+The control signals are too many to permit a brief description.  We
+therefore invent a set of toy control signals that give us some of the
+flavor of control, without getting us bogged down in unnecessary details.
+The toy control signals are 'no-op', 'add', 'multiply', 'shift', 'load',
+'store', and 'write back'.  If any box receives a box-appropriate control
+signal at the start of cycle 'c', then it will perform the specified
+action during cycle 'c'.  The 'no-op' signal means "do nothing".
+
+Note that in Assignment 3, I ignore _names_ of control signals, and let all
+case analysis be conducted from the knowledge of the _opcode_.
+
+Reality Check
+_____________
+
+Consider the f-box.  Allegedly, it sends PC to memory and fetches the next
+instruction.  Although we don't call this a _memory reference_, i.e., a load
+or a store, it certainly is a _memory access_.  How many processor cycles
+does it take to access memory on a typical computer?  In lecture 1, I
+suggested the figure of 200 cycles.  You cannot address memory and get back
+a word in a single cycle.  What is going on here?
+
+In reality, the f-box sends PC to the _instruction cache, or _I-cache_.
+A cache is a complex state element that can store copies of some, but
+obviously not all, memory locations.  Most caches (L1$, L2$, L3$) are small
+enough to fit on the processor chip.  So, we have to pretend two things that
+are not true.  First, that it is possible to access the I-cache in a single
+cycle.  Second, that the I-cache magically _always_ has a copy of just the
+instruction we need.  Surprisingly, for reasons explained later, these two
+white lies do not grossly misrepresent the actual performance of the I-cache.
+Hint: this good fortune has something to do with the fetch-execute cycle.
+
+Consider the m-box.  Allegedly,	it either sends a data address to memory and
+receives a data value (this is a load), or else it sends a data address plus
+a data value to memory, thus depositing the data value (this is a store).
+Recall that the m-box only does work when the pipeline is executing a memory
+reference.  Still, each memory reference is certainly a memory access.  Do
+we have a problem here?
+
+In reality, the m-box interacts with the _data cache_, or _D-cache_.  This is
+another complex state element that can store copies of some, but obviously not
+all, memory locations.  Again, we pretend two things that are not true.  First,
+that it is possible to access the D-cache in a single cycle.  Second, that the
+D-cache magically _always_ has a copy of the data value we wish to load or
+store.  For data, these two white lies _can_ cause serious problems.  It
+depends on the memory-accessing pattern.
+
+Consider program P executing during some interval I.  Suppose that, during this
+interval, program P only uses data from, say, 20K distinct memory locations.
+We say that these 20K locations constitute the _working set_ of program P
+during interval I.  If program P's working set fits into the computer's
+D-cache, then we can't really say we have a problem.  However, if the working
+set doesn't fit into the D-cache, then we _may_ have a problem: we may
+repeatedly fail to find the data copy we want in the D-cache, and thus may
+repeatedly be forced to access the actual memory, at much greater cost.
+Which of these two cases is the real one depends on the memory-accessing
+pattern of program P.  Some patterns generate enormous working sets that are
+too big to fit into any D-cache.
+
+This problem even has a name: it is officially called the _Memory Wall_.
+Consider Moore's Law.  It says that processor performance, which we may
+roughly model as the product of the number of logic transistors times the
+clock frequency in Hz, increases exponentially over time.  Before 2003,
+both factors increased exponentially.  Now, we have to be very careful with
+the clock frequency.  Still, replacing a single power-inefficient core with
+many power-efficient cores increases the power efficiency of the processor
+chip as a whole, and thereby allows us to increase performance without
+overstepping our power budget.  We don't ask that each factor in Moore's Law
+increases exponentially; we only ask that their _product_ increases
+exponentially.  Moore's Law, interpreted in this fashion, is alive and well
+in the multicore era, with one important qualification.
+
+Update: This statement is no longer true since 2014.
+
+Increased arithmetic performance is only possible if there is increased
+delivery of data operands to functional units.  Memories are making some
+improvements to memory latency and memory bandwidth, but not fast enough to
+keep pace with processor improvements.  Raw processor performance increases
+faster than raw memory performance.  A ideal, or perfect, cache could easily
+compensate for the mismatch between processor demand and memory supply.
+However, in the real world, caches are _not_ ideal, and programs are not
+always _cache friendly_.  In the worst case, program performance may be
+limited by memory performance, and be unaffected by increases in processor
+performance.  All moderately educated computer professionals agree that the
+Memory Wall and the Power Wall are the two main challenges that must be
+overcome by today's computer designers.  Dealing with the Power Wall is
+mandatory.  What about the Memory Wall?  We could accept to only write
+programs that play nicely with today's caches.  But this concession might
+be selling our birthright for a mess of pottage.
+
+Review of Pipelining
+____________________
+
+Pipelining is a naturally efficient way for a datapath to execute machine
+instructions.  It was standard in vector supercomputers.  The basic idea is
+to allow different workstations ("boxes") to work on different instructions
+at the same time.  By overlapping the execution of different machine 
+instructions, we can make significant improvements in the pipeline's execution
+_throughput_.
+
+Say that executing some machine instruction is a task 'T'.  Suppose we break 
+'T' into a _sequence_ of nonoverlapping subtasks: 'T = t1; t2; ...; tn'.  Now,
+we provide a specialized workstation for each subtask (these are our boxes).
+Think of the processor clock as ringing a bell at the start of each processor
+cycle.  For simplicity, let's stick with having five stages, with the f, d,
+x, m, and w boxes as our specialized workstations.  An instruction pipeline
+doesn't have to have five stages---it could have 21---but this was the design
+of an early RISC processor.
+
+When the bell rings, each workstation passes the partially executed instruction
+to the workstation on its right.
+
+A picture we have already seen may help:
+
+         1  2  3  4  5  6  7  8  9  0  ...  clock cycle
+instr 1  f  d  x  m  w
+instr 2     f  d  x  m  w
+instr 3        f  d  x  m  w
+instr 4           f  d  x  m  w
+instr 5              f  d  x  m  w
+instr 6                 f  d  x  m  w
+instr 7                    f  d  x  m  w
+...                           ...
+
+Look at clock cycle 5.  We have five boxes working on five different
+instructions.
+
+Is this advantageous?  Suppose each box completes its work in one clock cycle.
+Therefore, the time to execute an instruction (the instruction _latency_) is
+5 cycles.  But when the pipeline achieves cruising speed, a new instruction
+completes every cycle, giving the pipeline an execution _bandwidth_ of one
+instruction per cycle.  (We call this _single-cycle pipelining_).  The ideal
+speedup when a pipeline is pipelined is thus equal to the pipeline _depth_
+(the number of stages).
+
+Each of our five boxes is a _combinational_ circuit, but the clocked pipeline
+as a whole is a _sequential_ circuit.  To make this work, each box is followed 
+immediately on its right by a set of (nonISA) _pipeline registers_, which is
+called a "pipeline latch".  The basic requirement is this: Prior to the end of
+a clock cycle, all the results from a given stage must be stored in the
+pipeline latch to its right, in order that these values can be preserved
+across clock cycles, and used as inputs to the next stage at the start of the
+next clock cycle.
+
+Note: In this course, we may _pretend_ that pipeline boxes are combinational
+logic, but in the real world they are not _pure_ combinational logic.
+
+Also, it is reasonable to think of the boxes as combinational circuits that
+compute Boolean functions, and of the latches as complementary state elements
+that allow the pipeline to function as a finite state machine.
+
+Space-time Diagram
+__________________
+
+The figure above is a space-time diagram.  These diagrams show the evolution 
+of the pipeline in time, and are useful in capturing aspects of the control
+and data flow.  Let me repeat the figure with some actual (but not very
+interesting) instructions.
+
+               1  2  3  4  5  6  7  8  9
+add r1,r2,r3   f  d  x  m  w
+add r2,r3,r4      f  d  x  m  w
+add r3,r4,r5         f  d  x  m  w
+add r4,r5,r6            f  d  x  m  w
+add r5,r6,r7               f  d  x  m  w
+
+The instruction-execution pipeline reaches equilibrium in cycle 5, when all 
+five boxes are (notionally) active, and five distinct instructions are being
+processed at the same time.  At equilibrium, one instruction is fetched per
+cycle, one result is produced per cycle, the latency is 5 cycles, and the
+pipeline occupancy (concurrency) is 5, which is the latency-bandwidth product.
+
+In this toy program, no data flows between instructions, which are all
+independent.  As described earlier, data does flow between different boxes
+working on the same instruction.  For example, in the first instruction, the
+x-box receives the values of 'r2' and 'r3', which it adds.  The w-box receives
+the register name "r1" and the sum computed by the x-box.  However, the m-box
+receives no data at all.  Since an add is not a memory reference, there is no
+work from the m-box to do.  Instead, it performs a no-op.  I sometimes write
+'n' in place of 'm' when I want to emphasize that the m-box is inactive.  The
+data sent to the w-box hops right over the m-box.
+
+In this diagram, what control signals do the boxes receive?  Consider cycle 1.
+The f-box receives the control signal 'fetch', while _all_ the other boxes
+receive the control signal 'no-op'.  By reading the columns of the diagram,
+one can see which boxes receive activating control signals, and which boxes
+are instructed to do nothing.  (Qualification follows).
+
+The exception to this rule is the m-box.  Although I have written 'm' in five
+columns, in fact, the m-box receives the 'no-op' control signal in _each and
+every_ cycle (not just the columns in which 'm' appears).
+
+In every cycle, the f- and d-boxes receive either the 'no-op' control signal
+or the 'fetch' and 'decode' control signals, respectively.  From a control
+standpoint, they are not very interesting case statements.  For this reason,
+we focus on the x-, m-, and w-boxes.
+
+When the x-box does something, it may be any one of a range of arithmetic or
+logical operations.  When the m-box does something, it is either a load or a
+store.  When the w-box does something, it is always write back.
+
+A pipeline is a machine with a control system.  We will see more interesting
+space-time diagrams when we learn about pipeline dynamics.  But a space-time
+diagram by itself shows the pipeline's kinematics.  For all boxes other than
+the m-box, if a box name appears in the column corresponding to cycle 'c',
+then that box is active in cycle 'c'.  Howver, if the m-box's name appears,
+then it may or may not be active.
+
+There is a notion of _gap_, which is the number of stalls between two adjacent
+flow-dependent instructions; obviously, it depends on the identity of both
+the producer and the consumer instruction.  Figure C.29 in the 6th edition is
+just total nonsense.  The authors talk more sense in chapter 3.  We will use
+the notion of gap in our discussion of _loop unrolling_, in chapter 3.
+
+Here are some examples.
+
+a) l.d f4,...  f d x m w
+   s.d f4,...    f d x m              gap = 0
+
+   l.d   f4,...    f d x m w
+   mul.d f6,f4,...   . f d x ...      gap = 1
+
+b) mul.d f6,...  f d x x x x n w
+   s.d   f6,...    . . f d x m        gap = 2
+
+   mul.d f6,...    f d x x x x n w 
+   mul.d f8,f6,...   . . . f d x ...  gap = 3
+
+
+From probst at cse.concordia.ca  Sun Oct 11 20:32:36 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Sun, 11 Oct 2020 20:32:36 -0400
+Subject: [comp5201-f20] Zoom link for Tuesday's class
+Message-ID: <202010120032.09C0WaaQ035627@poise.encs.concordia.ca>
+
+
+DAVID K. PROBST is inviting you to a scheduled Zoom meeting.
+
+Topic: DAVID K. PROBST's COMP5201 Zoom Meeting
+Time: Oct 13, 2020 05:45 PM Montreal
+
+Join Zoom Meeting
+https://concordia-ca.zoom.us/j/87558129027?pwd=cTFxMGVCcnpzZlJRYTJtbUtiWTRUUT09
+
+Meeting ID: 875 5812 9027
+Passcode: 566370
+
+
+From probst at cse.concordia.ca  Tue Oct 13 15:48:00 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Tue, 13 Oct 2020 15:48:00 -0400
+Subject: [comp5201-f20] lecture "6": review of lecture 5 plus some new things
+Message-ID: <5f860470.KosKrkWlRVk4Ego3%probst@cse.concordia.ca>
+
+
+Lecture 6  Computer Organization and Design                    DKP/Fall 2020
+_________
+
+RISC Instruction Execution
+__________________________
+
+Little's law
+____________
+
+Pipelines take time to reach their equilibrium state.  We may feed operations
+into an empty pipeline, but need to wait until we get our first result.  It
+is only after the pipeline has reached its equilbrium state that the result
+bandwidth on the right will match the input bandwidth on the left.  Here is a
+picture:
+                          pipeline
+
+                     +-----------------+
+                -->  |  -->  -->  -->  |  -->
+bandwidth = 2        | concurrency = 6 |        bandwidth = 2
+                -->  |  -->  -->  -->  |  -->
+                     +-----------------+
+ 
+                       latency = 3
+
+Suppose initially the pipeline is empty and we apply a sustained input
+bandwidth of two operations per cycle.  Eventually, the pipeline will reach
+equlilibrium, and we will receive a a sustained output of two results per
+cycle.  In the picture, it is not specified whether we are supplying peak
+input bandwidth.  In general (Little's Law), at equilibrium, the occupancy
+(concurrency) of the pipeline is the latency-bandwidth product.
+
+MIPS RISC 1.0 pipeline
+______________________
+
++-------------------------------------------------------------------------+ P
+|     <I-cache>               <Register file>                 <D-cache>   | r
+|                                                                         | o
+|                             <Control circuitry>                         | c
+|              +-+           +-+           +-+           +-+              | e
+|     <f-box>  | |  <d-box>  | |  <x-box>  | |  <m-box>  | |  <w-box>     | s
+|              +-+           +-+           +-+           +-+              | s
+|              f/d           d/x           x/m           m/w              | o
++-------------------------------------------------------------------------+ r
+
+Boxes are shown using angular brackets and box names.  Latches are shown as
+short rectangles.  Crudely, you may view boxes as combinational logic, and
+latches as collections of pipeline registers.  Job descriptions follow.
+
+1. The f-box reads the memory address of the next instruction from the PC
+register, and fetches it from memory, or from the I-cahe.  It then updates
+PC by adding 4.  Each box must complete its work, including all latching,
+in one clock cycle.  Here, the fetched instruction is latched in the f/d latch.
+
+2. The d-box has multiple tasks.  It must decode the instruction, noting the
+operands (register and immediate), and the destination register (if any).  It
+also localizes any register operands in the instruction from the register file.
+The d-box also processes conditional branches.  Consider 'bne r1,r2,loop'.
+The d-box tests inequality of the two registers it has localized.  If they are
+unequal, the branch is deemed taken, and the d-box adds the offset (a multiple
+of the immediate 'loop') to the base register PC.  A number of things are
+latched by the d-box in the d/x latch.
+
+3. The x-box is actually a case statement, which requires control input.
+
+i) In a memory reference, we add the base register and the offset to compute
+the memory address.
+
+ii) In a register-register instruction, we perform the operation specified 
+by the opcode.
+
+iii) In a register-immediate instruction, we perform the operation specified
+by the opcode, using the immediate as one operand value.
+
+Think of the x-box as a collection of functional units, perhaps an integer unit,
+a floating-point unit, a register shifter, a logic unit, etc.  So the x-box
+begins to seem somewhat ghostly if you think about it too carefully.  The x-box
+result is latched in the x/m latch.
+
+4. The m-box is another case statement, and requires control.  If the
+instruction is a load, the m-box reads from memory, or from the D-cache, and
+latches the result in the m/w latch.  If the instruction is a store, the m-box
+writes to memory, or to the D-cache, taking the value to be stored from some
+pipeline latch.  Otherwise, the m-box does nothing.  When data flows from the
+x-box to the w-box during such a case, this is called "bypassing".
+
+5. The w-box does the same thing if the instruction is a load, or an ALU
+instruction, which necessarily produces a result; namely, it takes either the
+loaded value, or the ALU result, either of which can be found in the m/w latch,
+and writes it to the destination register.
+
+Not all instructions use all five boxes.  A conditional branch uses only the
+f-box and the d-box.  A store uses f, d, x, and m.  An ALU instruction uses
+f, d, x, and w.  Only a load uses f, d, x, m, and w.
+
+Boxes and Latches Form a Pipeline (in all modern computers)
+_________________________________
+
+         1 2 3 4 5 6 7 8 9
+instr 1  f d x m w
+instr 2    f d x m w
+instr 3      f d x m w
+instr 4        f d x m w
+instr 5          f d x m w
+...                ...
+
+There is one unusual point.  Since there are cycles in which both the d-box and
+the w-box access the RF, we _write_ in the first half of the cycle, and _read_
+in the second half of the cycle.
+
+Latches are also an intrapipeline _communication mechanism_.  Any value latched
+by the end of cycle 'n' moves to the next latch by the end of cycle 'n+1'.
+This is called _fowarding_.  Think of the pipeline as a river which is
+constantly flowing to the right.
+
+Sometimes the pipeline must _stall_.  There are three possible reasons:
+
+a) hardware unavailable ("structural hazard")
+
+b) data unavailable ("data-dependance hazard")
+
+c) branch decision unavailable ("control hazard")
+
+                                     d
+How bad are stalls?  Answer: su = ------- .  We need to minimize stalls.
+                                  1 + s/i
+
+More precisely, the speedup due to pipelining is the depth of the pipeline
+divided by 1 plus the average number of stall cycles per instruction.
+
+In RISC 1.0, the only data dependence that can cause problems is the _flow
+dependence_, in which an earlier instruction produces a value that is
+consumed by a later instruction.  (In RISC 2.0, we need to worry about the
+other two data dependences).  Actually, the MIPS RISC 1.0 pipeline with
+multicycle operations can have other types of data dependence, but we will
+just ignore this.
+
+Sometimes we get lucky.  Consider:
+
+              1 2 3 4 5 6 7 8 9  1   2   3   4   5  6  7  8  9
+add r1,r2,r3  f d x n w          f | d | x | n | w
+add r4,r1,r4    f d x n w            f   d  \x  \n  w
+add r5,r1,r5      f d x n w              f   d   x  n  w
+add r6,r1,r6        f d x n w                f   d--x  n  w
+add r7,r1,r7          f d x n w                  f  d--x  n  w
+
+Let's follow 'r1'.  It is in the x/m latch at the start of cycle 4.  It is in
+the m/w latch at the start of cycle 5.  It is sent to the RF in cycle 5, but
+also retrieved from the RF in cycle 5, and available in the d/x latch at the
+start of cycle 6.  Finally, 'r1' is retrieved from the RF in cycle 6, and is
+available in the d/x latch at the start of cycle 7.
+
+There are no stalls here because the x-box is in the middle.
+
+At other times we have no choice but to stall.  Because I hate
+oversimplification, I am going to give 'mul.d' two x-boxes (for now)..
+
+                1 2 3 4 5 6 7 8 9  1   2   3   4   5   6   7   8   9
+l.d   f0,0(r1)  f d x m w          f | d | x | m | w
+                                               -
+l.d   f2,0(r2)    f d x m w            f | d | x | m | w
+                                                   -  \_
+mul.d f4,f0,f2      f d s x x n w          .   f | d---x | x | n | w
+
+This is more interesting.  'f0' is sent to the RF in cycle 5, but also
+retrieved from the RF in cycle 5, and available in the d/x latch at the start
+of cycle 6.  'f2' is in latch m/w at the start of cycle 6, and is retrieved
+from that latch in cycle 6.
+
+There is a _load stall_ here because the m-box is slightly to the right.
+
+Does this seem like black magic?  The rule is: If a box will perform an
+operation in cycle 'n', and one of its operands is available in a latch at
+the start of cycle 'n', then the box may retrieve and use that operand in
+cycle 'n'.  A box may retrieve two operands from the same or different
+latches in the same cycle.
+
+Here is another example.  Now, I have put 4 x-boxes in 'mul.d'.
+
+                1 2 3 4 5 6 7 8 9 0 1 2  1 2 3 4 5 6 7 8 9 0 1 2
+mul.d f4,f0,f2  f d x x x x n w          f d x x x x n w
+mul.d f6,f4,f8    f d s s s x x x x n w    . . . f d x x x x n w
+
+This is a simple latch retrieval.  In cycle 7, the x-box pulls 'f4' out of
+the x/m latch which is available there at the start of cycle 7.
+
+All the dependences we have seen so far are _flow dependences_, also known
+as _producer-consumer dependences_.
+
+Here is an example of a branch stall, together with a flow-dependence stall.
+
+                  1 2 3 4 5  1 2 3 4 5
+addi  r1,r1,8     f d x n w  f d x n w
+bne   r1,r2,label   f s d      . f d
+mul.d f4,f0,f2          f f        f f
+
+Here, I have drawn the case where the branch is taken.  The 'mul.d' is fetched
+in cycle 4, but this is not the next instruction that will be executed.  So we
+have to fetch again to get the instruction with the label 'label'.  In the
+real world, branches are sometimes taken and sometimes not taken.  In my notes,
+I always draw the worst-case scenario where a second fetch is required.  This
+is called a _branch stall_.
+
+There is a branch stall because the d-box is slightly to the left.
+
+The policy illustrated here is the _predict-not-taken_ policy.  The processor
+fetches the next instruction as if the branch is not taken.  If that turns out
+to be true, there is no branch stall.  Only if the branch is taken is it
+necessary to refetch.
+
+<* material not covered last time *>
+
+It is time to be more honest about the x-box.  Since it is really a virtual
+collection of different functional units, we may have two x-boxes active
+in the same cycle.  Consider:
+
+                1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 0 | 1 | 2 | 3 
+l.d   f0,0(r1)  f | d | xi| m1| m2| w |   |   |   |   |   |   |   
+               ---------------------------------------------------
+l.d   f2,0(r2)    | f | d | xi| m1| m2| w |   |   |   |   |   |
+               ---------------------------------------------------
+mul.d f4,f0,f2    |   | . | . | f | d | x1| x2| x3| x4| n | w |        
+               ---------------------------------------------------
+s.d   f4,0(r1)    |   |   |   |   | . | . | f | d | xi| m1| m2|
+
+Here, memory references have two m-boxes, and floating-point multiplies
+have four x-boxes.  What this means is that I have replaced two pipeline
+boxes by embedded _internal pipelines_.  The numbers are self-explanatory.
+Remember that address calculation is an integer operation, which can be
+handled by the integer-arithmetic functional unit, here called 'xi'.
+In cycle 10, there is no "structural" conflict between 'xi' and the
+floating-point-arithmetic functional unit, which is still active.
+
+We make the assumption that all arithmetic functional units, whether one box
+or many, are _fully pipelined_.  That is, you may feed in a new arithmetic task
+to the unit in each and every cycle.
+
+Moreover, there is no "structural" conflict between a box doing nothing,
+and that same box doing something.  This situation sometimes occurs with
+the m-box.
+
+Nonpipelined RISC 1.0 Datapath (use this model for Assignment 3)
+______________________________
+
+                   +--------------------------------------+
+                   |            v            v            v
+  +-------+    +-------+    +-------+    +-------+    +-------+
+  |       |    |       |    |       |    |       |    |       |
+  |   f   | => |   d   | => |   x   | => |   m   | => |   w   |
+  |       |    |       |    |       |    |       |    |       |
+  +-------+    +-------+    +-------+    +-------+    +-------+
+                                |                         ^
+                                +-------------------------+    
+
+We have been focusing on pipelining.  However, Assignment 3 asks you to emulate
+the _nonpipelined_ RISC 1.0 datapath.  Here, I draw some previous material
+together to help you see the big picture.  Clearly, in any emulation, we are
+going to idealize certain things that matter for real computers, but whose
+details have no pedagogical value.  The first thing we idealize is pretending
+that register designators and immediates are encoded using the same number of
+bits (in instruction formats), which simplifies programming, but makes no
+conceptual difference.
+
+With equal sizes, the only thing that matters is the left-to-right ordering.
+
+1. Instruction Formats (opc, arg1, arg2, arg3)  // opcode and three arguments
+
+   l.d   f2,4(r1)  encodes as:  opc, r1, f2,  4
+   l.d   f4,8(r3)  encodes as:  opc, r3, f4,  8
+   mul.d f6,f2,f4  encodes as:  opc, f2, f4, f6
+   add.d f8,f4,f6  encodes as:  opc, f4, f6, f8
+   s.d   f6,8(r3)  encodes as:  opc, r3, f6,  8
+   s.d   f8,4(r5)  encodes as:  opc, r5, f8,  4
+   bne   r1,r3,lab encodes as:  opc, r1, r3,  0  // fake offset (no goto)
+   bne   r3,r3,lab encodes as:  opc, r3, r3,  0  // fake offset (no goto)
+
+I use decimal digits to encode arguments to not be distracted by string
+processing.  They are the digits you see above, but I have added 'r' and 'f'
+in front of some of them for human convenience.  In the program, all 'odd'
+registers are r-registers, and all 'even' registers are f-registers, so no
+lower-case Roman letters appear in the _argument_ object code.  (I put some
+of these letters in my print statements, again, for human convenience).
+In this scheme, both immediates and register designators are single decimal
+digits.
+
+The object code would then be (if this were the program):
+
+   l124     (output as: l|124)
+   l348     (output as: l|348)
+   m246     (output as: m|246)
+   a468     (output as: a|468)
+   s368     (output as: s|368)
+   s584     (output as: s|584)
+   b130     (output as: b|130)
+   b330     (output as: b|330)
+
+2. Box Behavior
+
+f-box: Kind of obvious.  By the way, my machine has "instruction-addressed"
+memory (all integers are in units of instructions!), so the 'for' loop has the
+correct increment.
+
+d-box: Decode (decompose) instruction.  Set 'opc'.  Localize all register
+operands from the RF.  Set either 'dreg' (destination register) or 'sval'
+(the value to store).  Set the two data outputs from the d-box to the x-box
+('D_Out1' and 'D_Out2').  This is a case statement because you need to know
+the value of 'opc' in order to choose the right behavior.  There are no extra
+marks for the elegance of your case statements.
+
+The d-box also handles conditional branches.  Since your languages don't have
+gotos, an untaken branch is a no-op, while a taken branch causes you to exit
+the 'for' loop.  That's why I encoded the offset as 0.  Set 'branch' to the
+branch decision.
+
+x-box: Calculate the memory address or perform the specified arithmetic
+instruction.  Set 'X_Out' (the data output from the x-box).  Remember: There
+are only integers in the emulation, even if they sometimes stand for
+floating-point numbers in the real world.  Interrogate 'opc'.
+
+m-box: Either bring in the floating-point value from memory at the memory
+address, or use a previously localized operand to push a value to memory at
+the memory address.  Set 'M_Out' (the data output from the m-box, if there
+is one).  Interrogate 'opc'.
+
+w-box: If there is a destination register (interrogate 'opc'), push the
+appropriate result value to it, perhaps a loaded value, perhaps a computed
+value.  In fact, such a value could have come from either of the two boxes.
+
+Please note that both the m-box and the w-box may do nothing during a cycle,
+depending on 'opc'.  I added the print statement "Did nothing." to several of
+my boxes as a default option, because it gives a clearer big picture.  I
+suggest that you do the same.
+
+You understand that your program's output is an essential window into your
+source code.  So, I insist on a single, integrated plaintext file consisting
+of your source code, to which your output has been appended as a comment.  In
+that way, we can run your program and see if your program _does_ produce the
+output it purports to output.  By the way, a Word document doesn't compile.
+Compilers are like me: they prefer plaintext. :-)
+
+Submit your assignment to Moodle ("Programming Assignment 3").
+
+Caution: My descriptions of box actions describe the results of your case
+statements, but are not necessarily isomorphic to them.
+
+3. Walkthrough of the Assignment-Provided d-box Code
+
+Warning: The invariants you use to design your code hold for _nonpipelined_
+datapaths.  They may not hold for RISC 1.0 pipelines, such as the one on the
+midterm and the one on the final.
+
+Look at the instruction formats.  In all cases ('l','s','a','m','b'), 'arg1'
+is the specifier of an operand register that needs to be localized.  For this
+reason, in a previous version, the d-box code _had_ the option of localizing
+this register value, and sending that value to a d-box output port before
+entering the case statement---when there were no conditional branches!  It is
+more accurate in the current program to include this action in every
+appropriate case.
+
+Now, suppose the case is an arithmetic statement.  In this case, 'arg2' is
+also the specifier of an operand register that needs to be localized.  Hence,
+we perform the same action as above.  But now, in addition, we need to set
+'dreg' to the specifier of the destination register, in this case, 'arg3'.
+
+This is all the code I provided.  You finish the d-box code by deciding what
+to do in the case of a load, what to do in the case of a store, and what to
+do in the case of a conditional branch.  For the remaining boxes, you will do
+something similar, but will now take advantage of the global variables (all
+shown in the assignment) that have been given a value by earlier boxes.
+
+You need to finish Assignment 2 first, but it is not a bad idea to take a
+look at Assignment 3 long before it is due.
+
+Brief look at RISC 2.0
+______________________
+
+Consider the first two iterations of a loop, where only the loop bodies are
+shown.  I have adjusted the memory addresses that will be stored in the load
+buffer and the store buffer, assuming the loop is proceeding leftward through
+each of two arrays.
+
+   l.d   f0,0(r1)    l1                    alpha
+   l.d   f2,0(r2)      \                        \
+   mul.d f4,f0,f2       m1 --> a1 --> s1         gamma --> delta --> epsilon
+   add.d f4,f4,f6      /                        /
+   s.d   f4,0(r1)    l2                    beta
+
+
+   l.d   f0,-8(r1)   l3                    zeta
+   l.d   f2,-8(r2)     \                        \
+   mul.d f4,f0,f2       m2 --> a2 --> s2         theta --> iota  --> kappa
+   add.d f4,f4,f6      /                        /
+   s.d   f4,-8(r1)   l4                    eta
+
+Think of the nodes labeled with Greek letters as "Zoom waiting rooms".  Now,
+the data dependences in the program mean that some instructions may not issue
+until their flow-graph predecessors have completed.  Imagine all ten
+instructions in waiting rooms.  All four loads are ready to issue now.  But
+suppose at least one of the first two loads is slow, while both second two
+loads are fast.  Then the multiply in the second iteration can issue.
+
+Notice that this could not happen if we executed the program in (von Neumann)
+program order.  Instead, we are stuck waiting for the slow load (or loads) to
+complete.  It is this extra freedom that is the principle change when we move
+from RISC 1.0 to RISC 2.0.
+
+It sounds great, but there are some serious downsides.
+
+Information Flow
+________________
+
+Consider the x-, m-, and w-boxes.  Here is a brief description of the data
+flow.  If the x-box is to act on some value or values, it must receive it
+(or them).  Also, it may receive a further data value that specifies more
+precisely the action to be performed (e.g., the number of bits to shift).
+In a store instruction, the m-box receives a data value from the pipeline,
+namely, the value to be stored.  It also receives a data value that is the
+memory address of where in memory the first value is to be stored.  In a
+load instruction, the m-box only receives the memory address.  When the
+instruction contains a destination register, the w-box receives both a data
+value and a register name from the pipeline.  This is what is to be written
+back and where it is to be written back to.  Obviously, one only feeds data
+to a box when one intends that box to do something.
+
+Reality Check
+_____________
+
+Consider the f-box.  Allegedly, it sends PC to memory and fetches the next
+instruction.  Although we don't call this a _memory reference_, i.e., a load
+or a store, it certainly is a _memory access_.  How many processor cycles
+does it take to access memory on a typical computer?  In lecture 1, I
+suggested the figure of 200 cycles.  You cannot address memory and get back
+a word in a single cycle.  What is going on here?
+
+In reality, the f-box sends PC to the _instruction cache, or _I-cache_.
+A cache is a complex state element that can store copies of some, but
+obviously not all, memory locations.  Most caches (L1$, L2$, L3$) are small
+enough to fit on the processor chip.  So, we have to pretend two things that
+are not true.  First, that it is possible to access the I-cache in a single
+cycle.  Second, that the I-cache magically _always_ has a copy of just the
+instruction we need.  Surprisingly, for reasons explained later, these two
+white lies do not grossly misrepresent the actual performance of the I-cache.
+Hint: this good fortune has something to do with the fetch-execute cycle.
+
+Consider the m-box.  Allegedly,	it either sends a data address to memory and
+receives a data value (this is a load), or else it sends a data address plus
+a data value to memory, thus depositing the data value (this is a store).
+Recall that the m-box only does work when the pipeline is executing a memory
+reference.  Still, each memory reference is certainly a memory access.  Do
+we have a problem here?
+
+In reality, the m-box interacts with the _data cache_, or _D-cache_.  This is
+another complex state element that can store copies of some, but obviously not
+all, memory locations.  Again, we pretend two things that are not true.  First,
+that it is possible to access the D-cache in a single cycle.  Second, that the
+D-cache magically _always_ has a copy of the data value we wish to load or
+store.  For data, these two white lies can cause _serious_ problems.  It 
+depends on the memory-accessing pattern.
+
+Consider program P executing during some interval I.  Suppose that, during this
+interval, program P only uses data from, say, 20K distinct memory locations.
+We say that these 20K locations constitute the _working set_ of program P
+during interval I.  If program P's working set fits into the computer's
+D-cache, then we can't really say we have a problem.  However, if the working
+set doesn't fit into the D-cache, then we may well have a problem: we may
+repeatedly fail to find the data copy we want in the D-cache, and thus may
+repeatedly be forced to access the actual memory, at much greater cost.
+Which of these two cases is the real one depends on the memory-accessing
+pattern of program P.  Some patterns generate enormous working sets that are
+too big to fit into any D-cache.
+
+This problem even has a name: it is officially called the _Memory Wall_.
+Consider Moore's Law.  It says that processor performance, which we may
+roughly model as the product of the number of logic transistors times the
+clock frequency in Hz, increases exponentially over time.  Before 2003,
+both factors increased exponentially.  Now, we have to be very careful with
+the clock frequency.  Still, replacing a single power-inefficient core with
+many power-efficient cores increases the power efficiency of the processor
+chip as a whole, and thereby allows us to increase performance without
+overstepping our power budget.  At least, this was the original multicore
+dream.  Initially, multicore was a mess because no one know how to build
+network-on-a-chip (NoC) chip interconnection networks.  Or how to handle
+cache coherence.  One question everyone can ask is, in the next generation,
+do I get twice as many cores, or only two more cores?  I don't know anyone
+who thinks that multicore, by itself, can be a driver of exponential growth
+in processor performance.
+
+Increased arithmetic performance is only possible if there is increased
+delivery of data operands to functional units.  Memories are making some
+improvements to memory latency and memory bandwidth, but not fast enough to
+keep pace with processor improvements.  Raw processor performance increases
+faster than raw memory performance.  A ideal, or perfect, cache could easily
+compensate for the mismatch between processor demand and memory supply.
+However, in the real world, caches are _not_ ideal, and programs are not
+always _cache friendly_.  In the worst case, program performance may be
+limited by memory performance, and be unaffected by increases in processor
+performance.  All moderately educated computer professionals agree that the
+Memory Wall and the Power Wall are the two main challenges that must be
+overcome by today's computer designers.  Dealing with the Power Wall is
+mandatory.  What about the Memory Wall?  We could accept to only write
+programs that play nicely with today's caches.  But this concession might
+be selling our birthright for a mess of pottage.
+
+Review of Pipelining
+____________________
+
+Pipelining is a naturally efficient way for a datapath to execute machine
+instructions.  It was standard in vector supercomputers.  The basic idea is
+to allow different workstations ("boxes") to work on different instructions
+at the same time.  By overlapping the execution of different machine 
+instructions, we can make significant improvements in the pipeline's execution
+_throughput_.
+
+Say that executing some machine instruction is a task 'T'.  Suppose we break 
+'T' into a _sequence_ of nonoverlapping subtasks: 'T = t1; t2; ...; tn'.  Now,
+we provide a specialized workstation for each subtask (these are our boxes).
+Think of the processor clock as ringing a bell at the start of each processor
+cycle.  For simplicity, let's stick with having five stages, with the f, d,
+x, m, and w boxes as our specialized workstations.  An instruction pipeline
+doesn't have to have five stages---it could have 21---but this was the design
+of an early RISC processor.
+
+When the bell rings, each workstation passes the partially executed instruction
+to the workstation on its right.
+
+Is this advantageous?  Suppose each box completes its work in one clock cycle.
+Therefore, the time to execute an instruction (the instruction _latency_) is
+5 cycles.  But when the pipeline achieves cruising speed, a new instruction
+completes every cycle, giving the pipeline an execution _bandwidth_ of one
+instruction per cycle.  (We call this _single-cycle pipelining_).  The ideal
+speedup when a pipeline is pipelined is thus equal to the pipeline _depth_
+(the number of stages).
+
+Each of our five boxes is a _combinational_ circuit, but the clocked pipeline
+as a whole is a _sequential_ circuit.  To make this work, each box is followed 
+immediately on its right by a set of (nonISA) _pipeline registers_, which is
+called a "pipeline latch".  The basic requirement is this: Prior to the end of
+a clock cycle, all the results from a given stage must be stored in the
+pipeline latch to its right, in order that these values can be preserved
+across clock cycles, and used as inputs to the next stage at the start of the
+next clock cycle.
+
+Note: In this course, we may _pretend_ that pipeline boxes are combinational
+logic, but in the real world they are not _pure_ combinational logic.
+
+Also, it is reasonable to think of the boxes as combinational circuits that
+compute Boolean functions, and of the latches as complementary state elements
+that allow the pipeline to function as a finite state machine.
+
+Finally, there is a notion of _gap_, which is the number of stalls between two
+adjacent flow-dependent instructions; obviously, it depends on the identity of
+both the producer and the consumer instruction.
+
+Here are some examples.
+
+a) l.d f4,...  f d x m w
+   s.d f4,...    f d x m              gap = 0
+
+   l.d   f4,...    f d x m w
+   mul.d f6,f4,...   . f d x ...      gap = 1
+
+b) mul.d f6,...  f d x x x x n w
+   s.d   f6,...    . . f d x m        gap = 2
+
+   mul.d f6,...    f d x x x x n w 
+   mul.d f8,f6,...   . . . f d x ...  gap = 3
+
+
+From probst at cse.concordia.ca  Sat Oct 17 17:34:31 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Sat, 17 Oct 2020 17:34:31 -0400
+Subject: [comp5201-f20] Zoom link for Tuesday plus comment
+Message-ID: <202010172134.09HLYVOn001971@poise.encs.concordia.ca>
+
+
+DAVID K. PROBST is inviting you to a scheduled Zoom meeting.
+
+Topic: DAVID K. PROBST's COMP5201 Zoom Meeting
+Time: Oct 20, 2020 05:45 PM Montreal
+
+Join Zoom Meeting
+https://concordia-ca.zoom.us/j/83887519370?pwd=MXo1Vno3ZzlxYXlvYVJ6SGFtTWpyUT09
+
+Meeting ID: 838 8751 9370
+Passcode: 175555
+
+---
+
+We will spend considerable time on Tuesday going over the
+solutions to Assignment 1.  I am assuming the numeric grades
+are available for Moodle.  Obviously, it is in your interest
+to have a copy of your submission with you when we go through
+the solutions.
+
+TYPO: on Moodle.
+
+
+From probst at cse.concordia.ca  Tue Oct 20 17:22:34 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Tue, 20 Oct 2020 17:22:34 -0400
+Subject: [comp5201-f20] cache laws
+Message-ID: <5f8f551a.05F3NpeTKLq55lU9%probst@cse.concordia.ca>
+
+
+Fundamental Cache Equations
+___________________________
+
+Every cache is an array of _elements_.  What an element is, and how a
+cache-array index is computed from the relevant memory address, differ between
+two cache families.  Both families will be introduced.  However, the unit of
+data transfer between memory and cache, for both families, is the _line_.
+Memory is byte addressed, and a line contains some fixed number of bytes,
+chosen by the cache designer.  The cache equations below specify which lines
+--which might be called memory slices---are to be copied into which cache
+elements, i.e., which cache-array elements.
+
+Generally true (both families)
+______________
+
+0) byte number   = memory address `mod` the number of bytes
+                   in a line
+
+1) line number   = memory address `div` the number of bytes
+                   in a line
+
+2) element index = line number `mod` the number of elements
+                   in the cache
+
+3) tag value     = line number `div` the number of elements
+                   in the cache
+
+In a direct-mapped cache, the array elements are _frames_,
+but, in an m-way set-associative cache, the array elements
+are _sets_ of frames.
+
+When a line is copied from memory into the cache, it is,
+according to these equations, placed in one of the cache
+elements.
+
+Because many lines are mapped to the same element, a tag
+value is used to identify which line got copied.  This is
+required to be able to look up lines in caches.
+
+This is the punch line.  When you understand these equations,
+you understand how caches work.
+
+----
+
+I will rewrite the last two equations in a family-specific way.
+
+family 1: direct-mapped cache
+_____________________________
+
+2) frame index   = line number `mod` the number of frames
+                   in the cache
+
+3) tag value     = line number `div` the number of frames
+                   in the cache
+
+family 2: set-associative cache
+_______________________________
+
+2) set index     = line number `mod` the number of sets
+                   in the cache
+
+3) tag value     = line number `div` the number of sets
+
+
+From probst at cse.concordia.ca  Tue Oct 20 17:23:18 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Tue, 20 Oct 2020 17:23:18 -0400
+Subject: [comp5201-f20] lecture 8
+Message-ID: <5f8f5546.xT6W2v3g0GVOBkw3%probst@cse.concordia.ca>
+
+
+Lecture 8  Computer Organization and Design                    DKP/Fall 2020
+_________
+
+Current Status
+______________
+
+Killer micros live and die by their caches because, rightly or wrongly,
+they have always refused to add an effective complementary machanism,
+such as memory pipelining, to handle the problem of memory latency (the
+Memory Wall).  Over time, conventional cache designs have become quite
+elaborate, as more and more performance is demanded from them.  Since
+no human can possibly understand all the design trade-offs, we are
+forced to run many experiments to measure cache performance.  Killer
+micros are slowly giving way to new processor microarchitectures,
+specifically, chip multiprocessors (multicore).  However, the multicore
+revolution will succeed or fail, in large part, depending on the quality
+of new ideas for managing the on-chip and off-chip memory hierarchy.
+
+We will encounter many cache terms, including: cache, cache line, cache
+frame, cache hit, cache miss, hit rate, miss rate, direct-mapped cache,
+m-way set-associative cache, fully associative cache, LRU replacement,
+random replacement, temporal locality, spatial locality, tag field, hit
+time, valid bit, and associative memory.
+
+Note: Strangely enough, the term "cache line" produces the most confusion.
+
+The vast majority of today's processor caches are either i) direct mapped,
+ii) 2-way set associative, or iii) 4-way set associative.  However,
+increasing cache associativity (wayness) may be considered in some new
+microarchitectures---e.g., those that cannot tolerate conflict misses---
+within the limits of associative memory.  The greater size and power of
+associative memory normally leads to 2-way and 4-way set-associative
+caches being built using standard SRAMs and comparators, with 8-way and
+higher-way set-associative caches built using associative memory, which
+is considerably more expensive.
+
+Increasing the associativity increases the number of cache frames per set,
+which is also the number of parallel compares required to do an acceptably
+fast cache lookup.  The wayness is precisely the number of cache frames
+per set.  The number of cache sets is the total number of cache frames
+divided by the wayness.
+
+Thus, a direct-mapped cache is simply a 1-way set-associative cache: each
+cache set consists of a single cache frame.  In contrast, a fully
+associative cache with 'm' frames is simply an m-way set-associative
+cache: it has one set consisting of 'm' cache frames.  Again, the wayness
+is the number of cache frames per cache set.
+
+Example: Consider a cache with 4K cache frames.  If it is direct mapped,
+there are 4K sets with one frame per set.  If it is 2-way set associative,
+there are 2K sets with two frames per set.  If it is 4-way set
+associative, there are 1K sets with four frames per set.  And so on.
+
+Cache Rudiments
+_______________
+
+The conventional narrative of the utility and functioning of caches goes
+something like this:
+
+Given the steadily increasing mismatch between processor speeds and memory
+latencies, the need was felt from early on to have a "memory buffer"
+between high-performance CPUs and main memory.  Caches were perhaps the
+first memory buffers introduced for this purpose.  And, as the gap between
+processor and memory performance grew, multilevel caches became the norm.
+
+The goal of a memory hierarchy is to keep all of the code and data that is
+needed, presently and in the near future, close to the processor.  Ideally,
+this information should be reachable in a single cycle, and this dictates
+putting the cache on the processor chip.  However, the capacity of this
+on-chip SRAM memory must not be too large, because the time to access it is
+roughly proportional to its size.  For this reason, modern computers have
+multilevel caches, with the cache size increasing as we go down the cache
+hierarchy.
+
+Caches are appropriate when the memory-accessing pattern of a running
+program is _very far_ from random.  The most important kind of regularity,
+which is commonly referred to as _temporal locality_, is present in a
+program when the code and data used in the recent past is highly likely
+to be reused in the near future.  A second-order regularity, which is
+commonly referred to as _spatial locality_, is present in a program when
+the code and data currently in use is highly likely to be followed by the
+use, in the near future, of code and data at nearby memory locations (i.e.,
+at nearby virtual memory addresses).
+
+These two forms of regularity are indeed quite common, for almost all
+programs, in the memory-access patterns produced by the fetch-execute cycle.
+In sharp contrast, they are present in the memory-access patterns produced
+by the program sequence of memory references for only a _distinct subclass_
+of programs.  For this reason, there are few vexing issues surrounding
+I-caches (in either split or integrated caches).  In contrast, there are
+a number of vexing issues surrounding D-caches.  In all fairness to
+computer vendors, the distinct subclass of programs with exploitable
+regularities---the embarrassingly localizable programs---does constitute
+a _mass market_.  The problem is that this subclass is far from coextensive
+with computing as a whole, especially for new and emerging applications.
+
+Although we do not study parallel computing in an introductory course,
+when a parallel computer must maintain _cache coherence_ among the private
+D-caches of its processors, the problems multiply.  Cache coherence only
+makes the Memory Wall worse.
+
+Let us return our attention to sequential computing.  Consider an
+infinite-capacity D-cache.  Obviously, there is a cache miss the first time
+any particular datum is retrieved from memory, but, from that moment on,
+any time that datum is required, it is readily available from the cache.
+In an infinite-capacity D-cache, copies don't have _expiration dates_.  In
+the real world, however, some algorithms have extremely large working sets,
+and building a cache large enough to contain their working sets is simply
+impossible.  Thus, data items are brought in but, because of the size of
+the working set, their copies expire as they are flushed from the cache to
+make room for new data items, and this _before_ the algorithm needs to  
+reuse the copies of the original data items.  A simple observation is that
+caches are highly beneficial only for those programs whose working sets are
+sufficiently small.  Caches, not being infinite, simply cannot scale _in
+size_ to keep up with higher-performance processors executing algorithms,
+embedded in programs, with large working sets.  Only an infinitely large
+D-cache could be _general purpose_ in the sense of providing benefits to
+_all_ programs.
+
+Caches are much smaller than main memory so, at any moment, they contain
+only a tiny fraction of the executing program's code and data.  When the
+processor issues a memory reference, or the fetch-execute cycle initiates
+a memory access, a cache lookup is performed to determine whether the
+requested code or data item is present in the cache.  If so, we have a
+_cache hit_.  If not, we have a _cache miss_.  Cache hits lead to the rapid
+transfer of information from/to the cache to/from the pipeline (information
+flows in both directions between cache and pipeline just as information
+flows in both directions between memory and processor).  Cache misses
+cause us to recursively query the remaining levels of the cache hierarchy,
+and, in the worst case, make us perform a full memory access.  In the worst
+case, the time spent querying must be _added_ to the memory latency.
+
+For simplicity, in the following paragraphs, we focus on single-level
+D-caches only.
+
+Caches are high-speed buffers between main memory and the CPU.  Because
+their storage capacity is much less than that of main memory, there are
+five basic cache-design questions (we will add a sixth later):
+
+1) When a memory reference (load or store) leads to a cache miss, do we
+_automatically_ make a copy?  (the copy-decision problem)
+
+2) When a copy is made, how many bytes do we copy?  (the cache-line-size
+problem) 
+
+3) When we do make a copy, where do we put it?  (the placement problem)
+
+4) How do we determine whether a copy of a given data item exists?  (the
+lookup problem)
+
+5) What do we do if the cache is "full" (this has two meanings), and there
+is no room for a new data item we wish to bring in?  (the replacement
+problem)
+
+Later, we will consider:
+
+6) What happens on a write?
+
+---
+
+A simplified set of answers, for conventional cache design, is as follows:
+
+1) [Automatically?] We make a copy of a data item automatically whenever a
+memory reference for the item results in a cache miss (this is _demand_
+copying).
+
+Potential problems: No information is used by the cache about whether the
+data item will _ever_ be used again.  Moreover, no information is used by
+the cache about whether the program has _any_ interest in nearby memory
+locations.  The second comment concerns the _granularity_ of copies.
+
+2) [Granularity?] Say that the memory reference is to a memory word.  Then,
+we might copy just that word or we might copy a _sequence_ of contiguous
+words that contain the referenced word.  The amount that is copied is called
+a _cache line_.  If the cache line contains few words (say, 1 or 2), the
+cache line is _short_.  If the cache line contains many words (say, 16 or
+32), the cache line is _long_.  Cache designers who believe that all
+programs have spatial locality argue in favor of long cache lines.  Wiser
+computer architects argue in favor of short cache lines as part of a general
+policy to avoid mis-speculation in all its forms.
+
+3) [Placement?] The cache is divided into a number of _cache frames_.  We
+must have some policy to map memory locations into cache frames.  Some
+policies are tight and don't give us much choice; other policies are loose
+and give us more freedom.  We will discuss these policies in detail below.
+
+4) [Lookup?] In a real-world cache, each frame, which has some index
+position, contains a _tag field_ in addition to the data contents.  Whether
+a memory reference leads to a hit or a miss is determined by i) finding the
+right cache frame, and ii) checking the tag.  A variant of this lookup
+strategy is i) finding the right _set_ of frames, and ii) checking the tag
+of each frame in the set. 
+
+5) [Replacement?] If there is a cache miss, and the new data item
+_collides_ with a data item already in the cache, then one cache line (the
+_victim_) must be ejected to make room for the new data item.  Victim
+selection is determined by a replacement algorithm.  If the placement
+policy is tight, the victim may already be determined.  If the placement
+policy is loose, we have some choice as to which cache line should be
+evicted.  With a tight policy, you collide with some item that maps to the
+same frame you do.  This is a matter of _conflict_.  With a loose policy,
+you collide with a set of cache frames that is completely filled.  This is
+a matter of _capacity_.
+
+A cache is an array.  With the exception of the (somewhat theoretical)
+loosest placement policy, caches are addressed by indices.  When there is
+indexing, each cache entry contains a tag field consisting of some 
+high-order bits from the memory address of the copied data item.  We will
+see how the address is divided in just a moment.  The cache capacity is the
+product of the number of cache frames and the size of a cache line.  The
+tags are extra (in fact, they are overhead).
+
+Placement Policy
+________________
+
+There are a range of mapping (placement) policies.  If any cache line can
+be placed into any cache frame, then we have a _fully associative_ cache.
+If a cache line can only be placed in precisely one cache frame, then we
+have a _direct-mapped_ cache.  If a cache line can only be placed in
+precisely one _set_ of cache frames, then we have a _set-associative_ cache.
+
+Large fully associative caches are impractical.  To avoid a lengthy linear
+search in an m-way set-associative cache, which would be too slow, we must
+use either i) some number of comparators, or ii) an associative memory, for
+copy lookup.  An associative memory is an _alternative_ to an indexed array.
+Array elements are located, and retrieved, by indexing.  In contrast,
+elements of an associative memory are located, and retrieved, by
+simultaneously matching a searched-for key against _every_ key in the
+associative memory, which should be thought of as a sequence of <key,value>
+pairs.
+
+Distinct from circuits that simply add comparators to SRAM storage, an
+_associative memory_ is a specialized circuit that combines comparison and
+storage in a single device.  As a digital device, it is quite different from
+a circuit that simply does parallel compares with standard SRAMs and a set
+of comparators.  Associative memories for large 'm' exceed the cost and power
+budgets of m-way set-associative processor caches.  Another name for
+associative memory is _content-addressable memory_.
+
+The use of associative memories in caches (there is _some_) can be quite
+confusing because of the presence or absence of (implicit) cache-frame
+indices, which all real-world caches possess.
+
+We need one preliminary formula.  A cache line is a contiguous portion of
+memory.  All cache lines are of the same length.  Cache lines have
+identifying (0-indexed) numbers rather than names.  The formula for the
+cache-line number, which I often abbreviate as just the _line number_, is:
+
+0) (cache) line number = byte address `div` number of bytes per cache line
+
+This formula holds for all types of caches.  The differences are: 
+
+1) In a direct-mapped cache, a cache line is mapped into the cache frame
+whose index is:
+
+cache-frame number = (cache-line number) modulo (number of cache frames)
+
+Say the cache-line number is 'n' bits long, and there are 2^k cache
+frames.  Then the low-order 'k' bits of the cache-line number determine
+the cache frame.  Obviously, many cache lines map into the same cache
+frame.  They are distinguished by the remaining 'n-k' bits, which are
+stored as a tag field in the cache frame.  To look up a cache line, we
+i) compute the cache-frame number, and ii) compare the tag field (the
+'n-k' bits) with the high-order bits of the address, or number, of the
+cache line.  The cache-frame number is an _index_.  We also need a valid
+bit which indicates whether the cache frame contains genuine data or
+garbage.
+
+2) An m-way set-associative cache consists of a number of frame sets, each
+of which consists of 'm' frames.  Example: A 32-way set-associative cache
+with 4,096 cache frames would give rise to 2^7 sets each containing 2^5
+frames.  During lookup, we would match 32 tags in parallel (this would
+require an associative memory).  Each cache line maps to precisely one of
+the 2^7 sets.  Instead of indexing frames, we now index _sets_ of frames.
+
+In an m-way set-associative cache, a cache line is mapped into the cache
+set whose index is:
+
+cache-set number = (cache-line number) modulo (number of cache sets)
+
+Say the cache-line number is 'n' bits long, and there are 2^k cache sets.
+Then the low-order 'k' bits of the cache-line number determine the cache
+set.  Obviously, many cache lines map into the same cache set.  They are
+distinguished by the remaining 'n-k' bits, which are stored as a tag field
+in _each_ occupied cache frame in the cache set.
+
+To look up a cache line, we i) compute the cache-set number, and ii)
+compare all 'm' tag fields ('m' times 'n-k' bits) with the high-order bits
+of the address, or number, of the cache line.  The cache-set number is an
+_index_.  We also need valid bits which indicate whether each cache frame
+in the set of 'm' frames contains genuine data or garbage.
+
+3) In a fully associative cache, there is effectively only one set.  This
+means that there are _no indices_.  To look up a cache line in a fully
+associative cache with 2^k cache frames, each tag field is the whole n-bit
+line number, there is no index field, and we must match the line number we
+seek, in parallel, against all 2^k stored tags.  We also need valid bits
+which indicate whether each cache frame contains genuine data or garbage.
+
+Caution: There are no fully associative processor caches.  How would one
+implement such a beast?
+
+Could we use an associative memory to do this?  Associative memories are
+nontrivial circuits, in more ways than one.  For this reason, 2-way and
+4-way set-associative caches are typically built from standard SRAMs and
+comparators, while 8-way and higher-way set-associative caches are built
+using associative memories.  But associative memories: i) are six times
+more expensive than SRAMs, ii) consume much more power, and iii) are
+difficult to modify.  As a practical matter, in a cache context, one
+simply does not build associative memories with more than 128 entries.
+An associative memory cannot be used to implement a normal-sized fully
+associative processor cache for the simple reason that such caches have
+far more than 128 entries.
+
+An associative memory, in contrast, could well be a component in, say, a
+16-way set-associative cache.  Presumably, we would need one 16-element
+associative memory _per cache set_ to handle cache lookup in each indexable
+cache set of 16 cache frames.  This is not absurd because 16 is much less
+than 128.  It would have to be an unusual processor to require that much
+wayness.  But a 2,048-way set-associative cache would be _totally_ absurd.
+
+Note: It is not large associative memories themselves that are impractical.
+A processor cache has a strict cost, power, and hit-time budget.  Large
+associative memories fall outside this budget.  That doesn't stop large
+associative memories from being quite successfully used in, say, network
+routers.
+
+Example: A computer has a byte-addressable memory and 32-bit memory
+addresses.  A cache line contains 64 bytes.  A  cache-line number
+is therefore 26 bits long.
+
+Example: A computer has a 40-bit line number and a direct-mapped cache
+with 4K frames.  The frame number is therefore 12 bits long and the tag
+field is 28 bits long.
+
+Example: A computer has	a 40-bit line number and a 4-way set-associative
+cache with 4K frames.  The set-index number is therefore 10 bits long and
+the tag field is 30 bits long.  In general, increasing the wayness by a
+factor of 2 decreases the size of the index by 1 bit and increases the
+size of the tag by 1 bit.
+
+Replacement Policy
+__________________
+
+In an m-way set-associative cache, when there is a cache miss, the indexed
+set of 'm' frames may be full.  To make room for a new cache line, a
+victim line must be selected from the set.  The best scheme is _least
+recently used_ (LRU): Replace that cache line that has been unused for the
+longest time.  If you don't want to pay for the bookkeeping, use _random_
+replacement.  I have heard a suggestion that a cache twice as large with
+random replacement has a miss rate equal to the smaller cache with LRU.
+
+Write Policy
+____________
+
+Consider a store instruction.  If we wrote only into the D-cache, the
+cached copy would differ from the memory original.  We could use _write
+through_ and write the data into both the memory and the cache.  This
+typically has poor performance.  The alternative to write through is
+_write back_.  When a write occurs, the new value is written only to the
+line in the cache.  The modified line is written to the next lower level
+of the hierarchy, which we will always take to be the main memory, when
+it is replaced.  Unmodified lines are simply evicted from the cache when
+they are replaced.
+
+Three C's
+_________
+
+It is useful to classify cache misses into three categories:
+
+1) _Compulsory_ misses occur the first time a cache line is referenced.
+
+2) _Conflict_ misses occur when more than 'm' cache lines compete for
+the same cache frames in an m-way set-associative cache.
+
+3) _Capacity_ misses occur when the working set of the program is too
+large for the cache, even if i) the cache is fully associative, and 
+ii) optimal cache-line replacement is used.
+
+Example: Consider a 1-way set-associative cache (direct-mapped cache).
+If a cache line maps to cache frame 'f', but frame 'f' is occupied by
+another line, then that is a conflict miss.  More precisely, it is a
+conflict miss unless it is a compulsory miss (we check membership in
+the three categories in order).
+
+Example: Consider a 4-way set-associative cache.  If a cache line maps
+to cache set 's', but set 's' is occupied by 4 lines different from the
+line we are looking up, then that is a conflict miss.  The remark about
+checking in order still applies.
+
+Example: Consider a 4-way set-associative cache with 4K cache frames.
+This is 1K sets with 4 frames per set.  Now, double the cache size to
+8K frames.  This is 2K sets with 4 frames per set.  A cache line that
+missed in the smaller cache but hit in the larger cache _appears_ to
+count as a capacity miss.  But order still matters.  That is, a cache
+line that missed in the smaller cache and was categorized as a conflict
+miss would not count as a capacity miss.  Technically, a capacity miss
+requires a fully associative cache, but doubling the cache size did
+make conflict misses half as likely.
+
+Cache-Performance Equations
+___________________________
+
+A. Expected/average/effective memory-access time:
+
+tbar = cache-hit time + miss rate * memory latency
+
+B. Effective memory bandwidth:
+
+effective memory bandwidth = actual delivered operand bandwidth/
+                             miss rate
+
+The first formula calculates the average time to access memory.
+
+The second formula shows the amount of _bandwidth amplification_
+as a function of miss rate.
+
+Little's law reminder
+_____________________
+
+The actual delivered operand bandwidth is the minimum of:
+i) the memory-reference concurrency divided by the memory latency, and
+ii) the hardware bandwidth (the physical upper limit on bandwidth).
+
+Since Little's law is applicable only in steady-state conditions, we may
+observe that concurrency/latency also equals the memory-request bandwidth.
+
+Little's law quantifies the performance benefit of all forms of pipelining,
+from 'fdxmw' pipelines to memory pipelines.
+
+Conclusion
+__________
+
+If a program with a high degree of data reuse runs on a computer with a
+cache, then the cache will be used _temporally_.  If a program with a high
+degree of contiguous, sequential memory accessing runs on a computer with
+long cache lines, then the cache will be used _spatially_.  (A cache with
+single-word cache lines cannot be used spatially).
+
+The principle of _value locality_ is simple:
+
+Hierarchically, using any mechanism you can think of, minimize the wire
+distances that values travel to reach the arithmetic operations that they
+are operands of.
+
+Equivalently, avoid long-range communication whenever possible.
+
+Caches used temporally are one mechanism that can minimize the wire
+distances that values travel to reach the arithmetic operations that need
+them.
+
+Loading a value into the processor from remote memory incurs an enormous
+wire-distance cost, but reusing the value amortizes this cost since cache
+accesses have small wire-distance cost.  Similarly, writing a value into
+the cache and then using the value has a low wire-distance cost, viz., two
+cache accesses.  These are the two ways caches are used temporally.  Note
+that registers can _only_ be used temporally.
+
+Caches are used spatially when a cache miss for a word automatically causes
+the speculative prefetching of a multiword cache line.  A cache used
+spatially does not minimize the wire distances that values travel (the 'n'
+words loaded into the cache travel the same distances over the same wires
+as they would if they were loaded separately).  More precisely, the memory 
+pipelining in cache-line prefetching has some positive effect because it
+tolerates (some) memory latency, but it reduces neither the bandwidth
+requirements nor the power consumption.
+
+In simple English, long cache lines are a parallelism (latency-tolerating)
+trick, not a locality (latency-avoiding) trick.
+
+Speculative prefetching of multiword cache lines is a form of parallelism
+in which the entire line is obtained by memory pipelining.  The amount of
+parallelism is the length of the cache line.  This parallelism tolerates
+some of the latency of accessing local memory.  But so little---the
+concurrency is 16 or 32, not 400 or 500---that it does not really deserve
+the name of "memory pipelining".
+
+
+From probst at cse.concordia.ca  Wed Oct 21 17:49:57 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Wed, 21 Oct 2020 17:49:57 -0400
+Subject: [comp5201-f20] final-exam time and date
+Message-ID: <5f90ad05.7Y48frDUzWpt1XwG%probst@cse.concordia.ca>
+
+
+Hi Dr. Probst,
+
+Not a problem! 
+
+...
+
+I have you marked down for the following:
+
+COURSE:    COMP5201
+
+DAY:       December 15, 2020 (Tuesday)
+
+TIME:      7:00 - 10:00 p.m.
+
+PROFESSOR: David K. Probst
+
+PLATFORM:  Not yet specified (probably Moodle) 
+
+PROCTORED: No
+	
+Thanks!
+
+Sarah
+
+
+From probst at cse.concordia.ca  Wed Oct 21 18:01:47 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Wed, 21 Oct 2020 18:01:47 -0400
+Subject: [comp5201-f20] synopsis of solution set used in grading Ass. 1
+	(everything correct)
+Message-ID: <202010212201.09LM1lu1016751@poise.encs.concordia.ca>
+
+
+a) On a uniprocessor, serial portion A of program P consumes x% of the time,
+while parallel portion B consumes the remaining (100 - x)%.  On a parallel
+computer, portion A speeds up by a factor of 1.5, while portion B speeds up
+by the number of processors.  The theoretical maximum speedup is 200 times.
+How many actual processors are needed to achieve at least 75% of the maximum
+speedup?  How many actual processors are needed to achieve at least 90% of
+the maximum speedup?
+
+ - at least 75% of the maximum speedup:               P = ________ processors
+* 595.5 ==> 596
+ - at least 90% of the maximum speedup:               P = ________ processors
+* 1,786.5 ==> 1,787
+
+
+---
+
+I used the wrong factor in class Tuesday (text written Tuesday morning),
+but the solution method in both cases is identical.
+
+The marker finished his work long before any of this.
+
+Moral of the story: Nothing to write home about.
+
+
+From probst at cse.concordia.ca  Mon Oct 26 23:12:21 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Mon, 26 Oct 2020 23:12:21 -0400
+Subject: [comp5201-f20] Zoom link for Tuesday's class
+Message-ID: <5f979015.3QlxD/ZacdYCOjKi%probst@cse.concordia.ca>
+
+
+DAVID K. PROBST is inviting you to a scheduled Zoom meeting.
+
+Topic: DAVID K. PROBST's COMP5201 Zoom Meeting
+Time: Oct 27, 2020 05:45 PM Montreal
+
+Join Zoom Meeting
+https://concordia-ca.zoom.us/j/87467290145?pwd=cjdtNnhjRStocFBucHU3VWl3MGxHUT09
+
+Meeting ID: 874 6729 0145
+Passcode: 492298
+
+---
+
+This is logical week 8, one week before our midterm.
+
+We have Assignment 2 to go over, as well as review.
+
+Rules for the midterm will be given.
+
+We have left Daylight Savings Time.  We must all have
+the same time for tomorrow, and for next week.
+
+
+From probst at cse.concordia.ca  Tue Oct 27 07:01:21 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Tue, 27 Oct 2020 07:01:21 -0400
+Subject: [comp5201-f20] time change is this Sun, Nov 1, not yet on Tue,
+	Oct 27
+Message-ID: <202010271101.09RB1LZl031941@poise.encs.concordia.ca>
+
+
+From probst at cse.concordia.ca  Tue Oct 27 16:51:21 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Tue, 27 Oct 2020 16:51:21 -0400
+Subject: [comp5201-f20] textual material for the eighth class (Oct 27)
+Message-ID: <5f988849.NE6wl/E9wX0Y4yyx%probst@cse.concordia.ca>
+
+
+Notes for the Eighth Lecture  (Tues, Oct 27)
+____________________________
+
+** NOT FOR PUBLICATION **     Assignment 2 solutions
+
+1. [24 marks] Digital Logic.
+
+a) 'X' is the ternary connective such that 'Xpqr' is logically equivalent to
+'p /\ (p + q + r)'. '+' is 'xor'.  'F' and 'T' denote the 0-ary connectives
+'false' and 'true', respectively.  Whenever possible, put sentence letters in
+alphabetical order, and put sentence letters before any 0-place connective.
+
+Note: "sentence letters", i.e., 'p', 'q', 'r', ...
+
+Note: 'p + q + r' is a famous connective: ternary odd
+
+Using {'X', 'F', 'T'}, synthesize:                  ~p |= =| X ____ ____ ____
+* X T p F
+Using {'X', 'T'}, synthesize:                   p /\ q |= =| X ____ ____ ____
+* X p q T 
+Using {'X', '~', 'T'}, synthesize:         p \/ q |= =| ____ X ____ ____ ____
+* ~ X (~p ~q T)
+
+1. p /\ (p + q + r)
+
+   guess T p F
+
+   T /\ (T + p + F) |= =| ~p
+
+2. p /\ (p + q + r)
+
+   guess p q T
+
+   p /\ (p + q + T) |= =| p /\ q
+
+3. ~(p /\ (p + q + r))
+
+   guess ~ ~p ~q T
+
+   ~(~p /\ (~p + ~q + T)) |= =| ~(~p /\ (~p /\ ~q)) |= =| ~(~p /\ ~q))
+   |= =| p \/ q
+ 
+b) 'Y' is the ternary connective such that 'Ypqr' is logically equivalent to
+'p /\ (q <--> r)'.  'p <--> q' is true iff 'p' and 'q' have the same truth
+value.  'F' and 'T' denote the two 0-ary connectives 'false' and 'true',
+respectively.  Whenever possible, put sentence letters in alphabetical order,
+and put sentence letters before any 0-place connective.
+
+Using {'Y', 'F', 'T'}, synthesize:                  ~p |= =| Y ____ ____ ____
+* Y T p F
+Using {'Y', 'F', 'T'}, synthesize:              p /\ q |= =| Y ____ ____ ____
+* Y p q T
+Using {'Y', '~', 'F'}, synthesize:          p \/ q |= =| ___ Y ____ ____ ____
+* ~(Y ~p q F)  or  ~(Y ~p p q)
+
+1. p /\ (q <--> r)
+
+   guess T p F
+
+   T /\ (p <--> F) |= =| ~p
+
+2. p /\ (q <--> r)
+
+   guess p q T
+
+   p /\ (q <--> T) |= =| p /\ q
+
+3. p /\ (q <--> r)
+   
+   guess ~ ~p q F
+
+   ~(~p /\ (q <--> F)) |= =| ~(~p /\ ~q) |= =| p \/ q
+
+   there is one other solution
+
+2. [16 marks] Binary and Hexadecimal Numbers.
+
+Convert each of the following six binary or hexadecimal natural numbers into
+decimal.  Show work.
+
+a) Binary numbers: 1111, 1111 1110, 1111 1110 1101 0111
+* 15 = 8 + 4 + 2 + 1; 254 = 15 * 16 + 14; 65,239 = 254 * 16^2 + 215
+
+b) Hexadecimal numbers: af, afba, afba 51de
+* 175 = 10 * 16 + 15; 44,986 = 175 * 16^2 + 186;
+* 2,948,223,454 = 44,986 * 16^4 + 20,958
+
+3. [25 marks] Fractional Numbers and Blackboard Notation.
+
+Infinite binary expansions of rational numbers are either pure recurring or
+mixed recurring depending on whether the cycle starts immediately after the
+point.
+
+Note: cute trick to make '*' a superscript
+
+a) [math] Show the infinite binary expansion of 6 4/9 without normalization.
+* 6 4/9 = 110.(011100)^*
+
+Note: squarebrackets for hexadecimal, much of the time
+
+b) [math] Show the infinite binary expansion of 6 4/9 in hexadecimal without
+normalization.
+* 6 4/9 = 6.[71c]^*
+
+c) [math] Show the infinite binary expansion of 6 4/9 with normalization.
+Include the scale factor, and use a decimal exponent.  (This is a _scaled_
+binary expansion).
+* 6 4/9 = 1.10(011100)^* * 2^2
+
+d) [math] Show the normalized infinite binary expansion of 6 4/9 in
+hexadecimal.  Include the scale factor, and use a decimal exponent.
+* 6 4/9 = 1.9[c71]^* * 2^2
+
+e) Show the finite normalized binary blackboard notation that represents
+6 4/9.  The fractional field is 16 bits.  Show all 16 bits.  Now, show just
+the 16-bit (4-hexit) fractional field in hexadecimal.
+* 6 4/9 = 1.10(011100)^* * 2^2 ==> 1.1001110001110001 * 2^2
+* frac. field = [9c71]
+
+4. [15 marks] Integer Multiplication I.
+
+a) Multiply the following 10-bit binary natural numbers.  The multiplicand
+is 10011 11100 ([27c]) and the multiplier is 11010 ([1a]).   Show, all in
+hexadecimal, i) the initial value of the accumulator, and ii) each term
+added to the accumulator, and iii) the partial sum after the addition.
+The last addition yields the final value.
+* 0           +
+* 4f8  =  4f8 +               E.g., 27c * 2 = 4f8
+* 13e0 = 18d8 +
+* 27c0 = 4098 <final value>
+
+b) Redo the multiplication steps exactly as in question 4 a), but initialize
+the accumulator to s = 11011 ([1b]) instead of 0.  Show the same intermediate
+and final values.  (This is called "fused multiply-add"). 
+* 1b          +
+* 4f8  =  513 + 
+* 13e0 = 18f3 +
+* 27c0 = 40b3 <final value>
+
+5. [20 marks] Integer Multiplication II.
+
+a) First, show that, regardless of the initial n-bit value of the accumulator,
+the fused multiply-add result of two n-bit natural-number operands is always
+representable in 2n bits.  Second, starting from the largest possible FMA
+result, what is the largest n-bit number that can _still_ be added without
+producing overflow?  Third, if n = 16, what is this largest n-bit number?
+
+* square '2^n - 1'; show that this is less than '2^2n - 1'
+* what is the difference between the two?
+* so, '????' can still be addded
+* when n = 16, this number is 65,535
+
+b) A modular-adder device 'M' operates with 16-bit registers.  You give it
+two 16-bit natural numbers 'a' and 'b'.  It adds them, divides by 2^16,
+keeps the quotient 'q' a secret, and publishes the remainder 'r'.  Hint:
+Before answering, experiment with small addition tables.
+
+i)  If a = 31,465 and r = 53,576, what are 'b' and 'q'?
+* b = 22,111; q = 0
+
+ii) If a = 35,492 and r = 11,087, what are 'b' and 'q'?
+* b = 41,131; q = 1
+
+Review for the Midterm
+______________________
+
+Lecture 1
+
+ - interconnection network
+
+ - bandwidth (e.g., 24 GBs/s)  Note: I'm a power-of-ten kind of guy 
+
+ - peak and sustained (I doubt many people grasp this distinction)
+
+ - RISC processors are similar; programs are different
+
+ - arithmetic intensity (e.g., 8 Fs/B)
+
+ - multicore
+
+ - feeding FPUs with data is expensive, not the FPUs themselves
+
+ - latency
+
+ - I-cache, D-cache, register file (RF)
+
+ - fetch-execute cycle
+
+ - branching
+
+ - MIPS
+
+Lecture 2
+
+ - datapath plus control circuitry
+
+ - introduction to boxes
+
+ - Moore's Law
+
+ - Amdahl's Law
+
+ - signed and unsigned numbers
+
+ - two's complement
+
+ - error detection (very foggy)
+
+ - does a number fit in a register?
+
+ - negation
+
+ - moving bit patterns into large registers
+
+ - representing _bit patterns_ in hexadecimal notation
+
+ - hexadecimal arithmetic
+
+Lecture 3
+
+ - fixed-point numbers
+
+ - range, precision
+
+ - converting rationals into binary expansions
+
+ - blackboard notation
+
+   1/3 = 0.(01)^*  unnormalized
+
+   1/3 = 1.(01)^* * 2^-2 normalized
+
+   1/3 = 1.[5]^* * 2^-2 coefficient in hexadecimal
+
+   binary blackboard examples:
+
+   indefinite: 1.(01)^* *2^-2
+
+   definite:   1.01010101 * 2^-2 (8-bit fractional field)
+
+   hexadecimal versions:
+
+   indefinite: 1.[5]^* * 2^-2
+
+   definite:   1.[55] * 2^-2 (8-bit fractional field)
+
+   - floating-point numbers (sign, exponent, coefficient, special values)
+
+   - instruction formats (opcode, register designator, immediate)
+
+   - different 'immediate' semantics in memory references and conditional
+     branches
+
+Lecture 4
+
+ - combinational circuits
+
+ - sequential circuits
+
+ - sentential logic (propositional calculus)
+
+ - table of binary connectives
+
+ - the two 0-ary connectives, _badly_ typed as 'F' and 'T'
+
+ - k-place Boolean functions
+
+ - connecting gates to form circuits
+
+ - symbiosis between state elements and combinational logic
+
+ - half adder, full adder
+
+ - ternary names for sum and c_out (cuter)
+
+ - computer arithmetic
+
+ - the synthesis game
+
+Lecture 5
+
+ - RISC design philosophy
+
+ - Little's Law
+
+ - pipelines
+
+ - detailed descriptions of pipeline-box tasks
+
+ - boxes and latches
+
+ - stalls
+
+ - space-time diagrams (your professor's dot notation)
+
+ - forwarding (the ever-flowing river)
+
+ - multicycle operations
+
+ - load stalls
+
+ - branch stalls
+
+<end of review>
+
+
+
+
+
+
+
+
+From probst at cse.concordia.ca  Tue Oct 27 23:20:29 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Tue, 27 Oct 2020 23:20:29 -0400
+Subject: [comp5201-f20] midterm rules _will_ be provided to you
+Message-ID: <202010280320.09S3KTi6003421@poise.encs.concordia.ca>
+
+Tonight was review.
+
+I wanted to keep the class focused on one thing.
+
+I will spell out the midterm rules in great detail in
+a Mailman post.
+
+You will be downing in rules.
+
+By the way, for the most part, I prefer when students 
+_don't_ show their work.
+
+TYPO: drowning
+
+However, I never forbid students from doing things--I am
+a libertarian---with the exception of sending me MS
+Word.
+
+
+Trust me.  I'll get the rules to you soon.
+
+
+From probst at cse.concordia.ca  Wed Oct 28 17:26:55 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Wed, 28 Oct 2020 17:26:55 -0400
+Subject: [comp5201-f20] rules for the midterm
+Message-ID: <5f99e21f.TGfhYz/NkPLzye1B%probst@cse.concordia.ca>
+
+
+How I will conduct the midterm
+______________________________
+
+I am going to use both Moodle and my school email to conduct our open-book
+midterm exam.  You will receive the exam questions from me by email shortly
+before 5:45 p.m. on Tuesday, November 3.  You will answer on a separate
+answer sheet, which I am sending you today.  You must, prior to 7:00 p.m.,
+return two copies of the _plaintext_ answer sheet.  One is to be uploaded
+to Moodle---Salah will open a session, just as if it were a new homework,
+and he will give you further instructions.  This constitutes the legal,
+archived copy.  The other is to be sent to me as a plaintext email prior to
+7:00 p.m.  Both these actions are required.
+
+Type the answers left justified on the answer sheet.  The question document
+has a different format, and is truthfully more suitable for pen answers.  Use
+the format of the answer sheet!  As you type answers, the length of the answer
+sheet may grow.  That is O.K.
+
+Unless I ask, I normally do _not_ want to see your work.  However, I do not
+forbid you from showing me your work.  I doubt it will have much impact on
+partial marks.
+
+Students with special conditions must deal with me separately.
+
+You cannot change your answers once you have submitted.  I want two identical
+copies of one set of answers.
+
+I will probably be on-line during the exam.  Please feel free to email me
+during the exam.
+
+There is a tiny bit more notation (explained on the exam) that I will write
+to you about.  But not today.
+
+How do you fill out the answer sheet?  In a text editor.  Your sheet---you
+can type your name, id, etc., now---will look like:
+
+1. a) unicorn
+
+   b) 17
+
+....
+
+I think that covers it.
+
+
+From probst at cse.concordia.ca  Wed Oct 28 17:28:40 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Wed, 28 Oct 2020 17:28:40 -0400
+Subject: [comp5201-f20] answer sheet for midterm
+Message-ID: <5f99e288.UIGz5bwFslDVsyJc%probst@cse.concordia.ca>
+
+
+CODE: zebrafish5               FILE NAME: answers.txt (plaintext file)
+
+Full Name:                     ID:
+
+---
+
+1. a)
+
+   b)
+
+   c)
+
+---
+
+2. a)
+
+   b)
+
+   c)
+
+   d)
+
+---
+
+3. a)
+
+   b)
+
+   c)
+
+   d)
+
+---
+
+4. a) <no answer goes here>
+
+   i)
+
+   ii)
+
+   b) <no answer goes here>
+
+   iii)
+
+   iv)
+
+---
+
+5. a)
+
+   b)
+
+   c)
+
+   d)
+
+---
+
+Upon my sacred honor, I swear I have not cheated on this test.
+
+(signed) <type your name>
+
+
+From probst at cse.concordia.ca  Thu Oct 29 12:09:21 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Thu, 29 Oct 2020 12:09:21 -0400
+Subject: [comp5201-f20] simple repetition notation
+Message-ID: <5f9ae931.aTW/1Mj8RrF8c6Dc%probst@cse.concordia.ca>
+
+
+Two Notations for Repetition
+____________________________
+
+Sometimes when you put an integer into a large register, you pad on
+the left with a large number of identical digits.  For example, put
+1 into a 128-bit register.  You could describe this as:
+
+ - a lot of zeros followed by a one, or
+
+ - 127 zeros followed by a one, or
+
+ - 0^*1, or
+
+ - 0*1 (for students violently allegic to circumflexes)
+
+I call this "indefinite-repetition" notation.
+
+Sometimes when you put an infinite fractional expansion into a
+finite fractional field, you want to _count_ the number of times
+a cycle repeats.  For example, 1 1/5 = 1.(0011)^* = 1.[3]^*.  Put
+this into a register with a 48-bit fractional field.  You could
+describe the fractional field as:
+
+ - [333333333333], or
+
+ - [3]:12
+
+I call this "definite-repetition" notation.
+
+Equally, 1.[354]^* would give a frac. field of [354]:4
+
+
+From probst at cse.concordia.ca  Fri Oct 30 17:55:43 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Fri, 30 Oct 2020 17:55:43 -0400
+Subject: [comp5201-f20] addition to review topics
+Message-ID: <202010302155.09ULthZA003263@poise.encs.concordia.ca>
+
+In my review, I should have spent a little time going over
+the IEEE floating-point standard.  There is a lot to
+learn.                                   isn't
+
+Just remember how the sign bit, the exponent, and the
+coefficient are encoded once you know the size of the
+register.
+
+You should be receiving some Moodle information shortly.
+
+All of our rules apply to regular students not subject
+to special conditions.  I will handle these students
+personally.
+
+
+From probst at cse.concordia.ca  Sat Oct 31 15:29:35 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Sat, 31 Oct 2020 15:29:35 -0400
+Subject: [comp5201-f20] Moodle information and midterm reminders
+Message-ID: <5f9dbb1f.f0EIAijjRuCtTvW0%probst@cse.concordia.ca>
+
+
+Moodle news
+___________
+
+1) A Moodle session has been created, called "COMP5201 Midterm Exam
+Submission Session".  Now, that's a mouthful!
+
+I am told that you know how to upload.  Moodle is the place where _one_
+copy of your plaintext answer sheet is to go.  Do not bother the marker;
+he is not running the exam.  He is not the recpient of your answer sheet.
+He is only responsible for properly configuring the Moodle session.
+
+2) Please respect the 7:00 p.m. cutoff time for submitting to Moodle.
+You may panic and/or the Internet may crash, causing you to be one minute
+late.  But don't think that this is not a hard deadline.  Legally, I
+have the authority to reject late submissions.  But a 7:01 p.m.
+submission is a much better bet than no submission.
+
+3) For God's sake in Heaven above, do not submit Microsoft Word or
+pdf or HTML or MP4 video.  This is a _plaintext_ exam.
+
+4) Also prior to 7:00 p.m., you must mail me one _plaintext_ copy
+of your answer sheet, which must match your Moodle submission.  I hope
+you know how to send plaintext email.  In extremis, open an email
+session, and use cut and paste.
+
+5) Put your name and ID on your answer sheet.  To aid computer searching,
+Germans and Hungarians are asked to forego their beloved umlauts.  This
+applies to Swedes, etc., who are also quite attached to their diacritical
+marks.
+
+6) Your answer sheets were designed for left-justified answers.
+
+  1.
+
+  a) fish
+
+  b) bird
+
+  c) Boeing 747
+
+7) No student is forbidden from showing his or her work, but this is
+neither required nor encouraged.  Unless it says: "Show work".
+
+8) You will receive the questions by email just before 5:45 p.m.
+(no longer Daylight Savings Time).  On Sunday, fall back!
+
+
+From probst at cse.concordia.ca  Sat Oct 31 16:07:11 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Sat, 31 Oct 2020 16:07:11 -0400
+Subject: [comp5201-f20] Zoom link for Tuesday's Nineth Zoom Half-Meeting
+Message-ID: <5f9dc3ef.tSR2lVRut6tWvz2R%probst@cse.concordia.ca>
+
+
+Link 9 (Tue, Nov 3)
+______
+
+DAVID K. PROBST is inviting you to a scheduled Zoom meeting.
+
+Topic: DAVID K. PROBST's COMP5201 Zoom Half-Meeting
+Time: Nov 3, 2020 07:15 PM Montreal
+
+Join Zoom Meeting
+https://concordia-ca.zoom.us/j/81915128327?pwd=dmVjTlE5ZVR1bFhPRWkrVlBnQTF2dz09
+
+Meeting ID: 819 1512 8327
+Passcode: 667768
+

@@ -1,0 +1,1330 @@
+From probst at cse.concordia.ca  Wed Sep  2 16:48:32 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Wed, 02 Sep 2020 16:48:32 -0400
+Subject: [comp5201-f20] assignment 3
+Message-ID: <5f500520.aKsC9m8JccMGQYAg%probst@cse.concordia.ca>
+
+
+Name: ___________________                                     ID: ____________
+
+COMP5201                       Assignment 3                          Fall 2020
+Computer Organization & Design                               Prof. D.K. Probst
+Issued: October 20, 2020                                           Due: T.B.A.
+Submit the file {source + output} electronically.  No extension will be
+granted. 
+
+Write a simulator for the nonpipelined 'fdxmw' data path that can handle
+'mul.d', 'add.d', 'l.d', 's.d', and 'bne'---in a restricted form---but none of
+the other instructions such as 'addi', 'subi', and 'mul'.  In large part, this
+assignment is simple coding of the box job descriptions in Lecture 5 plus
+knowledge about how instructions are laid out.  
+
+You are given a template of the simulator below.  Points of interest are the
+following:
+
+1) There are ten registers in the register file.  While I pretend that some
+are f-registers and some are r-registers, in the simulation they are all
+simply integer registers, namely, Reg : 'array'[0..9] 'of' integer; .
+
+2) The object code for the test program has already been generated and
+stored in memory for you.  Recall the instruction formats from Lecture 3.
+
+3) Each of the five boxes generates data/control for subsequent boxes.
+Each time a useful result is generated, both write code to generate that
+result, and indicate having done so with a print statement.  To avoid chaos,
+stick with the variable names appearing in the template.  Example: The global
+d-box variables are 'opc', 'D_Out1', 'D_Out2', 'dreg', and 'sval', while the
+local variables are 'arg1', 'arg2', and 'arg3'.  Note that updating the
+register file, updating the memory, or making a branch decision, is a useful
+result, and deserves a print statement.
+
+4) 'bne' has special emulation rules.  If the branch is not taken, continue
+with the next instruction.  If the branch is taken, skip all remaining
+instructions, and terminate the program normally.
+
+5) Although the template code uses case statements, this is not required.
+It is, however, easier to code and to read.  
+
+6) In the code, register designators are decimal digits.  For example, f2
+is really just 2 (the print statements tell white lies!).
+
+7) Full output for the first instruction is shown to give you some idea
+of what kind of output is expected.
+
+8) Submissions must contain all source code and all output (as an appended
+comment) in a _single_ machine-readable ASCII text file.  A formal
+submission requires electronic transmission of the text file to a system
+to be designated.  Call it "Programming Assignment 3".
+
+9) If a box does nothing, print "<box name>: Did nothing."
+
+---
+
+/*
+
+  l.d   f2,4(r1)                            // program to be  
+  l.d   f4,8(r3)                            // simulated;
+  mul.d f6,f2,f4                            // no pipelining
+  add.d f8,f4,f6
+  bne   r5,r5,target
+  s.d   f6,8(r3)
+  s.d   f8,4(r5)
+  bne   r7,r9,target
+  l.d   f2,8(r7)
+  s.d   f2,8(r7)
+target:
+
+*/
+
+#include <iostream>  // for std::cout
+
+int main () {
+  // all submissions must contain this prelude, or equivalent
+
+  // register file
+  int Reg[10];
+  Reg[1] = 105; Reg[3] = 203; Reg[5] = 301; // r-register values
+  Reg[7] = 148; Reg[9] = 156;
+
+  // main memory
+  int  Mem[500];
+  char XMem[] = "llmabssbls";               // ten opcodes, and
+  Mem[0] = 124; Mem[1] = 348; Mem[2] = 246; // their ten argument
+  Mem[3] = 468; Mem[4] = 550; Mem[5] = 368; // lists
+  Mem[6] = 584; Mem[7] = 790; Mem[8] = 728;
+  Mem[9] = 728;
+
+  Mem[109] = 19; Mem[156] = 25;             // memory values
+  Mem[211] = 43;
+
+  bool branch;                              // for bne results
+  std:: cout << "\n";                       // blank line
+
+  // loop over instructions; pretend next instruction is at PC + 1
+  for( int PC = 0; PC < 10; PC++ ) {
+
+    // f-box
+    char head = XMem[PC];
+    int  tail = Mem[PC];
+    std::cout << "f: Fetched instruction: " << head << "|" << tail << ".\n";
+
+    // d-box
+    char opc = head;                        // decompose instruction
+    int arg3 = tail % 10;                   // into its opcode and
+    tail = tail / 10;                       // its three arguments
+    int arg2 = tail % 10;                   // inst = {opc,arg1,...}
+    tail = tail / 10;
+    int arg1 = tail;
+    std::cout << "d: Set opc to '" << opc << "'.\n";
+
+    // all code, or equivalent, above this line is mandatory
+
+    int D_Out1, D_Out2, dreg, sval;         // You may imitate this style.
+    switch( opc ) {
+      case 'a':
+      case 'm':
+        D_Out1 = Reg[arg1];                 // localize and latch
+        std::cout << "d: Set D_Out1 to " << D_Out1 << ".\n";
+        D_Out2 = Reg[arg2];                 // localize and latch     
+        std::cout << "d: Set D_Out2 to " << D_Out2 << ".\n";
+        dreg = arg3;                        // record dest. register
+        std::cout << "d: Set dreg to f" << dreg << ".\n";
+        break;
+        ...
+    }
+ 
+    // x-box
+    int X_Out;
+    switch( opc ) {
+    ...
+    }
+
+    // m-box
+    int M_Out;
+    switch( opc ) {
+    ...
+    }
+
+    // w-box
+    switch( opc ){
+    ...
+    }
+
+    std::cout << "\n";
+    ...
+  }                                         // end 'for' loop
+  ...
+}
+/*
+
+f: Fetched instruction: l|124.
+d: Set opc to 'l'.
+d: Set D_Out1 to 105.
+d: Set D_Out2 to 4.
+d: Set dreg to f2.
+x: Set X_Out to 109.
+m: Set M_Out to 19.
+w: Set f2 to 19.
+
+...
+
+*/
+
+
+From probst at cse.concordia.ca  Sat Sep  5 16:41:21 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Sat, 05 Sep 2020 16:41:21 -0400
+Subject: [comp5201-f20] tutorials start in week 2
+Message-ID: <202009052041.085KfL6H023745@poise.encs.concordia.ca>
+
+tutorials start in week 2
+
+
+From probst at cse.concordia.ca  Sun Sep  6 14:16:26 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Sun, 06 Sep 2020 14:16:26 -0400
+Subject: [comp5201-f20] first lecture/Zoom meeting (link plus guidance)
+Message-ID: <5f55277a.EEw8mZFlbv7nhBsY%probst@cse.concordia.ca>
+
+
+Zoom link for the first class (plus guidance)
+_____________________________
+
+Class begins at 5:45 p.m. sharp on Tues, Sept 8, and runs until
+8:15 p.m., with a short break near 7:00 p.m.
+
+---
+
+DAVID K. PROBST is inviting you to a scheduled Zoom meeting.
+
+Topic: DAVID K. PROBST's Zoom Meeting  (COMP5201)
+Time: Sept 8, 2020 05:45 PM Montreal
+
+Join Zoom Meeting
+https://concordia-ca.zoom.us/j/95511974657?pwd=VEE5VGEyYWNqcjBqbzBsWGcxanhuQT09
+
+Meeting ID: 955 1197 4657
+Passcode: 229142
+One tap mobile
++14388097799,,95511974657# Canada
++15873281099,,95511974657# Canada
+
+---
+
+The safest way to join is to plug that _long_ URL into your browser
+by cut and paste.  That will "join" you whether or not you have
+installed the Zoom web client.
+
+You can join a few minutes early if you want.  I will start speaking
+at 5:45 p.m.  Having hardcopy of the course outline and lecture 1
+(Archives, July) certainly won't hurt.
+
+It will be podcast style, i.e., no picture of me.  I may change later,
+but I will still show you stuff on Tuesday.
+
+Initially, you will not have speaking privileges.  We will do "Raise
+hand" and chat later.  If you have a question, send me an email
+immediately.  I don't guarantee a real-time response, but I do
+guarantee a response.
+
+Please *do not*---during class---send me Zoom suggestions.  I lose
+my chain of thought easily, and I want to focus exclusively on
+computer organization and design.
+
+
+From probst at cse.concordia.ca  Tue Sep  8 11:34:59 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Tue, 08 Sep 2020 11:34:59 -0400
+Subject: [comp5201-f20] reply to anticipated questions
+Message-ID: <5f57a4a3.beAffHzlDhY1xK3G%probst@cse.concordia.ca>
+
+
+Excerpt from the course outline
+_______________________________
+
+Laboratory: Teaching assistants will guide students on assignments, by
+working examples from the lecture notes, and other relevant elementary
+examples.  Students profit enormously by attending tutorials.
+
+Marking scheme:
+
+Final Exam  50% (on-line)
+Midterm     20% (on-line)
+Assignments 30% (on-line) 
+
+Note: I only read plaintext files; the marker is more tolerant.
+
+Final-exam rule: Disastrous performance on the final exam causes the normal
+marking scheme to be suspended.  You _must_ pass the final.  Moreover, there
+is no a priori mapping of numeric to letter grades.
+
+Warmly Recommended Textbook: Patterson & Hennessy, Computer Organization and
+Design, Morgan Kauffmann, RISC-V Edition (Sixth Edition), 2018 (paper and
+electronic).  These authors basically discuss only the RISC-V flavor of the
+MIPS assembly language.
+
+Warmly Recommended Calculator: Sharp Model EL-531XT (or equivalent).  With
+the push of a button, modern calculators can execute many of the numerical
+hand algorithms we will learn.  Buy a decent calculator, i.e., one that
+performs hexadecimal arithmetic.
+
+Required On-Line Learning Tool: Lectures will be given as Zoom meetings.
+You should download the free Zoom web client.  URL: zoom.us
+
+Assignment submissions: To be discussed later
+
+Instructor: David K. Probst (office: EV003.149, telephone: 848-2424,
+ext. 3023, messages: 848-2424, ext. 3000, email: probst at cse.concordia.ca,
+NOT probst at encs, and NOT david.probst at concordia.ca).
+
+Mailing list: A mailing list---comp5201-f20 at encs.concordia.ca---is available
+for two-way communication among students, the TAs, and the instructor.
+Students must subscribe to this list promptly.  To subscribe, go to:
+
+  https://mail.encs.concordia.ca:444/mailman/listinfo/comp5201-f20
+
+fill in the form, and follow instructions carefully.
+
+---
+
+Q: What is an in-person lab?  A: A remote tutorial.
+
+Q: Are you comfortable with proctored on-line exams?  A: No.
+
+Q: Must we pass the final?  A: Yes.
+
+Q: Should I interpret numbers?  Is 82 a B+?  A: No.  That's my
+   job.  You lack the data to interpret correctly.
+
+Q: When is the midterm?  A: Probably in week 9.
+
+Q: Must we buy the recommended textbook and, if so, why?  A: Some
+   students feel more comfortable having the same material treated
+   by different "authors".  Perhaps one document is confusing, and
+   the other is clearer---about a specific topic.  A slightly
+   older edition of the textbook is also of use.  I follow my own
+   notes, not the textbook.
+
+Q: Why do you recommend a calculator?  A: We do enormous amounts
+   of hexadecimal calculation in this course.  Owning a calculator
+   with hexadecimal built in simplifies your life.
+
+Q: Where do assignments go?  A: Probably to Moodle.
+
+Q: Do you have precisely one (published) email address that actually
+   reaches you?  A: Yes.
+
+Q: Is the Mailman list the meaning of life?  Q: Yes, if only to get
+   assignments, lectures, and clickable links to Zoom meetings.  I
+   will stop using the SIS to communicate with you.  If you have
+   subscribed yourself, you have passed the first "test".
+
+Q: What if I have a question?  A: Write me.  I can read ASCII and
+   Unicode.  I dislike pure HTML mail strongly.  The University
+   has a Microsoft mailer that shows up in my mailer looking like
+   Egyptian hieroglyphics.  Sometimes I can't read this at all.
+   I'm a Unix person, and do not read Microsoft anything.
+
+
+From probst at cse.concordia.ca  Tue Sep  8 17:47:59 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Tue, 08 Sep 2020 17:47:59 -0400
+Subject: [comp5201-f20] class has started, but no one has shown up
+Message-ID: <202009082147.088Llxu2028578@poise.encs.concordia.ca>
+
+
+From probst at cse.concordia.ca  Tue Sep  8 20:42:06 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Tue, 08 Sep 2020 20:42:06 -0400
+Subject: [comp5201-f20] mystery solved
+Message-ID: <202009090042.0890g6MF010178@poise.encs.concordia.ca>
+
+
+I have multiple rooms.  Some are private.  I scheduled the meeting
+for one of my public rooms.  955 1197  2933
+
+However, I hit the wrong "start meeting" button and it created a
+new **unscheduled** meeting in one of my private rooms.
+
+I will slowly learn that there are multiple "start meeting"
+buttons.
+
+I did retain the meeting recording.
+
+Good night!
+
+
+From probst at cse.concordia.ca  Wed Sep  9 11:22:21 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Wed, 09 Sep 2020 11:22:21 -0400
+Subject: [comp5201-f20] powers of ten, powers of two
+Message-ID: <5f58f32d.OuZCFU0cHta9+hJh%probst@cse.concordia.ca>
+
+
+powers of ten
+_____________
+
+-24 yocto ys              +24 yotta YFs/s
+
+-21 zepto zs              +21 zetta ZFs/s
+
+-18 atto  as              +18 exa   EFs/s
+
+-15 femto fs              +15 peta  PFs/s
+
+-12 pico  ps              +12 tera  TFs/s
+
+-9  nano  ns              +9  giga  GFs/s
+
+-6  micro us              +6  mega  MFs/s
+
+-3  milli ms              +3  kilo  KFs/s
+
+In column 1, 's' stands for second.  Thus, 1 fs
+= 1 femtosecond = 10^-15 s, and 2 fs = 2 femtoseconds
+= 2 * 10^-15 s.
+
+In column 2, 'F' stands for flop and 'Fs' stands
+for flops.  Thus, 1 PF/s = 1 petaflop/second = 10^15 Fs/s,
+and 3 PFs/s = 3 petaflops/second = 3 * 10^15 Fs/s.
+
+powers of two
+_____________
+
++80 yotta YBs
+
++70 zetta ZBs
+
++60 exa   EBs
+
++50 peta  PBs
+
++40 tera  TBs
+
++30 giga  GBs
+
++20 mega  MBs
+
++10 kilo  KBs
+
+'B' stands for byte and 'Bs' stands for bytes.  Thus,
+1 GB = 1 gigabyte = 2^30 Bs, and 3 GBs = 3 gigabytes
+= 3 *2^30 Bs.
+
+All this is because 2^10 is roughly equal to 10^3.
+
+
+From probst at cse.concordia.ca  Wed Sep  9 13:00:01 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Wed, 09 Sep 2020 13:00:01 -0400
+Subject: [comp5201-f20] executive summary of the first class
+Message-ID: <5f590a11.ug3e6YeGGgAr0J3m%probst@cse.concordia.ca>
+
+
+Executive Summary of First Class
+________________________________
+
+1. The major components of any computer are its processor system, its
+memory system, its storage system, and its interconnect.
+
+2. The value of interconnect is directly proportional to its bandwidth, 
+its peak capability to move electrical signals from one place to 
+another.  Common units are GWs/s and GBs/s.
+
+3. Although many hardware devices can "compute", high-end CPUs are 
+amazingly uniform in that all their cores are instances of RISC 2.0 
+processor microarchitecture.
+
+4. Starting in 1980, RISC computer vendors drove non-RISC computer 
+vendors out of business.  Hence the term "killer micro".
+
+5. Domain scientists solve problems by writing, or contracting out the 
+writing of, computer programs.  Different programs require different 
+computer capabilities in order to run fast.  Since no computer can run 
+all programs fast, computer vendors have optimized their designs to 
+appeal to the largest user communities.  This leaves many vital computer 
+programs without an appropriate computer to run on.  Some companies have
+pivoted to serve the machine-learning market, but this is of limited
+importance.
+
+6. The fundamental way in which programs differ lies in their different 
+memory-accessing patterns.  The simplest way of characterizing this is 
+to measure their _arithmetic intensity_.
+
+7. The current fashion for highly predictable data-parallel programs has 
+obscured the trouble we are in.  These programs are easy to please 
+because they are _embarrassingly localizable_.
+
+8. Killer micros, always evolving, went through a rough patch in 2003 
+when chips got too hot.  The single, hot, high-performance processor on 
+a chip was replaced by multiple, cool, low-performance processors on a 
+chip.  This design strategy is called _multicore_.  Scaling to large
+numbers of cores was beyond the prowess of computer vendors.
+
+9. Most computers have plenty of compute power, and limited communication
+power, which makes programs with low arithmetic intensity slow.
+
+10. Computation is limited by communication, not arithmetic.  Floating-point
+computation is essentially free, in time and energy.  In contrast, off-chip
+bandwidth is limited (in 2005) to a few GWs/s, and each word transferred
+consumes enormous energy.  Feeding the FPUs with data is expensive, not the
+FPUs themselves.  (The Japanese, in 2020, can do 32 GWs/s).
+
+11. When an expensive, critical resource goes idle waiting for data to 
+arrive, this is not a good thing.
+
+12. We studied the execution of 'mul.d f0,f2,f4'.
+
+13. We also studied a simple MIPS program with a loop.
+
+
+From probst at cse.concordia.ca  Sat Sep 12 12:50:06 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Sat, 12 Sep 2020 12:50:06 -0400
+Subject: [comp5201-f20] preliminary activity schedule
+Message-ID: <5f5cfc3e.8nu+XF2VEJeqsc7N%probst@cse.concordia.ca>
+
+
+** Preliminary Activity Schedule **  (as of Sept 12)      Fall 2020
+
+COMP5201 Computer Organization & Design  Section NN
+
+Lecture NN              Tuesday    5:45 -  8:15 p.m.  Remote (Zoom)
+David K. Probst         probst at cse.concordia.ca
+
+Tutorial NI             Tuesday    3:15 -  5:05 p.m.  Remote (Zoom)
+Samia Hilal             samia.hilal at videotron.ca
+
+Tutorial NJ             Tuesday    8:30 - 10:20 p.m.  Remote (Zoom)
+Samia Hilal             samia.hilal at videotron.ca
+
+Tutorials begin on Tuesday, Sept 15.
+
+---
+
+POD sessions: <not yet scheduled>
+
+There will be some POD sessions.  They will be given by Samia Hilal. 
+
+POD Session             ???
+Samia Hilal             samia.hilal at videotron.ca
+                        -- also by email and appointment
+
+POD Session             ???
+Samia Hilal             samia.hilal at videotron.ca
+                        -- also by email and appointment
+
+---
+
+Marker:
+
+Marker NN               <no contact hours>
+Salah Harb              salah.sa.harb at gmail.com
+
+
+From probst at cse.concordia.ca  Sat Sep 12 20:23:45 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Sat, 12 Sep 2020 20:23:45 -0400
+Subject: [comp5201-f20] Zoom link (second class)
+Message-ID: <5f5d6691.1z9gIdojefMEgrdx%probst@cse.concordia.ca>
+
+
+DAVID K. PROBST is inviting you to a scheduled Zoom meeting.
+
+Topic: DAVID K. PROBST's COMP5201 Zoom Meeting
+Time: Sep 15, 2020 05:45 PM Montreal
+
+Join Zoom Meeting
+https://concordia-ca.zoom.us/j/93066295552?pwd=Z0wyb0J6UVh5cVlpMm9aQmFjNVpKdz09
+
+Meeting ID: 930 6629 5552
+Passcode: 736131
+One tap mobile
++15873281099,,93066295552# Canada
++16473744685,,93066295552# Canada
+
+
+From probst at cse.concordia.ca  Sat Sep 12 20:29:52 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Sat, 12 Sep 2020 20:29:52 -0400
+Subject: [comp5201-f20] change of marking scheme (fewer marks for final)
+Message-ID: <5f5d6800.EgU2FNTzq+zTcG38%probst@cse.concordia.ca>
+
+
+COMP5201 Sec. NN              Course Outline                         Fall 2020
+
+Title: Computer Organization And Design      Instructor: Prof. David K. Probst
+
+Computer scientists, including software developers, must understand the basic
+hardware structures and device technologies inside computer systems.
+
+Computer architecture is the interface, i.e., the execution abstractions,
+that the hardware presents to the software stack.  In contrast, computer
+organization and design is the mix of processors, memories, peripherals, and
+interconnect, that implements this interface.
+
+Achieving high performance in the face of latency requires that we exploit
+various forms of latency tolerance and latency avoidance, while not
+exceeding our power budget.
+
+Lecture 1: General Introduction
+
+processors, memories, storage, interconnect
+factors that enable computer performance
+most merchant computers are not general purpose
+different algorithms require different capabilities from computers
+the von Neumann machine model
+ 
+Lecture 2: General Introduction (cont.)
+
+datapath and control circuitry
+pipelined instruction execution
+Moore's Law
+Amdahl's Law
+whole-number encodings
+hexadecimal encoding of bit patterns
+
+Lecture 3: Numbers and Instructions
+
+fixed-point numbers
+floating-point numbers
+instruction formats
+addressing modes 
+
+Lecture 4: Digital Logic
+
+logic gates
+sentential logic
+Boolean functions and implementations
+combinational and sequential logic
+half and full adders
+synthesizing logical connectives
+computer arithmetic
+
+Lecture 5: RISC Architectures
+
+RISC 1.0 pipelining
+pipeline boxes and pipeline latches
+pipeline datapath and pipeline control
+the RISC philosophy (KISS)
+the Three Walls (ILP, Power, Memory)
+
+Lecture 6: Limits to Pipelining
+
+dependences (program properties)
+hazards
+forwarding
+multicycle operations
+more on the Three Walls
+the multicore (r)evolution
+OOO pipelines (RISC 2.0 orthodoxy)
+
+Lecture 7: Latency Management
+
+memory technology
+memory latency: tolerate or avoid?
+are caches sufficient?
+data reuse ("temporal locality")
+contiguous-address data use ("spatial locality")
+memory pipelining
+Little's Law
+the new latencies
+
+Lecture 8: Conventional Cache Architecture
+
+cache friendliness of programs
+design decisions for conventional caches
+cache lines and cache frames
+mapping (cache equations)
+
+Laboratory: Teaching assistants will guide students on assignments, by
+working examples from the lecture notes, and other relevant elementary
+examples.  Students profit enormously by attending tutorials.
+
+Marking scheme:
+
+Final Exam  40% (on-line)
+Midterm     20% (on-line)
+Assignments 40% (on-line) 
+
+Note: I only read plaintext files; the marker is more tolerant.
+
+Final-exam rule: Disastrous performance on the final exam causes the normal
+marking scheme to be suspended.  You _must_ pass the final.  Moreover, there
+is no a priori mapping of numeric to letter grades.
+
+Warmly Recommended Textbook: Patterson & Hennessy, Computer Organization and
+Design, Morgan Kauffmann, RISC-V Edition (Sixth Edition), 2018 (paper and
+electronic).  These authors basically discuss only the RISC-V flavor of the
+MIPS assembly language.
+
+Warmly Recommended Calculator: Sharp Model EL-531XT (or equivalent).  With
+the push of a button, modern calculators can execute many of the numerical
+hand algorithms we will learn.  Buy a decent calculator, i.e., one that
+performs hexadecimal arithmetic.
+
+Required On-Line Learning Tool: Lectures will be given as Zoom meetings.
+You should download the free Zoom web client.  URL: zoom.us
+
+Assignment submissions: To be discussed later
+
+Instructor: David K. Probst (office: EV003.149, telephone: 848-2424,
+ext. 3023, messages: 848-2424, ext. 3000, email: probst at cse.concordia.ca,
+NOT probst at encs, and NOT david.probst at concordia.ca).
+
+Mailing list: A mailing list---comp5201-f20 at encs.concordia.ca---is available
+for two-way communication among students, the TAs, and the instructor.
+Students must subscribe to this list promptly.  To subscribe, go to:
+
+  https://mail.encs.concordia.ca:444/mailman/listinfo/comp5201-f20
+
+fill in the form, and follow instructions carefully.
+
+What's in the MKP book
+______________________
+
+1) Computer Abstractions and Technology
+   Terminology.  Power Wall.  Brief discussion of multicore.
+   Amdahl's Law.  ISA interface as the architecture.
+
+2) Instructions: Language of the Computer
+   Signed and unsigned numbers.  Two's complement.  Instruction
+   encoding.  Hexadecimal representation.  Stored programs.
+   Characters.  Addressing modes.
+
+3) Arithmetic for Computers
+   Integer Addition.  Integer Multiplication.  Floating-point
+   numbers.
+
+4) The Processor
+   Clocks.  Datapath.  Control.  Stages.  Pipelining.  Hazards.
+   Stalls.  ILP.  Linear and nonlinear pipelines.  
+
+5) Large and Fast: Exploiting Memory Hierarchy
+   Locality.  Cache design.  Three Cs.
+
+6) Parallel Processors from Client to Cloud
+   Hardware multithreading.  Multicore.  GPUs.  Multicomputers.
+   Roofline model.
+
+B) Basics of Logic Design  <appendix>
+   Stuff.
+
+
+From probst at cse.concordia.ca  Tue Sep 15 12:40:45 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Tue, 15 Sep 2020 12:40:45 -0400
+Subject: [comp5201-f20] on publishing today's Zoom tutorial links
+Message-ID: <5f60ee8d.2l3kr2FD7am4Cou3%probst@cse.concordia.ca>
+
+
+Our TA (tutor) is a big fan of Moodle.  In particular, she uses
+Moodle to broadcast Zoom links.  Did you receive the links in
+the mail?  Can you get the links by asking Moodle?
+
+I have never touched Moodle, and am not going to spend today
+figuring out how it works.
+
+I have asked Samia to send me today's Zoom links until we can
+get this Moodle mess sorted out.
+
+If the links stay the same, I will also add them to our
+activity schedule.
+
+
+From probst at cse.concordia.ca  Tue Sep 15 12:51:07 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Tue, 15 Sep 2020 12:51:07 -0400
+Subject: [comp5201-f20] today's tutorial links
+Message-ID: <5f60f0fb.pSN+tGX1TRnPMS7f%probst@cse.concordia.ca>
+
+
+3:30 Tutorial:
+
+SAMIA HILAL is inviting you to a scheduled Zoom meeting.
+Topic: COMP 5201 NN 2202 3:30 Tutorial
+Time: Sep 15, 2020 03:30 PM Montreal
+Join Zoom Meeting
+https://concordia-ca.zoom.us/j/95663069381
+Meeting ID: 956 6306 9381
+
+One tap mobile
++14388097799,,95663069381# Canada
++15873281099,,95663069381# Canada
+
+8:30 Tutorial:
+
+SAMIA HILAL is inviting you to a scheduled Zoom meeting.
+
+Topic: COMP 5201 NN 2202 8:30 Tutorial
+Time: Sep 15, 2020 08:30 PM Montreal
+Join Zoom Meeting
+https://concordia-ca.zoom.us/j/97033264506
+Meeting ID: 970 3326 4506
+
+One tap mobile
++12042727920,,97033264506# Canada
++14388097799,,97033264506# Canada
+
+
+From probst at cse.concordia.ca  Tue Sep 15 13:24:46 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Tue, 15 Sep 2020 13:24:46 -0400
+Subject: [comp5201-f20] updated activity schedule
+Message-ID: <5f60f8de.cN9TU0rxaye80ntm%probst@cse.concordia.ca>
+
+
+** Preliminary Activity Schedule **  (as of Sept 12)      Fall 2020
+
+COMP5201 Computer Organization & Design  Section NN
+
+Lecture NN              Tuesday    5:45 -  8:15 p.m.  Remote (Zoom)
+David K. Probst         probst at cse.concordia.ca
+
+Tutorial NI             Tuesday    3:15 -  5:05 p.m.  Remote (Zoom)
+Samia Hilal             samia.hilal at videotron.ca
+                        https://concordia-ca.zoom.us/j/95663069381
+                        Meeting ID: 956 6306 9381
+
+Tutorial NJ             Tuesday    8:30 - 10:20 p.m.  Remote (Zoom)
+Samia Hilal             samia.hilal at videotron.ca
+                        https://concordia-ca.zoom.us/j/97033264506
+                        Meeting ID: 970 3326 4506
+
+Tutorials begin on Tuesday, Sept 15.
+
+---
+
+POD sessions: <not yet scheduled>
+
+There will be some POD sessions.  They will be given by Samia Hilal. 
+
+POD Session             ???
+Samia Hilal             samia.hilal at videotron.ca
+                        -- also by email and appointment
+
+POD Session             ???
+Samia Hilal             samia.hilal at videotron.ca
+                        -- also by email and appointment
+
+---
+
+Marker:
+
+Marker NN               <no contact hours>
+Salah Harb              salah.sa.harb at gmail.com
+
+
+From probst at cse.concordia.ca  Wed Sep 16 13:59:34 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Wed, 16 Sep 2020 13:59:34 -0400
+Subject: [comp5201-f20] assignment 1 officially issued yesterday;
+	start working on it
+Message-ID: <5f625286./2SJvbHc+s5jl0FC%probst@cse.concordia.ca>
+
+
+Name: ___________________                                     ID: ____________
+
+COMP5201                       Assignment 1                          Fall 2020
+Issued: September 15, 2020                             Due: September 29, 2020
+Submit electronically to Moodle.  No extension will be granted. 
+
+1. [16 marks] Amdahl's Law.
+
+a) On a uniprocessor, serial portion A of program P consumes x% of the time,
+while parallel portion B consumes the remaining (100 - x)%.  On a parallel
+computer, portion A speeds up by a factor of 1.5, while portion B speeds up
+by the number of processors.  The theoretical maximum speedup is 200 times.
+How many real processors are needed to achieve at least 75% of the maximum
+speedup?  How many real processors are needed to achieve at least 90% of
+the maximum speedup?
+ - at least 75% of the maximum speedup:               P = ________ processors
+
+ - at least 90% of the maximum speedup:               P = ________ processors
+
+b) Portion A of program P takes 'x' seconds; portion B takes 'y' seconds.
+'x + y = 100'.  A is wholly sequential, while B is wholly parallel.  With
+an infinite number of processors, we get a speedup of 's'.  It takes 7 1/3
+imaginary processors (8 real processors) to achieve a speedup of at least
+'s/2'.  What are the values of 'x' and 'y'?  (They are integers).
+                                                               (x,y)  = _____
+2. [16 marks] Performance and Power Efficiency.
+
+A heterogeneous multicore chip adapts to the particular requirements by
+turning on a certain number of each of its two classes of core.  Alpha cores
+generate 14 GFs/s and dissipate 2 W (watts) of power.  Beta cores generate
+1 GF/s and dissipate 0.1 W.  We seek to maximize aggregate chip performance
+while still achieving a power efficiency of at least 7.39 GFs/s/W.
+Electrical considerations dictate that precisely 500 cores be turned on.
+a) Indicate the number of cores turned on.
+                                          _____ alpha cores, _____ beta cores
+
+b) What is chip peak performance and chip power dissipation?
+                                                         _____ TFs/s, _____ W
+3. [20 marks] MIPS Assembly Language.
+
+Consider the C++ program fragment:
+
+ for( j=0; j<n; j++ ) {sum = a[j] * b[n-j-1];}
+
+which performs a computation on two floating-point arrays of size 'n'.
+Rewrite this fragment in MIPS assembly language.  Take n = 32.  Use 'f0'
+initialized to zero as 'sum'.  The address of 'a[0]' is 1024.  The address
+of 'b[0]' is 2048.  Set 'r1' to the address of 'a[0]'.  Set 'r2' to the
+address of 'b[n-1]'.  Set 'r3' to the byte address immediately following
+the end of array 'a'.  Use only the following instructions.
+
+set   f6,0.0      // set 'f6' to 0.0
+set   r1,n        // set 'r1' to n
+l.d   f6,n(r2)    // load into 'f6' eight bytes starting at Mem[r2+n]
+mul.d f4,f0,f2    // put the product 'f0 * f2' into 'f4'
+add.d f4,f0,f2    // put the sum 'f0 + f2' into 'f4'
+addi  r1,r1,n     // add integer 'n' to 'r1'
+subi  r1,r1,n     // subtract integer 'n' from 'r1'
+bne   r1,r2,loop  // if 'r1 /= r2' then goto 'loop'
+
+4. [16 marks] Dealing with Overhead.
+
+Consider two generations of bandwith support to nearby memory for a
+multicore CPU.  In the first generation, there are 28 Gbs/s of bandwidth to
+nearby memory.  In the second generation, there are 256 GBs/s of bandwidth
+to nearby memory.  There is a GPU accelerator.  The total time for an RPC
+call-work-and-return from the GPU is 4 * 10^-7 s.  A core has 128 64-bit
+registers.  Define the cost of a context switch from CPU thread t1 to CPU
+thread t2 as four times the cost of moving the register-file contents out
+of, or into, the processor.  For each generation, should a thread making
+an RPC on the GPU a) spin wait, or b) context switch?  Explain.
+
+Hint: When a thread makes an RPC on a GPU, it is like a regular procedure
+call in that the thread may not go on to its next instruction until the
+RPC returns.  Imagine that there is some completely separate control
+system that synchronizes CPU (actually, core) and GPU; don't even think
+about this!  While thread t1 is waiting for the RPC to return, it has a
+choice between two options.  It can either spin, doing no useful work, or
+it can context switch to thread t2, hoping that thread t2 can do some
+useful work while thread t1 is waiting.  You must find the intelligent
+option for thread t1 in each of the two generations. 
+
+5. [12 marks] Address-register Sizes.
+
+An n-bit register can hold 2^n distinct bit patterns.  As such, it can only
+be used to address a memory whose number of addressable units (typically,
+bytes) is less than or equal to 2^n.  In what follows, use the power-of-two
+interpretation of Greek prefixes.  I.e., K = 2^10, M = 2^20, etc.  In this
+question, register bit sizes need not be a power of two.
+
+a) What is the minimum size of an address register for a computer with 8 GBs
+of memory? 
+                                                        answer = _____ bits
+b) What is the minimum size of an address register for a computer with 35 TBs
+of memory?
+                                                        answer = _____ bits
+c) What is the minimum size of an address register for a computer with 1.05
+EBs of memory?
+                                                        answer = _____ bits
+d) What is the minimum size of an address register for a computer with 0.5
+(1/2) EB of memory?
+                                                        answer = _____ bits
+6. [20 marks] Utility-Cost Tradeoffs
+
+A single NEC SX-9 vector processor unit (VPU) has a peak arithmetic
+performance of 102.4 GFs/s.  The memory system supplies a peak memory
+bandwidth of 162 GBs/s.  The VPU dissipates 40 W, while the memory system
+dissipates 55 W.  Together, both components dissipate 95 W.  Every program
+has some arithmetic intensity (ai), measured in flops/byte, that indicates
+how much performance is achievable for a given bandwidth.  The equation is:
+achievable GFs/s = min{ai*bw, peak GFs/s}.  (For this question, pretend a
+memory system comes with interconnect included).
+
+a) What is the minimum ai that achieves peak arithmetic performance on an
+SX-9 VPU?                                             ai = _____ flops/byte
+
+b) What is the power efficiency of this computer system at peak performance?
+                                                      pe = _____ GFs/s/W
+
+c) A special customer buys two memory systems for the one VPU, thus doubling
+both the peak bandwidth and the power dissipated by the memory.  What is the
+new minimum ai that achieves peak arithmetic performance?
+                                                      ai = _____ flops/byte
+
+d) What is the power efficiency of the new system at peak performance?
+                                                      pe = _____ GFs/s/W
+
+e) Since higher power efficiency is a good thing, why would a customer spend
+more money to get less of it?
+
+
+From probst at cse.concordia.ca  Thu Sep 17 12:08:31 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Thu, 17 Sep 2020 12:08:31 -0400
+Subject: [comp5201-f20] misprint in Qn. 3, Ass. 1;  it's "sum += ..."
+Message-ID: <5f6389ff.3Aub1SFGZiknFIMX%probst@cse.concordia.ca>
+
+
+Name: ___________________                                     ID: ____________
+
+COMP5201                       Assignment 1                          Fall 2020
+Issued: September 15, 2020                             Due: September 29, 2020
+Submit electronically to Moodle.  No extension will be granted. 
+
+1. [16 marks] Amdahl's Law.
+
+a) On a uniprocessor, serial portion A of program P consumes x% of the time,
+while parallel portion B consumes the remaining (100 - x)%.  On a parallel
+computer, portion A speeds up by a factor of 1.5, while portion B speeds up
+by the number of processors.  The theoretical maximum speedup is 200 times.
+How many real processors are needed to achieve at least 75% of the maximum
+speedup?  How many real processors are needed to achieve at least 90% of
+the maximum speedup?
+ - at least 75% of the maximum speedup:               P = ________ processors
+
+ - at least 90% of the maximum speedup:               P = ________ processors
+
+b) Portion A of program P takes 'x' seconds; portion B takes 'y' seconds.
+'x + y = 100'.  A is wholly sequential, while B is wholly parallel.  With
+an infinite number of processors, we get a speedup of 's'.  It takes 7 1/3
+imaginary processors (8 real processors) to achieve a speedup of at least
+'s/2'.  What are the values of 'x' and 'y'?  (They are integers).
+                                                               (x,y)  = _____
+2. [16 marks] Performance and Power Efficiency.
+
+A heterogeneous multicore chip adapts to the particular requirements by
+turning on a certain number of each of its two classes of core.  Alpha cores
+generate 14 GFs/s and dissipate 2 W (watts) of power.  Beta cores generate
+1 GF/s and dissipate 0.1 W.  We seek to maximize aggregate chip performance
+while still achieving a power efficiency of at least 7.39 GFs/s/W.
+Electrical considerations dictate that precisely 500 cores be turned on.
+a) Indicate the number of cores turned on.
+                                          _____ alpha cores, _____ beta cores
+
+b) What is chip peak performance and chip power dissipation?
+                                                         _____ TFs/s, _____ W
+3. [20 marks] MIPS Assembly Language.
+
+Consider the C++ program fragment:
+
+ for( j=0; j<n; j++ ) {sum += a[j] * b[n-j-1];}
+
+which performs a computation on two floating-point arrays of size 'n'.
+Rewrite this fragment in MIPS assembly language.  Take n = 32.  Use 'f0'
+initialized to zero as 'sum'.  The address of 'a[0]' is 1024.  The address
+of 'b[0]' is 2048.  Set 'r1' to the address of 'a[0]'.  Set 'r2' to the
+address of 'b[n-1]'.  Set 'r3' to the byte address immediately following
+the end of array 'a'.  Use only the following instructions.
+
+set   f6,0.0      // set 'f6' to 0.0
+set   r1,n        // set 'r1' to n
+l.d   f6,n(r2)    // load into 'f6' eight bytes starting at Mem[r2+n]
+mul.d f4,f0,f2    // put the product 'f0 * f2' into 'f4'
+add.d f4,f0,f2    // put the sum 'f0 + f2' into 'f4'
+addi  r1,r1,n     // add integer 'n' to 'r1'
+subi  r1,r1,n     // subtract integer 'n' from 'r1'
+bne   r1,r2,loop  // if 'r1 /= r2' then goto 'loop'
+
+4. [16 marks] Dealing with Overhead.
+
+Consider two generations of bandwith support to nearby memory for a
+multicore CPU.  In the first generation, there are 28 Gbs/s of bandwidth to
+nearby memory.  In the second generation, there are 256 GBs/s of bandwidth
+to nearby memory.  There is a GPU accelerator.  The total time for an RPC
+call-work-and-return from the GPU is 4 * 10^-7 s.  A core has 128 64-bit
+registers.  Define the cost of a context switch from CPU thread t1 to CPU
+thread t2 as four times the cost of moving the register-file contents out
+of, or into, the processor.  For each generation, should a thread making
+an RPC on the GPU a) spin wait, or b) context switch?  Explain.
+
+Hint: When a thread makes an RPC on a GPU, it is like a regular procedure
+call in that the thread may not go on to its next instruction until the
+RPC returns.  Imagine that there is some completely separate control
+system that synchronizes CPU (actually, core) and GPU; don't even think
+about this!  While thread t1 is waiting for the RPC to return, it has a
+choice between two options.  It can either spin, doing no useful work, or
+it can context switch to thread t2, hoping that thread t2 can do some
+useful work while thread t1 is waiting.  You must find the intelligent
+option for thread t1 in each of the two generations. 
+
+5. [12 marks] Address-register Sizes.
+
+An n-bit register can hold 2^n distinct bit patterns.  As such, it can only
+be used to address a memory whose number of addressable units (typically,
+bytes) is less than or equal to 2^n.  In what follows, use the power-of-two
+interpretation of Greek prefixes.  I.e., K = 2^10, M = 2^20, etc.  In this
+question, register bit sizes need not be a power of two.
+
+a) What is the minimum size of an address register for a computer with 8 GBs
+of memory? 
+                                                        answer = _____ bits
+b) What is the minimum size of an address register for a computer with 35 TBs
+of memory?
+                                                        answer = _____ bits
+c) What is the minimum size of an address register for a computer with 1.05
+EBs of memory?
+                                                        answer = _____ bits
+d) What is the minimum size of an address register for a computer with 0.5
+(1/2) EB of memory?
+                                                        answer = _____ bits
+6. [20 marks] Utility-Cost Tradeoffs
+
+A single NEC SX-9 vector processor unit (VPU) has a peak arithmetic
+performance of 102.4 GFs/s.  The memory system supplies a peak memory
+bandwidth of 162 GBs/s.  The VPU dissipates 40 W, while the memory system
+dissipates 55 W.  Together, both components dissipate 95 W.  Every program
+has some arithmetic intensity (ai), measured in flops/byte, that indicates
+how much performance is achievable for a given bandwidth.  The equation is:
+achievable GFs/s = min{ai*bw, peak GFs/s}.  (For this question, pretend a
+memory system comes with interconnect included).
+
+a) What is the minimum ai that achieves peak arithmetic performance on an
+SX-9 VPU?                                             ai = _____ flops/byte
+
+b) What is the power efficiency of this computer system at peak performance?
+                                                      pe = _____ GFs/s/W
+
+c) A special customer buys two memory systems for the one VPU, thus doubling
+both the peak bandwidth and the power dissipated by the memory.  What is the
+new minimum ai that achieves peak arithmetic performance?
+                                                      ai = _____ flops/byte
+
+d) What is the power efficiency of the new system at peak performance?
+                                                      pe = _____ GFs/s/W
+
+e) Since higher power efficiency is a good thing, why would a customer spend
+more money to get less of it?
+
+
+From probst at cse.concordia.ca  Sat Sep 19 15:04:27 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Sat, 19 Sep 2020 15:04:27 -0400
+Subject: [comp5201-f20] Zoom link for Tuesday's meeting
+Message-ID: <5f66563b.D1F2iEjt9HYVUq/w%probst@cse.concordia.ca>
+
+
+DAVID K. PROBST is inviting you to a scheduled Zoom meeting.
+
+Topic: DAVID K. PROBST's COMP5201 Zoom Meeting
+Time: Sep 22, 2020 05:45 PM Montreal
+
+Join Zoom Meeting
+https://concordia-ca.zoom.us/j/96837811290?pwd=QlhLNTgvUFF0cTllWkpoaTZiVUN0Zz09
+
+Meeting ID: 968 3781 1290
+Passcode: 711825
+One tap mobile
++12042727920,,96837811290# Canada
++14388097799,,96837811290# Canada
+
+
+From probst at cse.concordia.ca  Sun Sep 20 14:37:27 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Sun, 20 Sep 2020 14:37:27 -0400
+Subject: [comp5201-f20] reply to student question (MIPS programming)
+Message-ID: <5f67a167.Ngvfxw8x7GJKhFjG%probst@cse.concordia.ca>
+
+
+In the MIPS assembly-language question, what do we need to set or
+initialize?
+
+"Take n = 32.  Use 'f0' initialized to zero as 'sum'.  The address of 'a[0]'
+is 1024.  The address of 'b[0]' is 2048.  Set 'r1' to the address of 'a[0]'.
+Set 'r2' to the address of 'b[n-1]'.  Set 'r3' to the byte address
+immediately following the end of array 'a'."
+
+Answer: You must code
+
+set f0,...
+set r1,...
+set r2,...
+set r3,...
+
+What does "Use only the following instructions." mean?  Can we only use.
+for example, "add.d f4,f0,f2", and not "add.d f0,f4,f2"?
+
+Answer: Of course not.  I was trying to avoid the pedantry of:
+
+  'add.d' <f-register> ',' <f-register> ',' <f-register>
+
+
+From probst at cse.concordia.ca  Mon Sep 21 13:31:53 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Mon, 21 Sep 2020 13:31:53 -0400
+Subject: [comp5201-f20] Ass. 1 hint about byte addressing
+Message-ID: <5f68e389.orJtpW4cOmAspQ+r%probst@cse.concordia.ca>
+
+
+Hint for the program in assignment 1
+____________________________________
+
+We understand the distinction between a register and a memory location, 
+except there's really no such thing as a memory location.  Memory is an 
+array of bytes.  Memory is byte addressed.  When you ask memory to give 
+you a memory object, you must specify how many bytes you want.
+
+We know that an integer occupies four bytes, while a floating-point 
+number occupies eight bytes.  By the way, the address of a multibyte 
+object is the byte address of the leftmost byte of the object, which is 
+also the byte with the lowest memory byte address.
+
+In the example in Lec. 1, we had an array of four floating-point numbers.
+
+Let's say the array began at byte address 1,000 (computers don't like 
+commas in numbers).
+
+If the leftmost floating-point number is at address 1,000, then the 
+rightmost floating-point number is at address 1,024.
+
+So, expanding the Lec. 1 code to show initialization, we have:
+
+set f2,3.5
+set r1,1024
+set r2,992
+loop:
+  l.d   f0,0(r1)
+  add.d f4,f0,f2
+  s.d   f4,0(r1)
+  subi  r1,r1,8
+  bne   r1,r2,loop
+
+That should make everything crystal clear.
+
+
+From probst at cse.concordia.ca  Tue Sep 22 20:45:19 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Tue, 22 Sep 2020 20:45:19 -0400
+Subject: [comp5201-f20] history gossip
+Message-ID: <5f6a9a9f.0DeTc1rPleVyAinP%probst@cse.concordia.ca>
+
+
+Historical Accuracy
+___________________
+
+John von Neumann (originally Janos) was born in Budapest, and was a
+Hungarian-American mathematician, etc., etc.
+
+Stanislaw Ulam was a Polish-American scientist who worked with
+von Neumann.
+
+Edward Teller was born in Budapest, and was a Hungarian-American
+theoretical physicist.
+
+Johannes is the first name of someone I know.
+
+Mozart was Austrian, as were some of my teachers.
+
+
+From probst at cse.concordia.ca  Thu Sep 24 09:33:12 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Thu, 24 Sep 2020 09:33:12 -0400
+Subject: [comp5201-f20] updated activity schedule (added POD sessions)
+Message-ID: <5f6ca018.SuqCDSGJtYtKTMgb%probst@cse.concordia.ca>
+
+
+** Activity Schedule **  (as of Sept 24)                  Fall 2020
+
+COMP5201 Computer Organization & Design  Section NN
+
+Lecture NN              Tuesday    5:45 -  8:15 p.m.  Remote (Zoom)
+David K. Probst         probst at cse.concordia.ca
+
+Tutorial NI             Tuesday    3:15 -  5:05 p.m.  Remote (Zoom)
+Samia Hilal             samia.hilal at videotron.ca
+                        https://concordia-ca.zoom.us/j/95663069381
+                        Meeting ID: 956 6306 9381
+
+Tutorial NJ             Tuesday    8:30 - 10:20 p.m.  Remote (Zoom)
+Samia Hilal             samia.hilal at videotron.ca
+                        https://concordia-ca.zoom.us/j/97033264506
+                        Meeting ID: 970 3326 4506
+
+Tutorials begin on Tuesday, Sept 15.
+
+---
+
+POD sessions:
+
+POD Session 1           Monday     5:30 -  7:30 p.m.  Remote (Zoom)
+Samia Hilal             samia.hilal at videotron.ca
+                        https://concordia-ca.zoom.us/j/99421489660
+                        Meeting ID: 994 2148 9660
+                        -- also by email and appointment
+
+POD Session 2           Thursday   2:00 -  4:00 p.m.  Remote (Zoom)
+Samia Hilal             samia.hilal at videotron.ca
+                        https://concordia-ca.zoom.us/j/96235084909
+                        Meeting ID: 962 3508 4909
+                        -- also by email and appointment
+
+POD Sessions begin on Thursday, Sept 24.
+
+---
+
+Marker:
+
+Marker NN               <no contact hours>
+Salah Harb              salah.sa.harb at gmail.com
+
+
+From probst at cse.concordia.ca  Sat Sep 26 18:58:30 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Sat, 26 Sep 2020 18:58:30 -0400
+Subject: [comp5201-f20] Zoom link for Tuesday's class
+Message-ID: <5f6fc796.Nuk0QGDN43Y6SMxp%probst@cse.concordia.ca>
+
+
+DAVID K. PROBST is inviting you to a scheduled Zoom meeting.
+
+Topic: DAVID K. PROBST's COMP5201 Zoom Meeting
+Time: Sep 29, 2020 05:45 PM Montreal
+
+Join Zoom Meeting
+https://concordia-ca.zoom.us/j/87420355077?pwd=NkFoemtlVzBlVWFHeC9ueURrSEJyZz09
+
+Meeting ID: 874 2035 5077
+Passcode: 244695
+
+
+From probst at cse.concordia.ca  Sun Sep 27 10:28:58 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Sun, 27 Sep 2020 10:28:58 -0400
+Subject: [comp5201-f20] hand calculation as sanity check
+Message-ID: <5f70a1aa.5UBvkWnzOdeiP2dK%probst@cse.concordia.ca>
+
+
+Pi
+__
+
+The transcendental number pi = 3.14159 26535 89793 23846 26433 ... is hard
+to write down.  I used a truncated version in my experiment.
+
+I asked, i) what is the (4+4n)-bit binary fixed-point number that approximates
+pi, ii) what is the normalized blackboard floating-point number---with 4n
+fractional bits---that approximates pi, and ii) couldn't we just say everything
+in hexadecimal?  That would be a (1+n)-hexit hexadecimal fixed-point number
+times a scale factor.
+
+I don't really care about pi; this post is about hand manipulation of
+hexadecimal numbers used as sanity checks.
+
+'n' ranges from 2 to 8.
+
+n = 2
+
+pi = (0011.0010 0100) = [3.24]  // brackets indicate hex
+
+pi = 1.1001 0010 * 2^1 = 1.[92] * 2^1
+
+n = 3
+
+pi = (0011.0010 0100 0011) = [3.243]
+
+pi = 1.1001 0010 0001 * 2^1 = 1.[921] * 2^1
+
+...
+
+n = 8
+
+pi = [3.243f6a88]
+
+pi = 1.[921f6544] * 2^1
+
+You can convert to binary if you really want.
+

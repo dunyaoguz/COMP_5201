@@ -1,0 +1,1438 @@
+From probst at cse.concordia.ca  Wed Jul 15 15:54:13 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Wed, 15 Jul 2020 15:54:13 -0400
+Subject: [comp5201-f20] course outline
+Message-ID: <5f0f5ee5.NpH64FJHRHx/jL4L%probst@cse.concordia.ca>
+
+
+COMP5201 Sec. NN              Course Outline                         Fall 2020
+
+Title: Computer Organization And Design      Instructor: Prof. David K. Probst
+
+Computer scientists, including software developers, must understand the basic
+hardware structures and device technologies inside computer systems.
+
+Computer architecture is the interface, i.e., the execution abstractions,
+that the hardware presents to the software stack.  In contrast, computer
+organization and design is the mix of processors, memories, peripherals, and
+interconnect, that implements this interface.
+
+Achieving high performance in the face of latency requires that we exploit
+various forms of latency tolerance and latency avoidance, while not
+exceeding our power budget.
+
+Lecture 1: General Introduction
+
+processors, memories, storage, interconnect
+factors that enable computer performance
+most merchant computers are not general purpose
+different algorithms require different capabilities from computers
+the von Neumann machine model
+ 
+Lecture 2: General Introduction (cont.)
+
+datapath and control circuitry
+pipelined instruction execution
+Moore's Law
+Amdahl's Law
+whole-number encodings
+hexadecimal encoding of bit patterns
+
+Lecture 3: Numbers and Instructions
+
+fixed-point numbers
+floating-point numbers
+instruction formats
+addressing modes 
+
+Lecture 4: Digital Logic
+
+logic gates
+sentential logic
+Boolean functions and implementations
+combinational and sequential logic
+half and full adders
+synthesizing logical connectives
+computer arithmetic
+
+Lecture 5: RISC Architectures
+
+RISC 1.0 pipelining
+pipeline boxes and pipeline latches
+pipeline datapath and pipeline control
+the RISC philosophy (KISS)
+the Three Walls (ILP, Power, Memory)
+
+Lecture 6: Limits to Pipelining
+
+dependences (program properties)
+hazards
+forwarding
+multicycle operations
+more on the Three Walls
+the multicore (r)evolution
+OOO pipelines (RISC 2.0 orthodoxy)
+
+Lecture 7: Latency Management
+
+memory technology
+memory latency: tolerate or avoid?
+are caches sufficient?
+data reuse ("temporal locality")
+contiguous-address data use ("spatial locality")
+memory pipelining
+Little's Law
+the new latencies
+
+Lecture 8: Conventional Cache Architecture
+
+cache friendliness of programs
+design decisions for conventional caches
+cache lines and cache frames
+mapping (cache equations)
+
+Laboratory: Teaching assistants will guide students on assignments, by
+working examples from the lecture notes, and other relevant elementary
+examples.  Students profit enormously by attending tutorials.
+
+Marking scheme:
+
+Final Exam  50% (on-line)
+Midterm     20% (on-line)
+Assignments 30% (on-line) 
+
+Note: I only read plaintext files; the marker is more tolerant.
+
+Final-exam rule: Disastrous performance on the final exam causes the normal
+marking scheme to be suspended.  You _must_ pass the final.  Moreover, there
+is no a priori mapping of numeric to letter grades.
+
+Warmly Recommended Textbook: Patterson & Hennessy, Computer Organization and
+Design, Morgan Kauffmann, RISC-V Edition (Sixth Edition), 2018 (paper and
+electronic).  These authors basically discuss only the RISC-V flavor of the
+MIPS assembly language.
+
+Warmly Recommended Calculator: Sharp Model EL-531XT (or equivalent).  With
+the push of a button, modern calculators can execute many of the numerical
+hand algorithms we will learn.  Buy a decent calculator, i.e., one that
+performs hexadecimal arithmetic.
+
+Required On-Line Learning Tool: Lectures will be given as Zoom meetings.
+You should download the free Zoom web client.  URL: zoom.us
+
+Assignment submissions: To be discussed later
+
+Instructor: David K. Probst (office: EV003.149, telephone: 848-2424,
+ext. 3023, messages: 848-2424, ext. 3000, email: probst at cse.concordia.ca,
+NOT probst at encs, and NOT david.probst at concordia.ca).
+
+Mailing list: A mailing list---comp5201-f20 at encs.concordia.ca---is available
+for two-way communication among students, the TAs, and the instructor.
+Students must subscribe to this list promptly.  To subscribe, go to:
+
+  https://mail.encs.concordia.ca:444/mailman/listinfo/comp5201-f20
+
+fill in the form, and follow instructions carefully.
+
+What's in the MKP book
+______________________
+
+1) Computer Abstractions and Technology
+   Terminology.  Power Wall.  Brief discussion of multicore.
+   Amdahl's Law.  ISA interface as the architecture.
+
+2) Instructions: Language of the Computer
+   Signed and unsigned numbers.  Two's complement.  Instruction
+   encoding.  Hexadecimal representation.  Stored programs.
+   Characters.  Addressing modes.
+
+3) Arithmetic for Computers
+   Integer Addition.  Integer Multiplication.  Floating-point
+   numbers.
+
+4) The Processor
+   Clocks.  Datapath.  Control.  Stages.  Pipelining.  Hazards.
+   Stalls.  ILP.  Linear and nonlinear pipelines.  
+
+5) Large and Fast: Exploiting Memory Hierarchy
+   Locality.  Cache design.  Three Cs.
+
+6) Parallel Processors from Client to Cloud
+   Hardware multithreading.  Multicore.  GPUs.  Multicomputers.
+   Roofline model.
+
+B) Basics of Logic Design  <appendix>
+   Stuff.
+
+
+From probst at cse.concordia.ca  Wed Jul 15 16:04:57 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Wed, 15 Jul 2020 16:04:57 -0400
+Subject: [comp5201-f20] lecture 1
+Message-ID: <5f0f6169.fIvBZnSzeQ4rOgKp%probst@cse.concordia.ca>
+
+
+Lecture 1  Computer Organization and Design                    DKP/Fall 2020
+_________
+
+General Introduction
+____________________
+
+A picture of a (standalone) uniprocessor (circa 2003):
+
+         +------------+                    +------------+
+         |            |                    |            |
+         |            |   +------------+   |            |
+         |    CPU     |---| Memory hub |---|    DRAM    |
+         |            |   +------------+   |            |
+         |            |         |\         |            |
+         +------------+         | \        +------------+
+                                |  \ 
+                                |   \
++---------------------+         |    \     +-----+
+|       I/O hub       |---------|     \----| NIC |--- Network
++---------------------+                    +-----+
+   |   |         |
+   |   |         |
+             +--------+
+   .   .     |        |
+   .   .     |  Disk  |
+   .   .     |        |
+   .   .     |        |
+             |        |
+             +--------+
+
+Consider three familiar components of a computer: the processor, the memory,
+and the storage.  Also, consider a realistic _interconnection network_,
+which shows how signals are transmitted among these three components.  (This
+interconnection network is the _fourth_ component).  The processor can talk
+directly to the memory, but data must be moved from the storage to the memory
+before the processor can access them.  Processor-memory communication, as
+well as processor-network communication, must be fast.  However,
+processor-storage communication is, of necessity, slow.  Question: Where
+should coprocessors (accelerators) fit into this scheme?
+
+As shown, the four major components of a uniprocessor are: 1) the processor,
+2) the memory system (here, DRAM), 3) the storage system (here, a single disk)
+---the other peripheral devices are not shown, and 4) the wires (here, the
+highest-level interconnect) that allow the other components to communicate.
+
+In larger, multiprocessor computers, the global system interconnect between
+processors and memories is an elaborate network.  To achieve a high peak
+data-transfer rate between its processors and memories, a computer needs a
+_high-bandwidth_ communication fabric (interconnection network).  It also
+needs a high-bandwidth memory system that can feed data values rapidly into
+the communication fabric.  A processor that is able, in the general case,
+to sustain a significant fraction of this network/memory bandwidth---to
+keep itself supplied with useful data---is called a _latency-tolerant_
+processor.  At present, there are few, if any, of these.  The idea of
+implementing processors with general-purpose latency tolerance---for a
+wide range of long-latency events---is only slowly being recognized by
+the computer industry as a scalable path to higher performance.
+
+Modern computers use direct point-to-point links between compatible devices
+for greater speed and bandwidth.  These links are called _wires_.  In contrast,
+a _bus_ is a _shared_ communication link (party line) that connects multiple
+subsystems.
+
+The point-to-point interconnect between processors and memories can be designed
+to provide high peak bandwidth.  The switch in the point-to-point network (the
+so-called _memory controller hub_) is not a bottleneck.  In contrast, the
+switch in the bus network (the so-called _I/O controller hub_) is literally a
+bus, and is a _terrible_ bottleneck.  The bus interconnect between a processor
+and its peripherals necessarily has low bandwidth because of the number and
+diversity of the I/O devices.  For performance reasons, the network-interface
+chip is on the point-to-point network.
+
+There are many kinds of computer (embedded controllers, laptops, desktops,
+servers, high-performance computers, Google-style constellations, etc.).  What
+if I suggested that all processor building blocks are basically the same?
+(What?!  Of course not.  A CPU is not a GPU, nor a DSP, nor an FPGA, and
+certainly not a VPU!).  But let's explore this wild idea.  Clearly, large
+computers are _aggregates_ of uniprocessors, and hence are called
+_multiprocessors_, although a better name might be _multicomputers_.  But is
+a large-scale, high-end computer built from Intel Xeon chips all that
+different from a large-scale, high-end server built from IBM Power9 chips?
+There is an astonishing commonality here: across the planet, almost all
+high-end CPU processors, _including_ their embedded cores, are minor variants
+of the same pipelined RISC 2.0 processor microarchitecture.
+
+Update 1: In 2016, Chinese engineers built a large-scale computer with a peak
+performance of 125 PFs/s, 10 M cores, a power efficiency of 6 GFs/s/W, 1.3
+PBs of memory, and a power rating of 15.4 MWs.  This remarkable achievement
+was made possible by _rejecting_ all of the optimizations used in the complex
+RISC 2.0 pipelines that first saw the light of day in the 1990s.
+
+Update 2: In 2020, Japanese engineers built a large-scale computer with a peak
+performance of 500 PFs/s, 7.6 M cores, a power efficiency of 14.7 GFs/s/W,
+4.85 PBs of memory, and a power rating of 28.3 MWs.  Among the innovations
+that made this possible is the Fujitsu 48-core ARM A64FX CPU, which has no
+real need for accelerators, but could add them.  In my opinion, the Fugaku
+supercomputer is the first large computer to take nearby-memory bandwidth
+seriously.  Full disclosure: The A64FX retains some of the RISC 2.0 ideas.    
+
+I may introduce the RISC 2.0 dynamic-scheduling canon (in-order dispatch,
+out-of-order issue, register renaming, branch prediction, etc.) that industry
+converged to after 1990, but began to doubt in 2005.  RISC 2.0 processors are
+normally called OOO superscalar processors.
+
+>From 1979 to 2003, these so-called "killer micros" (RISC microprocessors)
+basically drove competing processor designs out of business.  So, almost all
+computers today are powered by one or more killer micros.  A cellphone has a
+cool killer micro, probably an ARM.  A server has one or more hot killer
+micros, probably Intel Xeons.  These killer micros got steadily better (had
+steadily increasing performance) up until 2003.  Of course, computers with
+the same processor could still differ in the quality of their memory system
+or the quality of their interconnect.
+
+Users want to solve problems algorithmically by computer.  To do this, they
+must write programs.  Before designing computers, hardware vendors ask: What
+do my best customers want?  What _kinds_ of programs do they wish to write?
+This affects design and optimization.
+
+Computer design, like all engineering design, is a series of trade-offs.
+Now, are all programs basically the same?  Absolutely not!  To start with,
+programs differ in their memory-accessing patterns.  Example: One program
+never touches memory and one program always touches memory.  More generally,
+programs can be quite different depending on whether they use predominantly
+_short-range_ or _long-range_ communication.  Programs can differ in their
+_arithmetic intensity_.  They can differ in their degree of _data reuse_.
+They can differ in their _memory stride_.  They can differ in the
+_predictability_ of their memory-accessing patterns.  And so on.  All
+together, these differences among programs essentially divide the space of
+computer users into different _markets_.  (And this is only their memory
+differences!).
+
+In the parallel world, there is a division between _task-parallel_ and
+_data-parallel_ programs.  Issue: To what extent are the threads, coming
+from program decomposition, independent, i.e., to what extent do they
+communicate and synchronize?  When they do neither, we call the programs
+they come from _embarrassingly localizable_.  GPUs have been optimized
+to run embarrassingly-localizable data-parallel programs.  While GPUs
+can do data parallel fast, only CPUs can do task parallel fast.
+
+Computer vendors naturally optimize their designs to make them match the
+needs of the programs of the largest class of users.  To this day, other
+user classes complain and continue to be frustrated, but there isn't a
+whole lot they can do about it.  Existing computers are essentially
+mass-market computers, i.e., computers constructed by aggregating
+mass-market components, such as killer micros (RISC microprocessors).
+
+Fact: computers on offer from major hardware vendors are remarkably
+architecturally similar.  Fact: none of them deserves to be called a
+general-purpose computer because each has been optimized to provide good
+performance only for some _restricted_ class of applications.
+
+In 2003, killer micros met their first Waterloo: basically chips were
+getting too hot.  Moore's law hadn't been repealed, but cooling and
+energy-supply problems meant that business as usual had come to an
+abrupt end.  Intel surrendered in 2004.  Vendors adopted a new game plan.
+Instead of putting _one_ hot, high-performance processor on a chip,
+vendors put _many_ cool, low-performance processors on a single
+"processor" chip.  This organization is called _multicore_.  However,
+even in 2020, there is no consensus about the best way to design a
+multicore chip.  Progress has been slow (Intel adds two cores per
+generation; this is linear, not exponential).  The big question is,
+what memory system will allow us to ramp up the _number_ of cores we
+can profitably put on a single multiprocessor chip?  This is because
+inadequate memory bandwidth may cancel the benefit of the increased
+arithmetic capability that multicore provides.  Clearly, core area and
+core power efficiency are also major factors in multicore scalability.
+By the way, are scalable multicore and RISC 2.0 basically incompatible?
+I strongly believe so.  But multicore disappointment is multifactorial.
+
+But see the two updates above.  Neither machine is standard RISC 2.0.
+
+Other big questions: Are the pins (required for off-chip I/O) and caches
+(including cache coherence) a stranglehold on the future effectiveness of
+multicore?  Also, do we require new programming models (and languages) and
+new system software to be able to exploit multicore efficiently?  Finally,
+is multicore rebranding the CPU as a data-parallel device?
+
+By the way, if and when the number of cores becomes sufficiently large,
+all of you have to be retrained as parallel programmers.  Unfortunately,
+we don't yet know how to teach this!  Still, some of us think that, in
+the future, all programmers will _only_ write parallel programs.  In
+2020, merchant multicore seems to have stalled---it's hard to tell, and
+our efforts to teach parallel programming are too embarrassing for words.
+Recall that any large parallel computer is necessarily a multiprocessor or
+multicomputer built using multicore processors.  I dream of an accessible,
+composable parallel-programming model that would span the entire range
+from multicore uniprocessors to the largest shared-memory multiprocessors.
+
+Is there a clear distinction between _architecture_ and _organization_?
+This is the same question as, is there a clear distinction between an
+_architecture_ and its _implementation_?  Think of a computer as a black
+box.  The vendor has given you a _contract_ that specifies the externally
+visible behavior of this box.  Perhaps the contract describes the behavior
+of every machine instruction, and also describes the way the machine has
+been optimized.  (In a programming language, such a black box would be
+called an "abstract data type", or a "module").
+
+Using this contract, you write and optimize programs.  The resulting object
+code is the _client_ of this architecture.  If the contract, which specifies
+the hardware/software interface, has been properly written, then the vendor
+can make arbitrary improvements to his implementation, and your old fast
+programs will still be faster than your old slow programs.  The contract
+constrains both parties.  You agree to rely _only_ on it while developing
+your programs, while the vendor agrees to support the contract even if he
+changes the implementation.  Contracts are not made in heaven: after a
+while, you and the vendor may agree that a new contract (i.e., a new
+architecture) is necessary.
+
+In one sense, evolving killer micros temporarily killed the _general_
+evolution of architectural diversity.  If you look at the instruction-set
+architectures (ISAs) of various machines, you will see that Intel and AMD
+are still peddling x86, and that the pure RISC processors have more or
+less identical ISAs.  However, it is wrong to say that instruction-set
+design is a dead horse.  The recent RISC-V ISA has reopened the topic.
+As well, in the design spaces of multicore and GPUs, it is still worth
+considering.  Of course, the real problem here is the dominance of utterly
+similar RISC implementations of conventional CPUs across the computer
+industry.  Sun (now Oracle) is an exception.  And GPUs are only
+coprocessors.
+
+What technological breakthrough, what architectural innovation, will restart
+general-purpose _parallel_ computing?  I've lost faith in the alleged benefits
+of CPU/GPU convergence, although this would be a good thing.  For now, I don't
+see much progress towards building a computer that could execute massively
+parallel code with wholly unpredictable memory-accessing patterns.  By the
+way, this is the major potential bottleneck of GPU coprocessors.  Salvation
+will only come with radically new processor microarchictures, radically new
+communication fabrics, and radically new main memories.  Computers are a
+package deal.
+
+Suggestions: 1) Use high-degree multithreading to design cores with _strong_
+latency tolerance.  2) Design pure-optical communication fabrics using
+optoelectronic devices to connect chips and fabric.
+
+We spoke of _architecture_ as the contract specifying the hardware/software
+interface.  In reality, a computer is a tower of interfaces.  Going down, we
+have: architecture, organization (a/k/a microarchitecture), and hardware (e.g.,
+logic design).  But consider going up.  A high-level programming language is
+an interface.  You write your program.  A compiler translates it into machine
+instructions (object code).  The computer executes the object code.  A
+(low-level) assembly language is another interface (practically extinct).  You
+write your program.  An assembler translates it into object code.  The computer
+executes the object code.
+
+Both the operating system and the runtime system are actors in this tower of
+interfaces.  Runtime systems are increasingly merging with compilers, but this
+is outside our scope.  We will consider neither.
+   
+Again, programs differ in what they require from a computer.  One important
+example of this is the distinction between compute-intensive and
+data-intensive programs.  A _compute-intensive_ program does asymptotically
+more processing than data movement (e.g., performing many arithmetic
+operations for each word transferred).  In contrast, a _data-intensive_
+program does asymptotically more data movement than processing (e.g.,
+performing one or fewer arithmetic operations for each word transferred).
+Therefore, a compute-intensive program will suffer from a bottleneck if the
+computer has inadequate processing resources relative to its bandwidth
+capabilities.  Similarly, a data-intensive program will suffer from a
+bottleneck if the computer has inadequate data-movement resources relative
+to its compute power.
+
+A frustrated compute-intensive program is said to be _compute bound_.  A
+frustrated data-intensive program is said to be _bandwidth bound_.
+
+A pipeline analogy shows that imbalance between processing power and
+data-movement capabilities can lead to a performance bottleneck.  The analogy
+is symmetric, but in practice one case concerns us more.
+
+
+program P1:                      computer A:  <high-bandwidth interconnect>
+
+compute-intensive    ----------\              /----------  [program P1's needs
+program P1                      \------------/              not being met by
+                                                            computer A]
+                                /------------\
+                     ----------/              \----------
+
+                     "input"       compute       "output"
+
+
+program P2:                      computer B:  <low-bandwidth interconnect>
+
+data-intensive                  /------------\
+program P2           ----------/              \----------  [program P2's needs
+                                                            not being met by
+                     ----------\              /----------   computer B]
+                                \------------/
+
+                     "input"       compute       "output"
+
+Here, computer A only performs well on programs with low arithmetic intensity,
+and computer B only performs well on programs with high arithmetic intensity.
+We could fix the imbalance shown by running program P1 on computer B and
+program P2 on computer A.  By the way, GPUs have some characteristics of
+computer A, but all CPUs are very much like computer B.
+
+Note that there are _two_ possible sources of imbalance, viz., either 1)
+between _compute bandwidth_ and _memory bandwidth_, or 2) between _compute
+bandwidth_ and _I/O bandwidth_ (i.e., storage bandwidth).
+
+Today, most computers are much better at computation than they are at
+communication, which means that low-bandwidth communication can be the principle
+performance bottleneck.  More programs than you might imagine are data intensive
+in the sense that their _arithmetic intensity_ is low.  Only highly
+compute-intensive programs are well matched to today's computers.  To fully
+understand this last statement, we need the concept of a program's _working
+set_, which we will only introduce much later.
+
+My architectural credo (one paragraph long)
+______________________
+
+In fact, computation today is limited by communication, not arithmetic.
+Floating-point computation is essentially free, in time and energy.  In
+contrast, off-chip bandwidth is limited to a few GWs/s and each word
+transferred consumes enormous energy.  Feeding the FPUs with data is
+expensive, not the FPUs themselves.  Since communication capability is so
+limited, we should try to i) exploit locality whenever possible to reduce
+our need for communication bandwidth, and ii) tolerate sufficient
+network/memory latency through some form of parallelism to keep the limited
+bandwidth resources in our high-latency network/memory systems _usefully_
+busy.  That is, we want to extract the highest possible sustained operand
+bandwidth from our limited bandwidth resources.
+
+---
+
+What are the figures of merit for DRAM memory (I tend to always answer "memory
+bandwidth", but that's not the whole story).  As DRAM improves, memory bandwidth
+improves by at least the square of the improvement in memory latency.  So, when
+do we care about _memory latency_ and when do we care about _memory bandwidth_?
+Imagine a processor that is able to sustain a high memory-request bandwidth of
+'b' memory requests per processor cycle.  This processor would benefit from a
+DRAM memory that is able to sustain a high memory-reply bandwidth of 'b' memory
+replies per processor cycle.  In contrast, imagine a processor that issues
+a single memory request, and must wait for a reply before being able to
+issue its next memory request.  This processor would benefit from a DRAM memory
+that is able to reply quickly to a single memory request; the time to do so
+is called the _memory latency_.  CPUs, but not GPUs, have large, deep memory
+hierarchies to try to keep their processors busy.  Everything works well when
+the programs have sufficient _arithmetic intensity_.  But the whole story is
+very, very complicated.  Fact: Neither CPUs nor GPUs are very successful at
+running programs with irregular, unpredictable memory accessing and massive
+parallelism opportunities.
+
+Recall that a program's data is stored in the memory but can only be processed
+in the CPU.  A program might make a memory reference to retrieve some operand
+and then be forced to wait for the operand to arrive.  If the whole processor
+sits idle while waiting, this is not good.  (Not utilizing an arithmetic
+functional unit is less tragic, because of the low cost of the unit).  Some
+processors are very good at maintaining processor activity, including asking
+memory for more data, even if some of the programs or threads they are running
+are waiting for data to arrive.  This rare (and good) form of processor is
+called a _latency-tolerant_ processor because its utilization does not degrade
+in the face of memory latency.  Other processors---in fact, most processors---
+are not very good at doing this, so they depend on having _latency-avoidance_
+mechanisms, i.e., they try to keep operands that will be used in the near
+future close to the processor.  This is the main justification for processor
+caches.  Note: CPUs are latency intolerant because of their monothreading;
+GPUs are weakly latency tolerant because of their limited multithreading.
+
+Killer micros only perform well when the program's memory-accessing pattern can
+be exploited by the memory hierarchy, of which caches, at all levels, are the
+most important part.  Lower-level caches are relevant to the storage-accessing
+pattern.
+
+Elaboration: Roughly speaking, there are two broad computer families, those
+that are _latency sensitive_ and those that are _bandwidth sensitive_.
+
+I) LS: Monothreaded scalar processors have individual threads that regularly
+issue long-latency operations, for example, memory references to off-chip
+DRAM memory.  As a result, these threads---and their processors---would
+normally spend the majority of their time stalled waiting for these operations
+to complete.  Therefore, these processors critically depend on some powerful
+latency-avoidance mechanism, typically a cache hierarchy, to keep the waiting
+times within reasonable limits.  Blithely trusting this latency-avoidance
+mechanism to always work, the LS vendors made no investment in bandwidth.
+
+II) BS: Throughput-oriented processors, such as vector processors, GPUs, and
+multithreaded processors, use parallelism of various kinds to keep many
+long-latency operations outstanding at all times, in such a way that the
+processor never stalls.  However, to make this work requires a major
+investment in bandwidth, as well as using the limited bandwidth available as
+frugally as possible.  These various parallelism mechanisms often depend on
+particular program properties being present, which affects the architecture's
+ability to exploit very large amounts of parallelism.  For example, not all
+programs are vectorizable.  In the GPU world, an additional concern is that
+irregular programs tend to clash with the implicit top-level memory hierarchy.
+All indications are that only massively multithreaded (scalar) processors with
+exceptional bandwidth can hope to achieve _general-purpose_ latency tolerance.
+
+Let's fill in a few components of the processor, so that we can follow the
+execution of one machine instruction.
+
+         +---------+-----+----------+-----+---------+
+   CPU:  | I-cache |     |    RF    |     | D-cache |   RF = register file
+         +---------+     +----------+     +---------+
+         |                                          |
+         |                                          |
+         |            control circuitry             |
+         |                                          |
+         +------------------------------------------+
+         |.PC.                PL                    |   PL = pipelined
+         +------------------------------------------+        datapath
+                       
+The processor's workbench is organized as a pipeline.  (Strictly speaking, we
+should separate the pipeline into a passive _datapath_ and active _control_
+circuitry).  Other than PC, no pipeline component, including the so-called
+"ALU", is pictured.
+
+Consider executing the (register-register) machine instruction 'mul.d f0,f2,f4',
+where 'f0', 'f2', and 'f4' are (floating-point) processor _registers_.  Another
+(invisible) processor register, 'PC' (program counter), points---or recently
+pointed---to this instruction, i.e., the multiply instruction, which has to be
+fetched from "memory" before it can be executed.  Note: At the same time we
+fetch the multiply instruction, we update the PC to point to the next
+instruction that is to be fetched.
+
+Assuming the multiply instruction has been fetched and decoded, we move on to
+actual execution.  We localize 'f2' and 'f4' to the pipeline by retrieving them
+from the register file.  We deliver both values to the ALU.  We take the ALU's
+output and write it to the register file (to register 'f0').  Think of the
+instruction cache as just a bag of machine instructions that can be fetched
+using their addresses.  The names on top are names of resources the pipeline
+uses.  Since 'mul.d' is not a memory reference, the D-cache is not used.
+
+Again, this instruction is not a _memory reference_, i.e., it is neither a
+_load_ nor a _store_.  In other words, we have discussed a _register-register
+instruction_.
+
+Thinking about this example, we see a new distinction.  The register file
+contains _externally visible_, or _ISA_, registers, i.e., ones that can appear
+in assembly-language statements.  But, if we retrieve a value from an ISA
+register, and bring it into the pipeline, we need some place to put it.  For
+this reason, every processor contains a large collection of _externally
+invisible_, or _nonISA_, registers.  Most of these are inside the pipeline.
+The most important nonISA register is the program counter (PC).  (Elaboration:
+The ISA---or _instruction-set architecture_---defines much of the processor's
+actual _architecture_, i.e., its externally visible behavior.  In contrast,
+the PC is part of the architecture's _implementation_.  A fundamental idea in
+computer science is that the implementation of an architecture may change
+rapidly, but it should implement the same architecture for much larger
+stretches of time). 
+
+von Neumann model
+_________________
+
+This brings us to the von Neumann computational model.  It started from
+von Neumann's idea to use a single sequence of instructions to automatically
+control all aspects of a computer's behavior, including both its control
+structures and its arithmetic operations.  The von Neumann machine model
+requires that there be pure _control-flow_ scheduling of arithmetic
+instructions, taken from the current thread, using the program counter
+(instruction pointer).  In contrast, the _dataflow_ computational model
+schedules instructions as soon as their operands become available, and does
+not use threads.  Over the years, the von Neumann model has grown by accretion.
+For example, interrupts are now part of the model.  Today, it is taken to
+also mean that each processor should execute precisely one thread at a time,
+and that single-thread performance matters greatly.
+
+The most problematic rule in the von Neumann model is: "Every processor (or
+core) should have precisely one program counter".  This may appear reasonable,
+but it is not.  I will criticize this rule later.
+
+Once we have instruction streams, we can use memory to store a program's
+instructions and supply them in program order to the processor, using their
+memory addresses.  We can also use memory to store the program's data.  Today,
+essentially all CPUs are von Neumann in that they have one _program counter_
+(PC) per processor.  Note that one program counter per processor implies one
+register file per processor.
+
+PC is an externally invisible register that holds the address of the next
+instruction to be fetched.  To implement the von Neumann _fetch-execute cycle_,
+we need a dedicated adder to increment the PC.  We also need to implement
+branches.
+
+Consider a program segment that is straight-line object code.  The dynamic
+sequence of machine instructions in an execution of the object code is called
+the _program order_.  ("Straight-line" means no branches).  In straight-line
+code, the fetch-execute cycle steps through the sequence of machine
+instructions in program order.  This is the simplest form of control-flow
+scheduling of instructions.  The general form includes branches.  Of course,
+we still have program order when we include branches.  It is a slightly more
+interesting order because of the presence of _loops_ and _if statements_. 
+
+Thus, abstractly, program order is the dynamic control-flow sequence of
+machine instructions in some execution of the object code.
+ 
+This has enormous performance consequences.  Consider a floating-point multiply
+somewhere in the sequence.  Presumably, loads appear earlier in the program to
+bring the two operands of the multiply from memory.  Suppose they haven't
+arrived yet.  In that case, the multiply cannot start execution.  Since we are
+moving through the program in program order, the whole program blocks.  Since
+the processor is running precisely one program, the whole processor blocks.
+This is not good for performance (we say the processor _stalls_).
+
+Couldn't the processor simply switch to another program when the program it is
+currently running blocks?  That depends on the context.  If the program will be
+blocked for a long time, then the cost of _context switching_ will be worth it.
+(Example: a program that blocks for disk I/O).  However, if the program will be
+blocked for a much shorter time, then it makes sense just to stall the
+processor.  Modern CPUs spin wait for memory references to complete.
+
+The von Neumann machine model has also had enormous programming consequences.
+
+In the von Neumann model, we store the program and the data in the memory
+(programs are like data in being representable by bit patterns).  We fetch
+instructions and data from the memory, perform computation in the processor,
+and push the result back to memory.  Again, the central idea of the von
+Neumann model is that each processor should have precisely _one_ program
+counter.  A von Neumann computer is thus essentially a sequential computer.
+And von Neumann computation becomes "rearranging the furniture in memory".
+
+In high-level languages, this computational model gave rise to the notion of
+a _variable_ (i.e., a named memory location whose value can be changed).  A
+variable is of course a _multiple-assignment variable_.
+
+Computing then becomes scheduling values into variables, i.e., deciding in
+which order which values will be "assigned" to variables.  This is the
+basic programming abstraction behind all von Neumann computing.  This idea
+is called the von Neumann _programming model_.
+
+In truth, we should keep program counters and throw variables---for the
+most part---in the garbage can.  What's wrong with variables?  They are
+not suitable for parallel programming because of data races.
+
+Basics (rehash)
+______
+
+Computer designs are not immutable.  The relative cost and speed of things
+change.  For example, even on the (small) space scale of a processor chip,
+wire delay already dominates transistor delay.  More importantly, wire power
+already dominates transistor power.  This double inversion was caused by
+shrinking feature sizes.  If you think about it, computer design should be
+refocused to become interconnect design, at all space scales and inside all
+components.
+
+When the relative value of cost parameters changes, what was a good design
+may become a bad design (and vice versa).
+
+For example, traditional designs assume it is basically free to move data
+from anywhere on a processor chip to anywhere else on the same chip.  This
+assumption is no longer true.
+
+1) General-purpose register machines may be divided into two families:
+   a) load-store architectures, including notably RISC machines, and
+   b) CISC architectures, including the DEC Vax and the IBM System/360,
+   but also some of the earlier Intel x86s.  The debate between RISC
+   and CISC was originally about what percent of the processor chip
+   should be dedicated to hardwired control.  RISC vs. CISC isn't
+   important these days (RISC won), and all computers are load-store
+   architectures, even when they pretend otherwise.
+
+2) Surprisingly, the various interconnects---at all scales---are the most
+   important components of a computer.  A) In a large-scale parallel computer,
+   global system interconnect links perhaps thousands of _nodes_, each
+   containing one or more processors and (local) memory.  B) In a node,
+   intranode interconnect links processors and local memory, as well as
+   providing a path to (external) I/O devices and the global system
+   _interconnection network_.  C) In a processor, intraprocessor interconnect
+   links the control unit and the datapath.  In a multicore processor,
+   interconnect links cores and caches.  D) In the pipeline, more fine-grained
+   interconnect links the registers and the ALU (i.e., the arithmetic and
+   logical functional units).  And so on.
+
+   Interconnect is so important because all computations must engage in
+   communication, at whatever scale.  Moreover, communication is the major
+   source of time spent and energy consumed.  Programs differ in whether
+   they engage in short-range or long-range communication.  The
+   interconnect may or may not have the capability to move whatever data
+   needs to be moved fast enough at the space scale in question.  As noted,
+   communication determines power and performance.
+
+3) The ISA defines the assembly language, the instruction format, the
+   addressing modes, and the programming model.  Well, the ISA determines the
+   _functional_ aspects of the programming model, but not the _performance_
+   aspects.
+
+5) We studied a fragment of MIPS code.  We had 64-bit floating-point registers
+   (but only 32-bit words).  We had a memory array of floating-point numbers.
+   We used 'r1' as an address register.  We saw a load instruction, an add
+   instruction, a store instruction, and an integer-subtract instruction used
+   to change 'r1' to point to the next floating-point number.  A conditional
+   branch sent us back to the top of the loop as long as there were more
+   floating-point numbers to process.
+
+
+appendix to first lecture
+_________________________    1 W = 64 bits
+
+
+Bandwidth, latency, and friends in a typical memory hierarchy
+_____________________________________________________________
+
+Level      BW (W/cyc)   Latency (cyc)   Capacity (W)   Granularity (W)
+
+Registers   12                1               32             1
+L1 Cache     2                3               2K             1
+L2 Cache     1                8              16K            16
+L3 Cache     0.5             20             512K            16
+DRAM         0.25           200               1G            16
+Other Node   0.001 - 0.05   500 - 10,000      1T            16 - 512
+
+
+MIPS code
+_________
+
+loop: l.d    f0,0(r1)    ; f0 := a[j]
+      add.d  f4,f0,f2    ; f4 := a[j] + c
+      s.d    f4,0(r1)    ; a[j] := f4
+      subi   r1,r1,8     ; j := j - 1
+      bne    r1,r2,loop  ; if r1 /= r2 then repeat
+
+This emulates the high level code:
+
+      'for' j := last 'downto' first 'do'
+         a[j] := a[j] + c
+      'od'
+
+Floating-point array in memory:               +---+---+---+---+
+                                              |   |   |   |   |
+                                              |   |   |   |   |
+                                              +---+---+---+---+
+                                           ^               ^
+                                           |             <-|
+                                           r2              r1
+
+
+From probst at cse.concordia.ca  Wed Jul 15 16:11:45 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Wed, 15 Jul 2020 16:11:45 -0400
+Subject: [comp5201-f20] lecture 2
+Message-ID: <5f0f6301.UxcVeidx+nm0CrzD%probst@cse.concordia.ca>
+
+
+Lecture 2  Computer Organization and Design                    DKP/Fall 2020
+_________
+
+General Introduction (continued)
+________________________________
+
+Let's look inside the processor.  I'll redraw the block diagram of the whole
+uniprocessor, this time slightly differently.
+
+     Memory              Processor           Peripheral devices
+   +---------------+   +---------------+   +---------------+
+   |               |   |               |   |               |
+   |               |   | Registers     |   | Input devices |
+   | Memory        |   |               |   |               |
+   | hierarchy     |---| PC       ALU  |---|- - - - - - - -|
+   |               |   |               |   |               |
+   |               |   | Control unit/ |   | Output devices|
+   |               |   | Datapath      |   |               |
+   |               |   |               |   |               |
+   +---------------+   +---------------+   +---------------+
+
+This picture is a little less physical (more abstract), but we can still
+imagine the point-to-point interconnect on the left, and the shared I/O
+bus on the right.  Looking carefully, we can make out four blocks.
+
+1) The processor (formerly known as the CPU) contains i) an arithmetic-logic
+unit (ALU) that performs arithmetic and logical operations, ii) a file of
+registers whose main function is to serve as high-speed storage of operands,
+iii) a control unit/datapath (the two are inseparable) that interprets
+instructions, and causes them to be executed, and iv) a program counter (PC)
+that lives inside the datapath, and indicates the memory address of the next
+instruction to be fetched.  We could say that the _datapath_ (now more
+commonly called "pipeline" because all modern datapaths are pipelined) does
+the work of executing instructions, while the _control unit_ specifies how
+this work should be carried out.  You may think of the control unit as an
+abstract "control program" that has been burned into the silicon chip; we
+call such a program _hard-wired_.  This is the current solution.
+
+Previously, the control unit was an actual (software) program that ran on a
+smaller implementing processor _inside_ the "real" processor, i.e., the one
+visible to the compiler, the assembler, and the programmer.  The old term
+for this was "microprogramming".
+
+Note: Modern terminology would distinguish i) the pipeline, ii) the register
+file, iii) the individual functional units, and iv) the on-chip caches.
+
+2) A memory that stores instructions, data, and intermediate and final results.
+Memory is now implemented as a hierarchy.  Memory is typically byte addressed.
+
+3) A set of peripheral _input_ devices that _send_ (transmit) data and
+instructions---sometimes from themselves, sometimes from the outside world---
+to the memory.  The disk (a storage device) functions as an input device, and
+so do I/O perpherals such as the keyboard and the network-interface chip.
+
+4) A set of peripheral _output_ devices that _receive_ (transmit) final
+results and messages from the memory---sometimes to themselves, sometimes to
+the outside world.  Again, the disk functions as an output device, but so do
+I/O peripherals such as the monitor ("screen") and the printer.
+
+Recall the fetch-execute cycle in more detail.
+
+1) The fetch engine ("f-box") in the pipeline fetches an instruction from
+memory as specified by the address stored in PC.
+
+2) The PC is unconditionally incremented by the length of an instruction in
+bytes---assuming, as we do, that memory is byte addressed.  Unless otherwise
+specified, we will consider all instructions to be encoded in 32 bits. If
+the fetched instruction is a conditional or unconditional branch, further
+modification of the PC may take place, by some other box, at a later time.
+
+3) The decode engine ("d-box") in the pipeline decodes the instruction, in
+conjunction with the control unit.  This is the first time we know what kind
+of instruction we have fetched.  (We will augment the d-box later).
+
+4) For a register-register instruction, the execution engine ("x-box") in the
+pipeline executes the instruction's _operation_.  But this is only one of
+several types of instruction.  For example, we could equally well have a load
+instruction transferring data from a memory location to a register, a store
+instruction transferring data from a register to a memory location, or a
+conditional-branch instruction.  So, we need to add at least a load-store
+engine ("m-box") to the pipeline.  Actually, we need to add one more.
+We will list all pipeline engines later.  (They are called _pipeline boxes_).
+
+5) And repeat until shutdown (or whatever).
+
+Note: The details about the exact sequencing of actions will make sense much
+later when we consider instruction _pipelining_ in the control unit/datapath.
+
+In 2016, this picture is somewhat dated.  For example, we don't have ALUs any
+more; they have been replaced by sets of functional units.  Portions of the
+memory hierarchy (specifically the L1$, L2$, and L3$) have been integrated into
+the processor chip.  (These are the processor _caches_).  And multicore means
+that several processors (now called _cores_), each with its private low-level
+cache(s), have been integrated onto a single "processor" chip.  Finally,
+although this is more advanced, sometimes we deviate from strict program order
+deep inside the pipeline.  This deviation is hidden from the running program.
+This advanced technique is called _dynamic instruction scheduling_, and
+conceptually makes use of dataflow ideas, thus partially breaking away from
+the von Neumann model of pure control-flow scheduling.  This is the main idea
+in RISC 2.0.
+
+We haven't said much about processor performance.
+
+Historically, the two factors with the greatest impact on performance have been
+i) increases in clock frequency, and ii) increases in the number of transistors
+(hence, gates) that can be packed onto a single chip.  Peak performance is
+obviously affected by the _product_ "number of logic transistors-Hz".  How
+have these two factors evolved over the years?
+
+Moore's Law
+___________
+
+>From 1971 to 2002, clock speeds increased at an exponential rate (roughly
+doubling every 2.5 years).  After 2003, the frequencies stabilize in the 3-GHz
+range (otherwise the chips would burn up---unless you cooled them with Freon).
+
+But the other factor is (or rather was) still going strong.  The number of
+transistors that can be put on a chip rose at the same pace (or better) as
+the clock frequency over this period, but without any leveling off in 2003.
+_Moore's law_ has had several incarnations.  Initially, it was about the
+exponential increase in the number of _memory transistors_ per square
+centimeter, and per dollar (Moore's memory law).  Later, it was about a
+similar exponential increase in the number of _logic transistors_ per square
+centimeter, and per dollar (Moore's processor law).  And, for a while, it was
+about the _combined_ exponential increase in both the number of logic
+transistors and the clock frequency.  (Strictly speaking, it was about the
+coexistence of Moore's law and Dennard scaling, according to which smaller
+transistors use less power).  Number of logic transistors-Hz isn't
+everything, but it's obviously important for performance.  Since 2003,
+Moore's law has reverted back to mean an exponential increase in number of
+logic transistors per square centimeter, and hence in the number of logic
+transistors per processor chip.  How long can Moore's law continue?  That's
+one of the $64,000 questions.  Since 2014, it has been going through a rough
+patch.  Some even claim that Moore's law has been repealed.  But we do have
+quite a number of transistors per chip now.  What is the best way to use them?
+
+It is easy to understand that there might be one Moore's law for memory, and
+another Moore's law for processors.  But why does clock frequency enter the
+picture and then suddenly depart?  Logic transistors were, and still are,
+getting smaller.  For a time, there was a concurrent phenomenon: _Dennard
+scaling_.  When Dennard scaling held, the following was true: as transistors
+got smaller, the power density was constant---so if there was a reduction in
+a transistor's linear size by two, the power it used fell by four (with
+voltage and current both falling by two).  As a result, the total chip power
+for a given chip-area size stayed the same from one VLSI-process generation
+to the next.  At the same time, feature sizes shrank, transistor count doubled,
+and the clock frequency increased by 40% every two years.  However, when
+feature sizes dropped below 65 nm, Dennard scaling could no longer be
+sustained, because of the exponential growth of the leakage current.  In
+short, although today we still have (or had) an exponentially increasing
+number of logic transistors per processor chip, we can no longer afford the
+power to turn them all on, and can no longer tolerate the heat of clocking
+them faster.
+
+Again, we have billions and billions of transistors, but can no longer afford
+the power to turn them all on.  Multicore is a different path to steadily
+increasing performance that deliberately underclocks cores to stay within the
+power budget.  Multicore has the potential to restore _power efficiency_,
+which is the number of operations/second per watt.  We're still trying to
+figure out to what extent multicore is performance scalable.  Current
+implementations are disappointing.  People just don't see that you need a
+large number of exceptionally low-power, low-performance cores and a large
+number of lightweight threads to keep them busy.  Multicore is a win only
+if you take thread-level parallelism seriously.  The architecture must
+enable programs to be decomposed into massive numbers of fine-grained
+threads, and must also use the _simplest possible_ cores for area and
+power efficiency.
+
+The broader significance for the future of computing is this.  It used to be
+that sequential processors had steadily increasing performance; that let
+programmers carry on with business as usual.  Now it is the case that only
+parallel processors will have steadily increasing performance; programmers
+will have to get off their asses and learn to program the new machines.
+
+I personally find it unlikely that programming systems, such as Google's
+MapReduce, will allow parallel-oblivious programmers to survive in the
+new era.  Using a tool to program for you is not exactly a comprehensive
+solution to the problem of enabling general-purpose parallel programming.
+
+Speaking as a computer architect, it appears that memory is the critical
+bottleneck for multicore: until we have major increases in memory bandwidth,
+multicore growth will be stunted.  Indeed, even the highest-level shared cache
+is a bottleneck, because of the unrelenting contention for it among the cores
+on the chip.  Note: GPUs need high memory bandwidth; CPUs need low memory
+latency.  As a general rule, when too many threads share the same cache, the
+performance crashes.  Or, possibly, RISC 2.0 is the critical bottleneck.
+
+Again, Intel and other manufacturers capped their clock frequencies at their
+2003 level.  IBM has been a bit more daring.
+
+Exercise: Assume processor performance is proportional to the product of the
+number of logic transistors per square centimeter times the clock frequency
+in Hz.  Consider a span of 16 years.  Scenario 1: The number of logic
+transistors doubles every 1.9 years; the clock frequency doubles every 2.5
+years.  Scenario 2: The number of logic transistors doubles every 2.1 years;
+the clock frequency stays constant after 8 years of doubling as in Scen. 1.
+What is the relative performance improvement?  Ans: After 16 years, the
+processors in scenario 1 are a bit more than 16 times faster than the
+processors in scenario 2 (more precisely, 2^4.002 times faster).
+
+Amdahl's Law
+____________
+
+Finally, I must tell you about a famous law about how efforts to improve
+performance (or reduce power or whatever) sometimes lead to disappointments,
+or at least to suprises.  This is _Amdahl's law_, introduced by Gene Amdahl
+in 1967.  Consider a program with one portion that is perfectly sequential,
+and another perfectly parallel portion that can be made as parallel as we
+like.  Suppose the sequential portion accounts for 5% of the run time when
+the program is run sequentially.  What happens if the program is run on a
+1000-core processor?
+
+We draw little diagrams.  If you have any sense, you will avoid formulas.
+
+   5  +   95  =  100
+  /1   /1000
+  __   _____     ___
+   
+   5  +  0.1  =  5.1   su = 19.6 (= 100/5.1)        
+
+The speedup isn't 1,000; it's barely 20.
+
+In general terms, Amdahl's law says that optimizing one part of the system
+that contributes the fraction 'p' of the quantity being minimized can yield
+_at best_ an improvement of 1/(1 - p).  Example: When p = 0.95, the best
+result is a factor of 20.  This works for time, power, etc.
+
+Example: Gene Amdahl originally observed that the less parallel portion of
+a program can limit performance on a parallel computer.  Thus, one might
+consider reserving part of a multicore chip for a larger core specialized
+in single-thread performance.
+
+Suppose we ignore this suggestion and build 100 identical cores.  Program
+P has portion A that uses 10% of the sequential time, and gets no parallel
+speedup, and portion B that uses 90% of the sequential time, and gets a
+parallel speedup equal to the number of cores.  What is the run time of P
+on this parallel computer?
+
+  10  +  90  =  100
+  /1   /100
+  __   ____     ___
+
+  10 +  0.9  = 10.9    su = 9.2
+
+Now, let us cannibalize the resources required to build 10 cores to build one
+larger core that runs single threads twice as fast, leaving 90 cores of the
+original design.  Program P is the same, with its 10%/90% split.  What is the
+run time of P on this new parallel computer?
+
+  10  +  90  =  100
+  /2    /90
+  __    ___     ___
+
+   5  +   1  =    6    su = 16.7
+
+Example: In a 100-watt sequential circuit, the combinational logic dissipates
+20 watts, while the (clocked) state elements dissipate 80 watts.  In the
+combinational logic, power is proportional to the voltage, but in the state
+elements, power is proportional to the _square_ of the clock frequency.
+(This invariant is just made up; it is fake news).
+
+The designers propose to reduce the voltage by a factor of 8 (to help the
+combinational logic), and the clock frequency by a factor of 10 (to help the
+state elements).  After the change, how much power is dissipated by the
+circuit?
+
+  20  +  80  =  100 watts
+  /8   /100
+  __   ____     ___
+ 
+ 2.5  + 0.8  =  3.3 watts
+
+New plan. Starting from the original circuit, the designers now propose to
+reduce the voltage by a factor of 5, and the clock frequency by a factor of
+15.  After the change, how much power is dissipated by the circuit?
+
+  20  +   80  =  100 watts
+  /5    /225
+  __    ____     ___
+
+   4  + 0.36  = 4.36 watts
+
+Exercise: On a uniprocessor, perfectly serial portion A of program P
+consumes 25 s, while perfectly parallel portion B consumes 75 s, for a
+total uniprocessor run time of 100 s.  On a 1,000-P multiprocessor,
+however, program P's run time falls to 25 + 0.075 = 25.075 s.  How many
+processors are required to achieve at least 75% of the 1,000-P speedup?
+
+Ans: 75% of the speedup translates into a contribution of 4/3 * 25.075
+= 33.433 - 25 = 8.433 s from portion B.  8.9 processors is enough for
+this (8.8932806), but that's crazy.  Nine processors gives us 8 1/3 s
+as B's contribution, which is less than 8.433 s, so nine processors is
+the right answer.
+
+At present, I don't plan to cover in any detail two low-level implementation
+topics.  At the lowest level, there is _circuit design_.  Here, the key words
+are "wires", "transistors", "resistors", "diodes", and so on; this is the
+domain of electrical engineers.  The next level up is _logic design_.  This
+is the level at which logic gates and wires are put together to build
+combinational circuits such as ALUs and PLAs, and at which stable-storage
+primitives such as flip-flops and latches are combined to implement registers
+and hard-wired control.  We will do _some_ logic design.
+
+Signed and Unsigned Numbers
+___________________________
+
+Computers need to represent numbers.  Since computers are electrical machines,
+it is natural to represent numbers in hardware as a series of high and low
+electronic signals.  This gives us only two digits, 0 and 1, so these numbers
+are called _binary numbers_.  A single binary digit is of course a _bit_.
+
+We will work mostly in base 2 and base 16, but numbers may be represented in
+any base.  If 'd' is the value of the i_th digit, the contribution to the
+number from that digit position is d * base^i, where 'i' starts at 0 and
+increases from right to left.
+
+Mathematicians have a set of numbers they call the _natural numbers_ (i.e., the
+nonnegative integers including 0).  The use of binary bit patterns to represent
+natural numbers follows what is called _natural-number semantics_.  (Computer
+jargon for natural number is "unsigned number").
+
+Example: In natural-number semantics, the bit pattern 1011 represents
+(1 * 2^3) + (0 * 2^2) + (1 * 2^1) + (1 * 2^0) = 11.
+
+The bit corresponding to exponent 0 is the _least significant bit_.  The bit
+corresponding to the largest exponent is the _most significant bit_.
+
+Suppose our registers are 32-bits long.  Now, there are 2^32 distinct 32-bit
+bit patterns.  If we interpret registers using natural-number semantics,
+these 2^32 bit patterns will represent the natural numbers from 0 to
+2^32 - 1.
+
+Example: In a 3-bit register, using natural-number semantics, we have the
+following interpretations: 000 = 0, 001 = 1, 010 = 2, 011 = 3, 100 = 4,
+101 = 5, 110 = 6, and 111 = 7.
+
+Hardware can be designed to add, subtract, multiply, and divide the numbers
+represented by these bit patterns.
+
+How do we represent integers, which may be negative?  After a bit of confusion,
+sensible people decided that integers ("signed numbers" in the jargon) should
+be represented using _two's complement semantics_.  Basically, leading 0s mean
+positive, while leading 1s mean negative.  A slightly larger example is
+necessary.
+
+Example: In a 4-bit register, using two's complement semantics, we have the
+following interpretations: 0000 = 0, 0001 = 1, 0010 = 2, 0011 = 3, 0100 = 4,
+0101 = 5, 0110 = 6, 0111 = 7, 1000 = -8, 1001 = -7, 1010 = -6, 1011 = -5,
+1100 = -4, 1101 = -3, 1110 = -2, and 1111 = -1.
+
+Since 0 occupies a position as a positive number, we wind up with one more
+nonzero negative number than nonzero positive number.  Notice that you only
+need to look at the most significant bit to decide if a number is positive
+or negative.  This bit is called the _sign bit_.
+
+The addition algorithm is semantics independent.  Even so, we may _impose_
+a semantics of our choice on all bit patterns to interpret the final result.
+Let's add a few 4-bit numbers in 4-bit registers and ignore _carry out_.
+Then, using two's-complement semantics, we will determine whether we got the
+right answer in this semantics using 4-bit registers.
+
+Example:  1100 = -4       Example:  0100 =  4
+         +1100 = -4                +0100 =  4
+          ----                      ----
+        1|1000 = -8 :-)             1000 = -8 :-(
+
+Example:  1011 = -5       Example:  0101 =  5
+         +1011 = -5                +0101 =  5
+          ----                      ----
+        1|0110 =  6 :-(             1010 = -6 :-(
+
+If we discard the most negative integer, we observe that every (two's
+complement) integer fits into a 4-bit register if and only if its
+negation fits into a 4-bit register.  There is nothing special about 4.
+The same assertion holds for (two's complement) integers and n-bit
+registers.
+
+By the way, a positive (two's complement) integer 'x' fits into an n-bit
+register if and only if x <= 2^(n-1) - 1.
+ 
+We say that _overflow_ has occurred if the register is too small to contain
+the correct result, including the sign bit.  Note that a _carry_ out of the
+register is not in itself a sign of overflow.  (See first example).
+
+Trick number 1: How to negate a two's complement number.
+
+1) Flip every bit.            0101 =  5     0001 =  1
+                              1010          1110
+2) Add one.                   1011 = -5     1111 = -1
+  
+                              1000 = -8
+                              0111
+                              1000 = -8
+
+Ah, not every two's complement number can be negated.  Why?  Because
+there is no 4-bit +8.  The correct answer must fit in the register.
+
+Trick number 2: How to place an n-bit two's complement number in a register
+with more than 'n' bits.
+
+1) Copy the number on the right.        Example:      1000 = -8 (4 bits)
+                                                       
+2) Replicate the sign bit on the left.           1111 1000 = -8 (8 bits)
+
+Now, let's learn how to write bit patterns in hexadecimal.  This is just
+shorthand; it is _not_ a new semantics.
+
+0   0000   0   0          We can convert "hex" patterns into bit patterns,
+1   0001   1   1          and bit patterns into "hex" patterns.
+2   0010   2   2
+3   0011   3   3          If the length of the bit pattern is not a multiple
+4   0100   4   4          of 4, go from right to left.  Pad with zeros.
+5   0101   5   5
+6   0110   6   6          A hex digit corresponds to 4 bits.
+7   0111   7   7         
+8   1000   8  -8          A hex digit is a "hexit".
+9   1001   9  -7
+a   1010  10  -6
+b   1011  11  -5
+c   1100  12  -4
+d   1101  13  -3
+e   1110  14  -2
+f   1111  15  -1
+
+In this table, the columns are: i) the hex digit, ii) the bit pattern, iii)
+the natural-number semantics, and iv) the two's-complement semantics.
+
+Addendum: It is not the case that two's-complement semantics is somehow the
+_correct_ semantics.  In some contexts, we may prefer natural-number semantics.
+This leads to an apparent paradox.  Redo the first two examples with
+natural-number semantics.
+
+Example:  1100 = 12       Example:  0100 =  4
+         +1100 = 12                +0100 =  4
+          ----                      ----
+        1|1000 =  8 :-(             1000 =  8 :-)
+
+What previously was right is now wrong, and vice versa.  As it happens, we
+have no way of telling the adder which semantics we are using.  This seems
+to make error reporting impossible.  We will resolve this issue later.
+
+Hexadecimal Integer Manipulation
+________________________________
+
+Here is a table:
+
+Hex table:                                   Hex flips:      Hex powers:
+
+0   0000   4   0100   8   1000   c   1100    0 - f  4 - b    1, 16, 256, 4096
+1   0001   5   0101   9   1001   d   1101    1 - e  5 - a
+2   0010   6   0110   a   1010   e   1110    2 - d  6 - 9    Hex naturals:
+3   0011   7   0111   b   1011   f   1111    3 - c  7 - 8    a  b  c  d  e  f
+                                                             10 11 12 13 14 15
+
+Recall that _no_ integer bit pattern specifies its semantics, natural number
+[nn] or two's complement [2c], but both the programmer and the architecture
+can.  Semantics helps determine whether a number fits into a register or
+whether the addition of two numbers is correct.  I will give some examples
+of computing directly in hex below.  The register size is indicated by the
+largest number of hex digits I show.  Can you spot the errors in c) below?
+
+4 bits:  nn  0..15      2c  -8..7       (1 hex digit)
+8 bits:  nn  0..255     2c  -128..127   (2 hex digits)
+12 bits: nn  0..4095    2c  -2048..2047 (3 hex digits)
+
+a) dec to hex: 210 ==> <13,2> ==> d2
+               -46 ==> <13,2> ==> d2
+               105 ==> <6,9>  ==> 69
+
+b) hex negation:  start with a6 (-90)     start with 0a6 (166)
+                  flip       59           flip       f59
+                  add 1       1           add 1        1
+                             --                      ---
+                             5a (90)                 f5a (-166)
+
+c) hex addition:  start with 69 (105)     start with  7f (127)
+   [in 2c]        add        a6 (-90)     add         fb (-5)
+                             --                       --
+                           1|0f (15)                1|7a (122)
+
+                  start with d2 (-46)     start with 0d2 (210)
+                  add        a6 (-90)     add        fa6 (-90)
+                             --                      ---
+                           1|78 (-136)             1|078 (120)
+
+                  start with fd2 (-46)
+                  add        fa6 (-90)
+                             ---
+                           1|f78 (-136)
+
+d) binary expansion: 1/7  ==> 0.(001)*  (infinite decimal expansion)
+                     1/14 ==> 0.0(001)*
+
+
+From probst at cse.concordia.ca  Wed Jul 15 16:40:32 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Wed, 15 Jul 2020 16:40:32 -0400
+Subject: [comp5201-f20] assignment 1
+Message-ID: <5f0f69c0.PeRRgLr9o1hX+FTt%probst@cse.concordia.ca>
+
+
+Name: ___________________                                     ID: ____________
+
+COMP5201                       Assignment 1                          Fall 2020
+Issued: September 15, 2020                             Due: September 29, 2020
+Submit electronically.  No extension will be granted. 
+
+1. [16 marks] Amdahl's Law.
+
+a) On a uniprocessor, serial portion A of program P consumes x% of the time,
+while parallel portion B consumes the remaining (100 - x)%.  On a parallel
+computer, portion A speeds up by a factor of 1.5, while portion B speeds up
+by the number of processors.  The theoretical maximum speedup is 200 times.
+How many real processors are needed to achieve at least 75% of the maximum
+speedup?  How many real processors are needed to achieve at least 90% of
+the maximum speedup?
+ - at least 75% of the maximum speedup:               P = ________ processors
+
+ - at least 90% of the maximum speedup:               P = ________ processors
+
+b) Portion A of program P takes 'x' seconds; portion B takes 'y' seconds.
+'x + y = 100'.  A is wholly sequential, while B is wholly parallel.  With
+an infinite number of processors, we get a speedup of 's'.  It takes 7 1/3
+imaginary processors (8 real processors) to achieve a speedup of at least
+'s/2'.  What are the values of 'x' and 'y'?  (They are integers).
+                                                               (x,y)  = _____
+2. [16 marks] Performance and Power Efficiency.
+
+A heterogeneous multicore chip adapts to the particular requirements by
+turning on a certain number of each of its two classes of core.  Alpha cores
+generate 14 GFs/s and dissipate 2 W (watts) of power.  Beta cores generate
+1 GF/s and dissipate 0.1 W.  We seek to maximize aggregate chip performance
+while still achieving a power efficiency of at least 7.39 GFs/s/W.
+Electrical considerations dictate that precisely 500 cores be turned on.
+a) Indicate the number of cores turned on.
+                                          _____ alpha cores, _____ beta cores
+
+b) What is chip peak performance and chip power dissipation?
+                                                         _____ TFs/s, _____ W
+3. [20 marks] MIPS Assembly Language.
+
+Consider the C++ program fragment:
+
+ for( j=0; j<n; j++ ) {sum = a[j] * b[n-j-1];}
+
+which performs a computation on two floating-point arrays of size 'n'.
+Rewrite this fragment in MIPS assembly language.  Take n = 32.  Use 'f0'
+initialized to zero as 'sum'.  The address of 'a[0]' is 1024.  The address
+of 'b[0]' is 2048.  Set 'r1' to the address of 'a[0]'.  Set 'r2' to the
+address of 'b[n-1]'.  Set 'r3' to the byte address immediately following
+the end of array 'a'.  Use only the following instructions.
+
+set   f6,0.0      // set 'f6' to 0.0
+set   r1,n        // set 'r1' to n
+l.d   f6,n(r2)    // load into 'f6' eight bytes starting at Mem[r2+n]
+mul.d f4,f0,f2    // put the product 'f0 * f2' into 'f4'
+add.d f4,f0,f2    // put the sum 'f0 + f2' into 'f4'
+addi  r1,r1,n     // add integer 'n' to 'r1'
+subi  r1,r1,n     // subtract integer 'n' from 'r1'
+bne   r1,r2,loop  // if 'r1 /= r2' then goto 'loop'
+
+4. [16 marks] Dealing with Overhead.
+
+Consider two generations of bandwith support to nearby memory for a
+multicore CPU.  In the first generation, there are 28 Gbs/s of bandwidth to
+nearby memory.  In the second generation, there are 256 GBs/s of bandwidth
+to nearby memory.  There is a GPU accelerator.  The total time for an RPC
+call-work-and-return from the GPU is 4 * 10^-7 s.  A core has 128 64-bit
+registers.  Define the cost of a context switch from CPU thread t1 to CPU
+thread t2 as four times the cost of moving the register-file contents out
+of, or into, the processor.  For each generation, should a thread making
+an RPC on the GPU a) spin wait, or b) context switch?  Explain.
+
+Hint: When a thread makes an RPC on a GPU, it is like a regular procedure
+call in that the thread may not go on to its next instruction until the
+RPC returns.  Imagine that there is some completely separate control
+system that synchronizes CPU (actually, core) and GPU; don't even think
+about this!  While thread t1 is waiting for the RPC to return, it has a
+choice between two options.  It can either spin, doing no useful work, or
+it can context switch to thread t2, hoping that thread t2 can do some
+useful work while thread t1 is waiting.  You must find the intelligent
+option for thread t1 in each of the two generations. 
+
+5. [12 marks] Address-register Sizes.
+
+An n-bit register can hold 2^n distinct bit patterns.  As such, it can only
+be used to address a memory whose number of addressable units (typically,
+bytes) is less than or equal to 2^n.  In what follows, use the power-of-two
+interpretation of Greek prefixes.  I.e., K = 2^10, M = 2^20, etc.  In this
+question, register bit sizes need not be a power of two.
+
+a) What is the minimum size of an address register for a computer with 8 GBs
+of memory? 
+                                                        answer = _____ bits
+b) What is the minimum size of an address register for a computer with 35 TBs
+of memory?
+                                                        answer = _____ bits
+c) What is the minimum size of an address register for a computer with 1.05
+EBs of memory?
+                                                        answer = _____ bits
+d) What is the minimum size of an address register for a computer with 0.5
+(1/2) EB of memory?
+                                                        answer = _____ bits
+6. [20 marks] Utility-Cost Tradeoffs
+
+A single NEC SX-9 vector processor unit (VPU) has a peak arithmetic
+performance of 102.4 GFs/s.  The memory system supplies a peak memory
+bandwidth of 162 GBs/s.  The VPU dissipates 40 W, while the memory system
+dissipates 55 W.  Together, both components dissipate 95 W.  Every program
+has some arithmetic intensity (ai), measured in flops/byte, that indicates
+how much performance is achievable for a given bandwidth.  The equation is:
+achievable GFs/s = min{ai*bw, peak GFs/s}.  (For this question, pretend a
+memory system comes with interconnect included).
+
+a) What is the minimum ai that achieves peak arithmetic performance on an
+SX-9 VPU?                                             ai = _____ flops/byte
+
+b) What is the power efficiency of this computer system at peak performance?
+                                                      pe = _____ GFs/s/W
+
+c) A special customer buys two memory systems for the one VPU, thus doubling
+both the peak bandwidth and the power dissipated by the memory.  What is the
+new minimum ai that achieves peak arithmetic performance?
+                                                      ai = _____ flops/byte
+
+d) What is the power efficiency of the new system at peak performance?
+                                                      pe = _____ GFs/s/W
+
+e) Since higher power efficiency is a good thing, why would a customer spend
+more money to get less of it?
+
