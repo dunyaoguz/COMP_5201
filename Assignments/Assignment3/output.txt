@@ -1,0 +1,116 @@
+Starting an instruction:
+
+f: Fetched instruction: l|124.
+d: Set opc to 'l'      arg1: 1      arg2: 2      arg3: 4
+d: Set D_Out1 to 105.
+d: Set D_Out2 to 4.
+d: Set dreg to f2.
+x: X_Out = 105 + 4 = 109
+m: Set M_Out to 19
+w: Set f2 to 19
+
+
+
+Starting an instruction:
+
+f: Fetched instruction: l|348.
+d: Set opc to 'l'      arg1: 3      arg2: 4      arg3: 8
+d: Set D_Out1 to 203.
+d: Set D_Out2 to 8.
+d: Set dreg to f4.
+x: X_Out = 203 + 8 = 211
+m: Set M_Out to 43
+w: Set f4 to 43
+
+
+
+Starting an instruction:
+
+f: Fetched instruction: m|246.
+d: Set opc to 'm'      arg1: 2      arg2: 4      arg3: 6
+d: Set D_Out1 to 19.
+d: Set D_Out2 to 43.
+d: Set dreg to f6.
+x: X_Out = 19 * 43 = 817
+w: Set f6 to 817
+
+
+
+Starting an instruction:
+
+f: Fetched instruction: a|468.
+d: Set opc to 'a'      arg1: 4      arg2: 6      arg3: 8
+d: Set D_Out1 to 43.
+d: Set D_Out2 to 817.
+d: Set dreg to f8.
+x: X_Out = 43 + 817 = 860
+w: Set f8 to 860
+
+
+
+Starting an instruction:
+
+f: Fetched instruction: b|550.
+d: Set opc to 'b'      arg1: 5      arg2: 5      arg3: 0
+d: Set D_Out1 to 301.
+d: Set D_Out2 to 301.
+d: Set dreg to f0.
+
+
+
+Starting an instruction:
+
+f: Fetched instruction: s|368.
+d: Set opc to 's'      arg1: 3      arg2: 6      arg3: 8
+d: Set D_Out1 to 203.
+d: Set D_Out2 to 8.
+d: Set dreg to f6.
+x: X_Out = 203 + 8 = 211
+m: Store memory: Mem[211] = 817
+
+
+
+Starting an instruction:
+
+f: Fetched instruction: s|584.
+d: Set opc to 's'      arg1: 5      arg2: 8      arg3: 4
+d: Set D_Out1 to 301.
+d: Set D_Out2 to 4.
+d: Set dreg to f8.
+x: X_Out = 301 + 4 = 305
+m: Store memory: Mem[305] = 860
+
+
+
+Starting an instruction:
+
+f: Fetched instruction: b|790.
+d: Set opc to 'b'      arg1: 7      arg2: 9      arg3: 0
+d: Set D_Out1 to 148.
+d: Set D_Out2 to 156.
+d: Set dreg to f0.
+
+
+
+Starting an instruction:
+
+f: Fetched instruction: l|728.
+d: Set opc to 'l'      arg1: 7      arg2: 2      arg3: 8
+d: Set D_Out1 to 148.
+d: Set D_Out2 to 8.
+d: Set dreg to f2.
+x: X_Out = 148 + 8 = 156
+m: Set M_Out to 25
+w: Set f2 to 25
+
+
+
+Starting an instruction:
+
+f: Fetched instruction: s|728.
+d: Set opc to 's'      arg1: 7      arg2: 2      arg3: 8
+d: Set D_Out1 to 148.
+d: Set D_Out2 to 8.
+d: Set dreg to f2.
+x: X_Out = 148 + 8 = 156
+m: Store memory: Mem[156] = 25

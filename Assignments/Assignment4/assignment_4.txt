@@ -1,0 +1,85 @@
+Name: Hugo JONCOUR                                     ID: 40139230
+
+COMP5201                       Assignment 4                          Fall 2020
+Computer Organization & Design                               Prof. D.K. Probst
+Issued: November 10, 2020                                Due: December 7, 2020
+Submit electronically to Moodle.                 No extension will be granted.
+
+1. [20 marks] A program has an 8-instruction loop that is executed many times.
+Only the last instruction is a conditional branch, whose target is the first
+instruction at memory address [3a5c50].  Only the first instruction is a load,
+whose target is a 4-byte integer that resides at a different memory location
+in each iteration.  There are no stores in the program.  The first integer has
+memory address [4b6d30].  These integers are contiguous, and are loaded in
+increasing memory-address order.  The size of an instruction is also 4 bytes.
+A unified, i.e., combined I-cache and D-cache, direct-mapped cache has 16-byte
+lines, and 16 frames.  It is initially empty.  We hope to determine the number
+of cache misses in the first 16 iterations.
+
+a) How many cache misses in the first four iterations?               _____
+
+b) How many cache misses in the second four iterations?              _____
+
+c) How many cache misses in the third four iterations?               _____
+
+d) How many cache misses in the fourth four iterations?              _____
+
+2. [20 marks] We investigate the increase in CPI (clocks per instruction)
+due to cache misses that occur during memory references.  For simplicity,
+we pretend that instruction fetches never miss.
+
+a) Suppose the processor takes an average of 1.3 clock cycles to execute
+an instruction when there are no cache misses.  Assume that the miss penalty
+is 8 cycles, and that there is an average of 1 memory reference per 3
+instructions.  The base CPI (1.3 cycles) _includes_ the cache hit time.
+Suppose the miss rate is 6%.  Using the formula t_ave = ht + mr * mp, what
+is the CPI when cache misses are taken into account?  In English, average
+time = hit time plus miss rate times miss penalty.
+
+b) Consider the same processor with a two-level cache.  The hit rates for
+the L1$ and the L2$ are 95% and 75%, respectively.  The _local_ miss
+penalties are 10 cycles and 80 cycles, respectively.  Assume the same
+frequency of memory references.  If the CPI is 1.3 cycles when there are no
+cache misses, what is the CPI when cache misses are taken into account?
+Hint: Apply the formula recursively to find the effective miss penalty of
+the L1$.
+
+3. [21 marks] Consider a computer with a byte-addressable memory.  A 40-bit
+memory address is divided as follows for cache processing.  First, the 8
+lower-order bits are masked to expose the line number.  Second, the 15
+lower-order bits of the line number are inspected to get the array index.
+Third, the remaining 17 bits encode the tag value.  Any numerical answer
+may contain a cache parameter.  Hint: What do the direct-mapped and
+set-associative placement formulas have in common?
+
+a) What is the cache size in bytes?
+
+b) What is the cache-mapping scheme?
+
+c) For a given byte in the cache, how many different bytes in the main
+memory could possibly be mapped to it?
+
+4. [19 marks] Consider a computer with 32-bit registers.  The memory is
+word addressed.  There is a direct-mapped cache with 4K cache frames.
+Cache lines are 16 words.  Into which cache frame, and with what tag
+value, does 32-bit word address '45677def' go?  Show your work.  Answers
+in hexadecimal.
+
+5. [20 marks] Consider a computer whose memory latency is 800 cycles.  Think
+of this as the time required to traverse a synchronous memory pipeline
+consisting of i) the network from processor to memory, ii) processing inside
+the memory, and iii) the network from memory to processor.  The peak input
+bandwidth of this pipeline is 8 bytes/cycle.  The processor manages to
+sustain 720 outstanding (load) memory references to floating-point operands
+in the pipeline in each and every cycle.
+
+a) Using Little's law, calculate the sustained delivered operand bandwidth
+in bytes/cycle arriving at the processor.  Does the peak input bandwidth
+limit you?  Show your work.
+
+b) The processor has a cache, with a 64-byte cache line, whose hit rate is
+95%.  Assuming that each floating-point arithmetic operation requires one
+new operand, and that the peak arithmetic performance of the processor is
+35 flops/cycle, what is the sustained arithmetic performance of this
+processor in flops/cycle?  Is there a bottleneck?  If so, identify it.
+Show your work.

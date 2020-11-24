@@ -53,8 +53,6 @@ int main()
     // loop over instructions; pretend next instruction is at PC + 1
     for (int PC = 0; PC < 10; PC++)
     {
-        std::cout << "\n\nStarting an instruction:\n\n";
-
         // f-box                FETCH
         char head = XMem[PC]; // these are shared variables opcode
         int tail = Mem[PC];   // that the d-box will use    values
@@ -67,7 +65,7 @@ int main()
         int arg2 = tail % 10; // inst = {opc,arg1,...}
         tail = tail / 10;
         int arg1 = tail;
-        std::cout << "d: Set opc to '" << opc << "'      arg1: " << arg1 << "      arg2: " << arg2 << "      arg3: " << arg3 << "\n";
+        std::cout << "d: Set opc to '" << opc << "'\n";
         // 'opc' is the next datapath "shared variable" to be initialized;
         // 'arg1', 'arg2', 'arg3' are d-box local variables
         // all code, or equivalent, above this line is mandatory
@@ -90,19 +88,25 @@ int main()
             D_Out2 = Reg[arg2]; // localize reg. operand and latch
             std::cout << "d: Set D_Out2 to " << D_Out2 << ".\n";
             dreg = arg3; // latch dest. register designator
-            std::cout << "d: Set dreg to f" << dreg << ".\n";
-            if (D_Out1 == D_Out2)
+            if (D_Out1 != D_Out2)
             {
-                PC += arg3;
+                std::cout << "d: " << D_Out1 << " != " << D_Out2 << ": not equal, branch taken\n";
+                std::cout << "d: Terminate program\n";
+                PC += 2; // If they are not equal we want to target (skip the next two instructions)
             }
+            else if (D_Out1 == D_Out2)
+            {
+                std::cout << "d: " << D_Out1 << " == " << D_Out2 << ": equal, branch not taken\n";
+            }
+
             break;
 
         case 'm':
             D_Out1 = Reg[arg1]; // localize reg. operand and latch
             std::cout << "d: Set D_Out1 to " << D_Out1 << ".\n";
-            D_Out2 = arg3; // localize reg. operand and latch
+            D_Out2 = Reg[arg2]; // localize reg. operand and latch
             std::cout << "d: Set D_Out2 to " << D_Out2 << ".\n";
-            dreg = Reg[arg2]; // latch dest. register designator
+            dreg = arg3; // latch dest. register designator
             std::cout << "d: Set dreg to f" << dreg << ".\n";
             break;
 
@@ -111,17 +115,17 @@ int main()
             std::cout << "d: Set D_Out1 to " << D_Out1 << ".\n";
             D_Out2 = arg3; // localize reg. operand and latch
             std::cout << "d: Set D_Out2 to " << D_Out2 << ".\n";
-            dreg = Reg[arg2]; // latch dest. register designator
+            dreg = arg2; // latch dest. register designator
             std::cout << "d: Set dreg to f" << dreg << ".\n";
             break;
 
         case 's':
-            D_Out1 = Reg[arg1]; // localize reg. operand and latch
+            D_Out1 = Reg[arg1]; // data from this register is to be stored in D_Out2+dreg
             std::cout << "d: Set D_Out1 to " << D_Out1 << ".\n";
-            D_Out2 = Reg[arg2]; // data from this register is to be stored in D_Out1+dreg
+            D_Out2 = arg3; // byte-offset to add to D_Out1 to have the address to store arg2
             std::cout << "d: Set D_Out2 to " << D_Out2 << ".\n";
-            dreg = arg3; // byte-offset to add to D_Out1 to have the address to store D_Out2
-            std::cout << "d: Set dreg to f" << dreg << ".\n";
+            dreg = arg2; // byte-offset to add to D_Out1 to have the address to store D_Out2
+            std::cout << "d: Set sval to f" << dreg << "'s value: " << Reg[dreg] << ".\n";
             break;
         }
 
@@ -131,7 +135,11 @@ int main()
         {
         case 'a':
             X_Out = D_Out1 + D_Out2;
-            std::cout << "x: X_Out = " << D_Out1 << " + " << D_Out2 << " = " << D_Out1 + D_Out2 << "\n";
+            std::cout << "x: X_Out = " << D_Out1 << " + " << D_Out2 << " = " << X_Out << "\n";
+            break;
+
+        case 'b':
+            std::cout << "x: No operation\n";
             break;
 
         case 'l':
@@ -141,12 +149,12 @@ int main()
 
         case 'm':
             X_Out = D_Out1 * D_Out2;
-            std::cout << "x: X_Out = " << D_Out1 << " * " << D_Out2 << " = " << D_Out1 * D_Out2 << "\n";
+            std::cout << "x: X_Out = " << D_Out1 << " * " << D_Out2 << " = " << X_Out << "\n";
             break;
 
         case 's':
-            X_Out = D_Out1 + dreg;
-            std::cout << "x: X_Out = " << D_Out1 << " * " << dreg << " = " << D_Out1 + dreg << "\n"; // address of memory to store in
+            X_Out = D_Out1 + D_Out2;
+            std::cout << "x: X_Out = " << D_Out1 << " + " << D_Out2 << " = " << X_Out << "\n"; // address of memory to store in
             break;
         }
 
@@ -156,29 +164,53 @@ int main()
         {
         case 'l': //load
             M_Out = Mem[X_Out];
-            std::cout << "m: Load memory: Mem[" << X_Out << "] = " << M_Out << "\n";
+            std::cout << "m: Set M_Out to " << M_Out << "\n";
             break;
 
         case 's': //store
-            M_Out = Mem[X_Out];
-            std::cout << "m: Load memory: Mem[" << X_Out << "] = " << M_Out << "\n";
+            Mem[X_Out] = Reg[dreg];
+            std::cout << "m: Store in memory: Mem[" << X_Out << "] 'f" << dreg << "' that is equal to " << Reg[dreg] << "\n";
             break;
             // case else: not supposed to do anything
+        case 'a':
+            std::cout << "m: No operation\n";
+            break;
+
+        case 'b':
+            std::cout << "m: No operation\n";
+            break;
+
+        case 'm':
+            std::cout << "m: No operation\n";
+            break;
         }
 
         // w-box                WRITE-BACK
         switch (opc)
         {
         case 'a':
-            Mem[dreg] = X_Out;
-            std::cout << "w: Mem[" << dreg << "] = " << Mem[dreg] << "\n";
+            Reg[dreg] = X_Out;
+            std::cout << "w: Set f" << dreg << " to " << X_Out << "\n";
             break;
+
+        case 'l':
+            Reg[dreg] = Mem[X_Out];
+            std::cout << "w: Set f" << dreg << " to " << Mem[X_Out] << "\n";
+            break;
+
         case 'm':
-            Mem[dreg] = X_Out;
-            std::cout << "w: Mem[" << dreg << "] = " << Mem[dreg] << "\n";
+            Reg[dreg] = X_Out;
+            std::cout << "w: Set f" << dreg << " to " << X_Out << "\n";
+            break;
+
+        case 's':
+            std::cout << "w: No operation\n";
+            break;
+
+        case 'b':
+            std::cout << "w: No operation\n";
             break;
         }
-
-        std::cout << "\n";
+        std::cout << "\n"; // blank line
     }
 }
