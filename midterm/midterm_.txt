@@ -1,0 +1,156 @@
+Computer Org. and Design Midterm  Tuesday, November 3, 2020  5:45 - 7:00 p.m.
+
+1. [20 marks] Digital Logic.
+
+'X' is the ternary connective such that 'Xpqr' is logically equivalent to
+'p \/ (q | r)'.  '|' is 'nand'.  We have: p | q |= =| ~(p /\ q).  'F' and 'T'
+denote the 0-ary connectives 'false' and 'true', respectively.  If possible,
+put 'sentence' letters in alphabetical order, and put 'sentence' letters 
+before any 0-place connective.
+
+a) Using {'X', 'F', 'T'}, synthesize:                 ~p |= =| X ___ ___ ___
+
+b) Using {'X', '~', 'T'}, synthesize:             p \/ q |= =| X ___ ___ ___
+
+c) Using {'X', '~', 'T'}, synthesize:         p /\ q |= =| ___ X ___ ___ ___
+
+2. [20 marks] Amdahl's Law.
+
+On a uniprocessor, serial portion A of program P consumes x% of the time,
+while parallel portion B consumes the remaining (100 - x)%.  On a parallel
+computer, portion A speeds up by a factor of 1.75, while portion B speeds up
+by the number of processors.  The theoretical maximum speedup is 500 times.
+How many actual processors are needed to achieve at least 45% of the maximum
+speedup?  How many actual processors are needed to achieve at least 85% of
+the maximum speedup?  In each case, show the final arithmetic operation used
+to compute 'P_frac', which is required to calculate 'P'.
+
+a)   - at least 45% of the maximum speedup:           P = ________ processors
+
+b)                                Computed P_frac by: [                     ]
+
+c)   - at least 85% of the maximum speedup:           P = ________ processors
+
+d)                                Computed P_frac by: [                     ]
+
+3. [20 marks] Pipeline Boxes and Pipeline Latches
+
++-------------------------------------------------------------------------+ P
+|     <I-cache>               <Register file>                 <D-cache>   | r
+|                                                                         | o
+|                             <Control circuitry>                         | c
+|              +-+           +-+           +-+           +-+              | e
+|     <f-box>  | |  <d-box>  | |  <x-box>  | |  <m-box>  | |  <w-box>     | s
+|              +-+           +-+           +-+           +-+              | s
+|              f/d           d/x           x/m           m/w              | o
++-------------------------------------------------------------------------+ r
+
+Memrefs have 2 m-boxes, and floating-point multiplies have 3 x-boxes.  Integer
+add is denoted xi.  The following space-time diagram shows the actual physical
+behavior of the program plus RISC 1.0 pipeline:
+
+                1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 0 | 1 | 2 | 3 | 4 |
+l.d   f0,4(r1)  f | d | xi| m1| m2| w |   |   |   |   |   |   |   |   |
+               --------------------------------------------------------
+s.d   f0,8(r2)    | . | f | d | xi| m1| m2|   |   |   |   |   |   |   |
+               ________________________________________________________
+mul.d f4,f0,f2    |   |   | f | d | x1| x2| x3| n | w |   |   |   |   |
+               --------------------------------------------------------
+mul.d f6,f4,f8    |   |   |   | . | . | f | d | x1| x2| x3| n | w |   |
+               --------------------------------------------------------
+mul.d f8,f0,f4    |   |   |   |   |   |   | f | d | x1| x2| x3| n | w |
+               --------------------------------------------------------
+
+Consider floating-point operands only.  When a box processing an instruction
+must retrieve two operands, answer in the order left operand, right operand.
+Otherwise, show the single latch name.
+
+a) From which latch or latches does the m1-box in cycle 6 receive its
+operand or operands?
+                                                       latch(es): ____, ____
+
+b) From which latch or latches does the x1-box in cycle 6 receive its
+operand or operands?
+                                                       latch(es): ____, ____
+
+c) From which latch or latches does the x1-box in cycle 9 receive its
+operand or operands?
+                                                       latch(es): ____, ____
+
+d) From which latch or latches does the x1-box in cycle 10 receive its
+operand or operands?
+                                                       latch(es): ____, ____
+
+Hex table:                                   Hex flips:      Hex powers:
+
+0   0000   4   0100   8   1000   c   1100    0 - f  4 - b    1, 16, 256, 4096
+1   0001   5   0101   9   1001   d   1101    1 - e  5 - a
+2   0010   6   0110   a   1010   e   1110    2 - d  6 - 9    Hex naturals:
+3   0011   7   0111   b   1011   f   1111    3 - c  7 - 8    a  b  c  d  e  f
+                                                             10 11 12 13 14 15
+
+4. [20 marks] Instructions with Base Register and Offset.
+
+a) Assume 64-bit registers and arithmetic units; 32-bit instructions and
+memory addresses; and 16-bit immediates.
+
+i) Consider 'l.d f6,-31485(r2)'.  After processing, a 64-bit number will be
+added to 'r2'.  Show this number in 64-bit hexadecimal.  Show padding on the
+left by 'alpha^*', where 'alpha' is a hexit.
+                                             hexadecimal:      _____________
+
+ii) As it happens, r2 = 16,144.  There is no error checking in the adder.  The
+least-significant 32 bits of the sum are extracted from the 64-bit register,
+and presented to the memory system as a memory byte address.  In decimal, what
+is this address?  No part marks for just the hexadecimal.
+
+                                             decimal:          _____________
+
+b) Assume 64-bit registers and arithmetic units; 40-bit instructions and
+memory addresses; and 20-bit immediates.  
+
+iii) Consider 'bne r1,r2,loop1', where 'loop1' = -314,485.  After processing,
+a 64-bit number will be added to 'PC'.  Show this number in 64-bit hexadecimal.
+Show padding on the left by 'alpha^*', where 'alpha' is a hexit.
+
+                                             hexadecimal:      _____________
+
+iv) As it happens, the instruction at label 'loop1' is 'bne r1,r2,loop2',
+where 'loop2' = -314,485.  Could the effect of these two chained conditional
+branches have been achieved by a _single_ conditional branch? ____ (yes/no)
+Explain.
+                                             _______________________________
+
+5. [20 marks] Fractional-Number Formats and Blackboard Notation.
+
+Infinite binary expansions of rational numbers are either pure recurring or
+mixed recurring depending on whether the cycle starts immediately after the
+point.
+
+a) [math] Show the infinite binary expansion of 15 3/14 without normalization.
+Factor 14.  Since these are bits, use '(...)^*' to indicate a bit sequence
+that repeats forever.
+                                                        ans: _______________
+
+b) [math] Normalize the infinite binary expansion of 15 3/14, adding a scale
+factor with a decimal exponent.  Prepare to move to a floating-point format.
+
+                                                        ans: _______________
+
+PFP is a slight variant of IEEE floating point.  In particular, i) there is
+no sign bit, ii) the exponent is 8-bit two's complement, iii) the fractional
+field is 52 bits, and iv) exponents are unbiased and no exponents have been
+removed to encode special values.  Registers have 60 bits.
+
+c) Show the 60-bit register contents of 15 3/14 in PFP in hexadecimal.  Use
+either pure or mixed definite-repetition hexadecimal for the fraction.
+
+                                                        ans: _______________
+
+d) Here are two numbers in fractional hexadecimal blackboard with a 24-bit
+fractional field.  Add them, and express their sum in fractional hexadecimal
+blackboard with a 24-bit fractional field.
+
+   1.[a5b6c7] * 2^-12
+ + 1.[775533] * 2^-12                                   ans: _______________
+   __________________

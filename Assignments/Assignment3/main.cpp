@@ -72,8 +72,8 @@ int main()
 
         int D_Out1, D_Out2, dreg, sval; // more shared variables
         switch (opc)
-        { // You may imitate this style.
-        case 'a':
+        {                       // You may imitate this style.
+        case 'a':               //add
             D_Out1 = Reg[arg1]; // localize reg. operand and latch
             std::cout << "d: Set D_Out1 to " << D_Out1 << ".\n";
             D_Out2 = Reg[arg2]; // localize reg. operand and latch
@@ -82,7 +82,7 @@ int main()
             std::cout << "d: Set dreg to f" << dreg << ".\n";
             break;
 
-        case 'b':
+        case 'b':               // bne
             D_Out1 = Reg[arg1]; // localize reg. operand and latch
             std::cout << "d: Set D_Out1 to " << D_Out1 << ".\n";
             D_Out2 = Reg[arg2]; // localize reg. operand and latch
@@ -101,7 +101,7 @@ int main()
 
             break;
 
-        case 'm':
+        case 'm':               // multiply
             D_Out1 = Reg[arg1]; // localize reg. operand and latch
             std::cout << "d: Set D_Out1 to " << D_Out1 << ".\n";
             D_Out2 = Reg[arg2]; // localize reg. operand and latch
@@ -110,7 +110,7 @@ int main()
             std::cout << "d: Set dreg to f" << dreg << ".\n";
             break;
 
-        case 'l':
+        case 'l':               // load
             D_Out1 = Reg[arg1]; // localize reg. operand and latch
             std::cout << "d: Set D_Out1 to " << D_Out1 << ".\n";
             D_Out2 = arg3; // localize reg. operand and latch
@@ -119,7 +119,7 @@ int main()
             std::cout << "d: Set dreg to f" << dreg << ".\n";
             break;
 
-        case 's':
+        case 's':               // save
             D_Out1 = Reg[arg1]; // data from this register is to be stored in D_Out2+dreg
             std::cout << "d: Set D_Out1 to " << D_Out1 << ".\n";
             D_Out2 = arg3; // byte-offset to add to D_Out1 to have the address to store arg2
@@ -214,3 +214,80 @@ int main()
         std::cout << "\n"; // blank line
     }
 }
+
+// OUTPUT:
+/*
+f: Fetched instruction: l|124.
+d: Set opc to 'l'
+d: Set D_Out1 to 105.
+d: Set D_Out2 to 4.
+d: Set dreg to f2.
+x: X_Out = 105 + 4 = 109
+m: Set M_Out to 19
+w: Set f2 to 19
+
+f: Fetched instruction: l|348.
+d: Set opc to 'l'
+d: Set D_Out1 to 203.
+d: Set D_Out2 to 8.
+d: Set dreg to f4.
+x: X_Out = 203 + 8 = 211
+m: Set M_Out to 43
+w: Set f4 to 43
+
+f: Fetched instruction: m|246.
+d: Set opc to 'm'
+d: Set D_Out1 to 19.
+d: Set D_Out2 to 43.
+d: Set dreg to f6.
+x: X_Out = 19 * 43 = 817
+m: No operation
+w: Set f6 to 817
+
+f: Fetched instruction: a|468.
+d: Set opc to 'a'
+d: Set D_Out1 to 43.
+d: Set D_Out2 to 817.
+d: Set dreg to f8.
+x: X_Out = 43 + 817 = 860
+m: No operation
+w: Set f8 to 860
+
+f: Fetched instruction: b|550.
+d: Set opc to 'b'
+d: Set D_Out1 to 301.
+d: Set D_Out2 to 301.
+d: 301 == 301: equal, branch not taken
+x: No operation
+m: No operation
+w: No operation
+
+f: Fetched instruction: s|368.
+d: Set opc to 's'
+d: Set D_Out1 to 203.
+d: Set D_Out2 to 8.
+d: Set sval to f6's value: 817.
+x: X_Out = 203 + 8 = 211
+m: Store in memory: Mem[211] 'f6' that is equal to 817
+w: No operation
+
+f: Fetched instruction: s|584.
+d: Set opc to 's'
+d: Set D_Out1 to 301.
+d: Set D_Out2 to 4.
+d: Set sval to f8's value: 860.
+x: X_Out = 301 + 4 = 305
+m: Store in memory: Mem[305] 'f8' that is equal to 860
+w: No operation
+
+f: Fetched instruction: b|790.
+d: Set opc to 'b'
+d: Set D_Out1 to 148.
+d: Set D_Out2 to 156.
+d: 148 != 156: not equal, branch taken
+d: Terminate program
+x: No operation
+m: No operation
+w: No operation
+
+*/
