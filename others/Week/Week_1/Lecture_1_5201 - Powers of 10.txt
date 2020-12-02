@@ -1,0 +1,51 @@
+powers of ten
+_____________
+
+-24 yocto ys              +24 yotta YFs/s
+
+-21 zepto zs              +21 zetta ZFs/s
+
+-18 atto  as              +18 exa   EFs/s
+
+-15 femto fs              +15 peta  PFs/s
+
+-12 pico  ps              +12 tera  TFs/s
+
+-9  nano  ns              +9  giga  GFs/s
+
+-6  micro us              +6  mega  MFs/s
+
+-3  milli ms              +3  kilo  KFs/s
+
+In column 1, 's' stands for second.  Thus, 1 fs
+= 1 femtosecond = 10^-15 s, and 2 fs = 2 femtoseconds
+= 2 * 10^-15 s.
+
+In column 2, 'F' stands for flop and 'Fs' stands
+for flops.  Thus, 1 PF/s = 1 petaflop/second = 10^15 Fs/s,
+and 3 PFs/s = 3 petaflops/second = 3 * 10^15 Fs/s.
+
+powers of two
+_____________
+
++80 yotta YBs
+
++70 zetta ZBs
+
++60 exa   EBs
+
++50 peta  PBs
+
++40 tera  TBs
+
++30 giga  GBs
+
++20 mega  MBs
+
++10 kilo  KBs
+
+'B' stands for byte and 'Bs' stands for bytes.  Thus,
+1 GB = 1 gigabyte = 2^30 Bs, and 3 GBs = 3 gigabytes
+= 3 *2^30 Bs.
+
+All this is because 2^10 is roughly equal to 10^3.

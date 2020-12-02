@@ -1,0 +1,247 @@
+Review for the Final (plus what we learned)
+____________________
+
+Lecture 1: General Introduction
+
+Topics: components: processors, memories, storage, system interconnect; why
+bandwidth matters (computer-communication balance); von Neumann model of
+computers
+
+ - latency and bandwith
+
+ - a network's quality is its bandwidth
+
+ - computing needs more architectural diversity: almost all high-end CPUs
+   have the same RISC microprocessor architecture
+
+ - killer micros are still king of the world
+
+ - but programs differ (don't listen to the disinformation); we agree that
+   data-parallel programs run faster on GPUs, while task-parallel programs
+   run faster on CPUs; however, CPU programs differ in their memory-accessing
+   patterns, in particular in their _arithmetic intensity_
+
+ - fast clocks make hot chips; let's try multicore!
+
+ - FPUs are free; moving data is expensive
+
+ - the von Neumann model underlies the fetch-execute cycle
+
+ - a few MIPS instructions  
+ 
+Lecture 2: General Introduction (cont.)
+
+Topics: workbench with stages, which can be pipelined ('fdxmw'); Moore's law;
+Amdahl's Law; whole-number encodings; two's complement; hexadecimal encoding
+of bit patterns
+
+ - first look at the fetch-execute cycle
+
+ - both clock frequency and number of logic transistors matter
+
+ - VLSI process technology gave us exponential improvements in transistor
+   density; today, the improvements are less rapid (when will we get to
+   5 nm?; when will we get to 3 nm?; what do we do for an encore?
+
+ - do we have the power to turn lots of transistors on?
+
+ - Amdahl's Law is _very_ important
+
+ - binary (radix-2) numbers: natural and two's complement semantics
+
+ - computer addition of whole numbers
+
+ - negation; expansion; size
+
+Lecture 3: Numbers and Instructions
+
+Topics: fixed-point numbers; floating-point numbers; instruction formats;
+addressing modes
+
+ - every number inside a computer is a 'binary rational'
+
+ - but some rational numbers (e.g., 1/3) are not binary rationals
+
+ - the fixed-point number system teaches us some important truths
+
+ - conversion of rationals to binary expansions is algorithmic
+
+ - finite and infinite binary expansions; pure and recurring infinite
+   binary expansions
+
+ - normalization and scale factors
+
+ - real-world floating point numbers in _registers_ i) hide the '1.',
+   and ii) encode the exponent in two's complement; field sizes matter; in
+   blackboard notation, we i) show the '1.', ii) write the scale factor
+   with a decimal exponent, and iii) may or may not worry about field
+   sizes
+
+ - floating-point numbers go: sign bit; exponent; (finite) fractional
+   part of coefficient
+
+ - floating-point special values
+
+ - instruction formats contain a few important truths, about sizes and
+   semantics
+
+Lecture 4: Digital Logic
+
+Topics: logic gates; Boolean functions and their multiple implementations;
+combinational and sequential logic; half and full adders; synthesizing gates
+from connectives and sentence letters; computer arithmetic
+
+ - combinational and sequential circuits
+
+ - n-place Boolean function
+
+ - identification of connectives with logic gates
+
+ - table of the sixteen binary connectives
+
+ - negation of connectives
+
+ - labeling gates outputs with logic formulas
+
+ - multiplicity of implementations of Boolean functions  
+
+ - synergy between state elements and combinational logic
+
+ - half adder, full adder
+
+ - specify, then implement; design tools
+
+ - ternary connectives
+
+ - De Morgan's Laws
+
+ - computer arithmetic on natural numbers
+
+ - logic synthesis
+
+Lecture 5: RISC 1.0 Architectures
+
+Topics: datapath and control; pipelining; pipeline boxes and pipeline latches;
+the Walls (ILP, Power, Memory)
+
+ - RISC philosophy
+
+ - Little's Law
+
+ - job descriptions of boxes
+
+ - latches as a transmission medium ("river")
+
+ - ideal pipelining
+
+ - data and control dependences
+
+ - pipeline stalls; dot notation for space-time diagrams
+
+ - multicycle operations
+
+ - centrality of flow dependences
+
+ - load stalls; branch stalls; "predict not taken"
+
+ - separate hardware devices for integer and floating-point arithmetic  
+
+Lecture 6: Hardware-Controlled Caches
+
+Topics: memory latency: tolerate or avoid?; are caches sufficient?;
+data reuse ("temporal locality"); contiguous-data use ("spatial locality");
+memory pipelining; Little's Law; cache mechanics
+
+ - cache friendliness
+
+ - design decisions for conventional caches
+
+ - translation formulas (mapping)
+
+ - cache lines and cache frames
+
+ - spatial and temporal locality
+
+ - cache mechanics:
+
+   - when do we make a copy?
+
+   - how many bytes do we copy?
+
+   - how does cache lookup work?
+
+   - how does victim selection work?
+
+ - cache-line length
+
+ - memory address = <tag; index; offset>
+
+ - direct-mapped and m-way associative caches
+
+ - cache-performance equations
+
+Review of the basic cache formulas
+___________________________________
+
+Imagine a large byte-addressed memory.  Suppose somebody wants to divide
+memory into contiguous lines of 16 bytes.  He also wants to name these
+lines.  A picture might look something like this:
+
+line name:        0        1        2        3        4      
+              [       ][       ][       ][       ][       ] ...
+
+byte address:  0    15  16   31  32   47  48   63  64   79
+
+The official name for these lines is _line_ (or _cache line_), while the
+official name for line names is _line number_.
+
+A moment's reflection will convince you that we can map from byte address
+to line number by:
+
+  line number = byte address `div` the number of bytes per line
+
+Work a few examples yourself.
+
+Imagine that we store integers in these lines, and that we keep copies of
+these lines in a warehouse.  Suppose we want to retrieve the integer at
+byte address 20 from the warehouse.
+
+Now, 20 `div` 16 = 1, so it's in line 1.
+
+Moreover, 20 `mod` 16 = 4, so it's 4 bytes over from the beginning of
+line 1.  This "4 bytes over" is called the _byte offset_, which is quite
+useful if you want to retrieve a particular datum from a copy of one of
+the lines stored in the warehouse.
+
+This explains our first two cache equations:
+
+0) byte offset = byte address `mod` the number of bytes per line
+
+1) line number = byte address `div` the number of bytes per line
+
+The warehouse owner once took a course in computer science, so he has
+organized his warehouse as an _array_, with 'elements' and 'array indices'.
+He realizes that there are enormously more byte addresses---also more
+lines---in memory than element containers in his warehouse, so he ties to
+spread the load as evenly as possible.  He remembers the _mod_ function
+from when he studied hash tables.  So, he implements our next two cache
+equations:
+
+2) cache index = line number `mod` the number of elements in the cache array
+
+3) tag value = line number `div` the number of elements in the cache array
+
+The cache index tells him which container to use to store a copy of the line.
+That makes sense.  But what is this weird _tag value_?
+
+The `mod` function maps a great many _different_ memory lines into the same
+container (element).  If a client asks the warehouse owner, "Do you have a
+copy of datum xyz at byte address alpha?", two steps are required before
+answering.  First, we have to calculate the container index from the byte
+address.  Second, we have to compare the top portion of the line number we
+are looking for to the top portion of the line number of the line stored in
+this container to make sure that this is a copy of our line, and not a
+copy of some other line that just happens to map to the same container.
+
+Yes, the warehouse has to store copies of tag values close to containers so
+that we can make comparisons.
