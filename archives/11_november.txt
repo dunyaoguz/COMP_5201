@@ -1,0 +1,2306 @@
+From probst at cse.concordia.ca  Tue Nov  3 10:10:13 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Tue, 03 Nov 2020 10:10:13 -0500
+Subject: [comp5201-f20] (no subject)
+Message-ID: <5fa172d5.nBEBZ7G5K+nqDNwP%probst@cse.concordia.ca>
+
+
+What Counts As Cheating
+_______________________
+
+You will be taking the midterm on the honor system, but we should
+define our terms clearly.
+
+Definition: _Cheating_ is accepting assistance from someone else
+during the exam.
+
+You may refer to notes, lecture notes, etc.
+
+You may make full use of a pocket calculator.
+
+Spending a lot of time looking things up takes away valuable time
+from solving the problems.
+
+We will stick to our agreed on exam duration, 5:45 - 7:00 p.m.
+
+Remember that this is a competitive exam: what matters is, are you
+in the top 20%?, the top 40%?, and so on.
+
+Finally, don't forget to return two plaintext copies of your answer
+sheet, one uploaded to Moodle, and the other emailed to me.
+
+You get one submission.  No changing of answers.
+
+Finally, spending lots of time documenting your solution method may
+slow some of you down.
+
+Suppose the answer is 123456, and you write 123756.  That tells me
+quite a lot about your solution method.
+
+
+From probst at cse.concordia.ca  Tue Nov  3 10:11:05 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Tue, 03 Nov 2020 10:11:05 -0500
+Subject: [comp5201-f20] what the honor system means
+Message-ID: <5fa17309.fVcKRwqnlcyldviQ%probst@cse.concordia.ca>
+
+
+What Counts As Cheating
+_______________________
+
+You will be taking the midterm on the honor system, but we should
+define our terms clearly.
+
+Definition: _Cheating_ is accepting assistance from someone else
+during the exam.
+
+You may refer to notes, lecture notes, etc.
+
+You may make full use of a pocket calculator.
+
+Spending a lot of time looking things up takes away valuable time
+from solving the problems.
+
+We will stick to our agreed on exam duration, 5:45 - 7:00 p.m.
+
+Remember that this is a competitive exam: what matters is, are you
+in the top 20%?, the top 40%?, and so on.
+
+Finally, don't forget to return two plaintext copies of your answer
+sheet, one uploaded to Moodle, and the other emailed to me.
+
+You get one submission.  No changing of answers.
+
+Finally, spending lots of time documenting your solution method may
+slow some of you down.
+
+Suppose the answer is 123456, and you write 123756.  That tells me
+quite a lot about your solution method.
+
+
+From probst at cse.concordia.ca  Tue Nov  3 17:45:52 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Tue, 03 Nov 2020 17:45:52 -0500
+Subject: [comp5201-f20] midterm questions
+Message-ID: <5fa1dda0.EuYrcSq/qZUbyzbC%probst@cse.concordia.ca>
+
+
+Computer Org. and Design Midterm  Tuesday, November 3, 2020  5:45 - 7:00 p.m.
+
+1. [20 marks] Digital Logic.
+
+'X' is the ternary connective such that 'Xpqr' is logically equivalent to
+'p \/ (q | r)'.  '|' is 'nand'.  We have: p | q |= =| ~(p /\ q).  'F' and 'T'
+denote the 0-ary connectives 'false' and 'true', respectively.  If possible,
+put 'sentence' letters in alphabetical order, and put 'sentence' letters 
+before any 0-place connective.
+
+a) Using {'X', 'F', 'T'}, synthesize:                 ~p |= =| X ___ ___ ___
+
+b) Using {'X', '~', 'T'}, synthesize:             p \/ q |= =| X ___ ___ ___
+
+c) Using {'X', '~', 'T'}, synthesize:         p /\ q |= =| ___ X ___ ___ ___
+
+2. [20 marks] Amdahl's Law.
+
+On a uniprocessor, serial portion A of program P consumes x% of the time,
+while parallel portion B consumes the remaining (100 - x)%.  On a parallel
+computer, portion A speeds up by a factor of 1.75, while portion B speeds up
+by the number of processors.  The theoretical maximum speedup is 500 times.
+How many actual processors are needed to achieve at least 45% of the maximum
+speedup?  How many actual processors are needed to achieve at least 85% of
+the maximum speedup?  In each case, show the final arithmetic operation used
+to compute 'P_frac', which is required to calculate 'P'.
+
+a)   - at least 45% of the maximum speedup:           P = ________ processors
+
+b)                                Computed P_frac by: [                     ]
+
+c)   - at least 85% of the maximum speedup:           P = ________ processors
+
+d)                                Computed P_frac by: [                     ]
+
+3. [20 marks] Pipeline Boxes and Pipeline Latches
+
++-------------------------------------------------------------------------+ P
+|     <I-cache>               <Register file>                 <D-cache>   | r
+|                                                                         | o
+|                             <Control circuitry>                         | c
+|              +-+           +-+           +-+           +-+              | e
+|     <f-box>  | |  <d-box>  | |  <x-box>  | |  <m-box>  | |  <w-box>     | s
+|              +-+           +-+           +-+           +-+              | s
+|              f/d           d/x           x/m           m/w              | o
++-------------------------------------------------------------------------+ r
+
+Memrefs have 2 m-boxes, and floating-point multiplies have 3 x-boxes.  Integer
+add is denoted xi.  The following space-time diagram shows the actual physical
+behavior of the program plus RISC 1.0 pipeline:
+
+                1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 0 | 1 | 2 | 3 | 4 |
+l.d   f0,4(r1)  f | d | xi| m1| m2| w |   |   |   |   |   |   |   |   |
+               --------------------------------------------------------
+s.d   f0,8(r2)    | . | f | d | xi| m1| m2|   |   |   |   |   |   |   |
+               ________________________________________________________
+mul.d f4,f0,f2    |   |   | f | d | x1| x2| x3| n | w |   |   |   |   |
+               --------------------------------------------------------
+mul.d f6,f4,f8    |   |   |   | . | . | f | d | x1| x2| x3| n | w |   |
+               --------------------------------------------------------
+mul.d f8,f0,f4    |   |   |   |   |   |   | f | d | x1| x2| x3| n | w |
+               --------------------------------------------------------
+
+Consider floating-point operands only.  When a box processing an instruction
+must retrieve two operands, answer in the order left operand, right operand.
+Otherwise, show the single latch name.
+
+a) From which latch or latches does the m1-box in cycle 6 receive its
+operand or operands?
+                                                       latch(es): ____, ____
+
+b) From which latch or latches does the x1-box in cycle 6 receive its
+operand or operands?
+                                                       latch(es): ____, ____
+
+c) From which latch or latches does the x1-box in cycle 9 receive its
+operand or operands?
+                                                       latch(es): ____, ____
+
+d) From which latch or latches does the x1-box in cycle 10 receive its
+operand or operands?
+                                                       latch(es): ____, ____
+
+Hex table:                                   Hex flips:      Hex powers:
+
+0   0000   4   0100   8   1000   c   1100    0 - f  4 - b    1, 16, 256, 4096
+1   0001   5   0101   9   1001   d   1101    1 - e  5 - a
+2   0010   6   0110   a   1010   e   1110    2 - d  6 - 9    Hex naturals:
+3   0011   7   0111   b   1011   f   1111    3 - c  7 - 8    a  b  c  d  e  f
+                                                             10 11 12 13 14 15
+
+4. [20 marks] Instructions with Base Register and Offset.
+
+a) Assume 64-bit registers and arithmetic units; 32-bit instructions and
+memory addresses; and 16-bit immediates.
+
+i) Consider 'l.d f6,-31485(r2)'.  After processing, a 64-bit number will be
+added to 'r2'.  Show this number in 64-bit hexadecimal.  Show padding on the
+left by 'alpha^*', where 'alpha' is a hexit.
+                                             hexadecimal:      _____________
+
+ii) As it happens, r2 = 16,144.  There is no error checking in the adder.  The
+least-significant 32 bits of the sum are extracted from the 64-bit register,
+and presented to the memory system as a memory byte address.  In decimal, what
+is this address?  No part marks for just the hexadecimal.
+
+                                             decimal:          _____________
+
+b) Assume 64-bit registers and arithmetic units; 40-bit instructions and
+memory addresses; and 20-bit immediates.  
+
+iii) Consider 'bne r1,r2,loop1', where 'loop1' = -314,485.  After processing,
+a 64-bit number will be added to 'PC'.  Show this number in 64-bit hexadecimal.
+Show padding on the left by 'alpha^*', where 'alpha' is a hexit.
+
+                                             hexadecimal:      _____________
+
+iv) As it happens, the instruction at label 'loop1' is 'bne r1,r2,loop2',
+where 'loop2' = -314,485.  Could the effect of these two chained conditional
+branches have been achieved by a _single_ conditional branch? ____ (yes/no)
+Explain.
+                                             _______________________________
+
+5. [20 marks] Fractional-Number Formats and Blackboard Notation.
+
+Infinite binary expansions of rational numbers are either pure recurring or
+mixed recurring depending on whether the cycle starts immediately after the
+point.
+
+a) [math] Show the infinite binary expansion of 15 3/14 without normalization.
+Factor 14.  Since these are bits, use '(...)^*' to indicate a bit sequence
+that repeats forever.
+                                                        ans: _______________
+
+b) [math] Normalize the infinite binary expansion of 15 3/14, adding a scale
+factor with a decimal exponent.  Prepare to move to a floating-point format.
+
+                                                        ans: _______________
+
+PFP is a slight variant of IEEE floating point.  In particular, i) there is
+no sign bit, ii) the exponent is 8-bit two's complement, iii) the fractional
+field is 52 bits, and iv) exponents are unbiased and no exponents have been
+removed to encode special values.  Registers have 60 bits.
+
+c) Show the 60-bit register contents of 15 3/14 in PFP in hexadecimal.  Use
+either pure or mixed definite-repetition hexadecimal for the fraction.
+
+                                                        ans: _______________
+
+d) Here are two numbers in fractional hexadecimal blackboard with a 24-bit
+fractional field.  Add them, and express their sum in fractional hexadecimal
+blackboard with a 24-bit fractional field.
+
+   1.[a5b6c7] * 2^-12
+ + 1.[775533] * 2^-12                                   ans: _______________
+   __________________
+
+
+From probst at cse.concordia.ca  Tue Nov  3 17:47:27 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Tue, 03 Nov 2020 17:47:27 -0500
+Subject: [comp5201-f20] duplicate answer sheet (if you need one)
+Message-ID: <5fa1ddff.MHiT9Ce6UvIuVN8n%probst@cse.concordia.ca>
+
+
+CODE: zebrafish5               FILE NAME: answers.txt (plaintext file)
+
+Full Name:                     ID:
+
+---
+
+1. a)
+
+   b)
+
+   c)
+
+---
+
+2. a)
+
+   b)
+
+   c)
+
+   d)
+
+---
+
+3. a)
+
+   b)
+
+   c)
+
+   d)
+
+---
+
+4. a) <no answer goes here>
+
+   i)
+
+   ii)
+
+   b) <no answer goes here>
+
+   iii)
+
+   iv)
+
+---
+
+5. a)
+
+   b)
+
+   c)
+
+   d)
+
+---
+
+Upon my sacred honor, I swear I have not cheated on this test.
+
+(signed) <type your name>
+
+
+From probst at cse.concordia.ca  Tue Nov  3 19:04:29 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Tue, 03 Nov 2020 19:04:29 -0500
+Subject: [comp5201-f20] finish up!
+Message-ID: <202011040004.0A404TRs038546@poise.encs.concordia.ca>
+
+Time's up!
+
+Scheduled Zoom Half-Class at 7:15 p.m.
+
+DAVID K. PROBST is inviting you to a scheduled Zoom meeting.
+
+Topic: DAVID K. PROBST's COMP5201 Zoom Half-Meeting
+Time: Nov 3, 2020 07:15 PM Montreal
+
+Join Zoom Meeting
+https://concordia-ca.zoom.us/j/81915128327?pwd=dmVjTlE5ZVR1bFhPRWkrVlBnQTF2dz09
+
+Meeting ID: 819 1512 8327
+Passcode: 667768
+
+
+From probst at cse.concordia.ca  Tue Nov  3 20:42:27 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Tue, 03 Nov 2020 20:42:27 -0500
+Subject: [comp5201-f20] you have all seen this, I trust
+Message-ID: <202011040142.0A41gR98011621@poise.encs.concordia.ca>
+
+
+Dear Class,
+
+In order to keep the consistency between the two tutorials, there will be
+no tutorial this evening.
+
+Have a good evening!
+
+Samia
+
+
+From probst at cse.concordia.ca  Thu Nov  5 13:02:09 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Thu, 05 Nov 2020 13:02:09 -0500
+Subject: [comp5201-f20] assignment 3 due date
+Message-ID: <5fa43e21.JkRtv3XfRLgO/ugg%probst@cse.concordia.ca>
+
+
+When, on Election Day, I proposed that Assignment 3 was due in two
+weeks, there was a monstrous gnashing of teeth, and rending of
+garments.
+
+I agreed to go over Assignment 3 on Nov 10 (week 10).
+
+I propose the following:
+
+ - Assignment 3 due on Tue, Nov 24 (week 12).
+
+ - Assignment 4 due on Tue, Dec 01 (week 13).
+
+Or, is that too late for Assignment 4?
+
+Speak now, or forever hold your peace.
+
+
+From probst at cse.concordia.ca  Thu Nov  5 13:14:51 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Thu, 05 Nov 2020 13:14:51 -0500
+Subject: [comp5201-f20] duplicate of Ass. 3 with due date and submission
+	instructions
+Message-ID: <5fa4411b.SwOGlDjDQHpIRJy2%probst@cse.concordia.ca>
+
+
+Name: ___________________                                     ID: ____________
+
+COMP5201                       Assignment 3                          Fall 2020
+Computer Organization & Design                               Prof. D.K. Probst
+Issued: October 20, 2020                                Due: November 24, 2020
+Submit the plaintext file {source + output} electronically to Moodle.  No
+extension will be granted. 
+
+Write a simulator for the nonpipelined 'fdxmw' data path that can handle
+'mul.d', 'add.d', 'l.d', 's.d', and 'bne'---in a restricted form---but none of
+the other instructions such as 'addi', 'subi', and 'mul'.  In large part, this
+assignment is simple coding of the box job descriptions in Lecture 5, plus
+knowledge about how instructions are laid out.  
+
+You are given a template of the simulator below.  Points of interest are the
+following:
+
+1) There are ten registers in the register file.  While I pretend that some
+are f-registers and some are r-registers, in the simulation they are all
+simply integer registers, namely, Reg : 'array'[0..9] 'of' integer; .
+
+2) The object code for the test program has already been generated and
+stored in memory for you.  Recall the instruction formats from Lecture 3.
+
+3) Each of the five boxes generates data/control for subsequent boxes.
+Each time a useful result is generated, both write code to generate that
+result, and indicate having done so with a print statement.  To avoid chaos,
+stick with the variable names appearing in the template.  Example: The global
+d-box variables are 'opc', 'D_Out1', 'D_Out2', 'dreg', and 'sval', while the
+local variables are 'arg1', 'arg2', and 'arg3'.  Note that updating the
+register file, updating the memory, or making a branch decision, is a useful
+result, and deserves a print statement.  In the simulation, we transmit both
+data and control by writing certain global variables, most of which are
+mentioned above.
+
+4) 'bne' has special emulation rules.  If the branch is not taken, continue
+with the next instruction.  If the branch is taken, skip all remaining
+instructions, and terminate the program normally.  The 'for' loop needs to
+know this decision.
+
+5) Although the template code uses case statements, this is not required.
+It is, however, easier to code and to read.  
+
+6) In the code, register designators are decimal digits.  For example, f2
+is really just 2 (the print statements tell white lies!).
+
+7) Full output for the first instruction is shown to give you some idea
+of what kind of output is expected.
+
+8) Submissions must contain all source code and all output (as an appended
+comment) in a _single_ machine-readable ASCII text file.  A formal
+submission requires electronic transmission of the text file to Moodle.
+Call it "Programming Assignment 3".
+
+9) If a box does nothing, print "<box name>: Did nothing."
+
+---
+
+/*
+
+  l.d   f2,4(r1)                            // program to be  
+  l.d   f4,8(r3)                            // simulated;
+  mul.d f6,f2,f4                            // no pipelining
+  add.d f8,f4,f6
+  bne   r5,r5,target
+  s.d   f6,8(r3)
+  s.d   f8,4(r5)
+  bne   r7,r9,target
+  l.d   f2,8(r7)
+  s.d   f2,8(r7)
+target:
+
+*/
+
+#include <iostream>  // for std::cout
+
+int main () {
+  // all submissions must contain this prelude, or equivalent
+
+  // register file
+  int Reg[10];
+  Reg[1] = 105; Reg[3] = 203; Reg[5] = 301; // r-register values
+  Reg[7] = 148; Reg[9] = 156;
+
+  // main memory
+  int  Mem[500];
+  char XMem[] = "llmabssbls";               // ten opcodes, and
+  Mem[0] = 124; Mem[1] = 348; Mem[2] = 246; // their ten argument
+  Mem[3] = 468; Mem[4] = 550; Mem[5] = 368; // lists
+  Mem[6] = 584; Mem[7] = 790; Mem[8] = 728;
+  Mem[9] = 728;
+
+  Mem[109] = 19; Mem[156] = 25;             // memory values
+  Mem[211] = 43;
+
+  bool branch;                              // for bne results
+  std:: cout << "\n";                       // blank line
+
+  // loop over instructions; pretend next instruction is at PC + 1
+  for( int PC = 0; PC < 10; PC++ ) {
+
+    // f-box
+    char head = XMem[PC];
+    int  tail = Mem[PC];
+    std::cout << "f: Fetched instruction: " << head << "|" << tail << ".\n";
+
+    // d-box
+    char opc = head;                        // decompose instruction
+    int arg3 = tail % 10;                   // into its opcode and
+    tail = tail / 10;                       // its three arguments
+    int arg2 = tail % 10;                   // inst = {opc,arg1,...}
+    tail = tail / 10;
+    int arg1 = tail;
+    std::cout << "d: Set opc to '" << opc << "'.\n";
+
+    // all code, or equivalent, above this line is mandatory
+
+    int D_Out1, D_Out2, dreg, sval;         // You may imitate this style.
+    switch( opc ) {
+      case 'a':
+      case 'm':
+        D_Out1 = Reg[arg1];                 // localize operand and latch
+        std::cout << "d: Set D_Out1 to " << D_Out1 << ".\n";
+        D_Out2 = Reg[arg2];                 // localize operand and latch     
+        std::cout << "d: Set D_Out2 to " << D_Out2 << ".\n";
+        dreg = arg3;                        // latch dest. register designator
+        std::cout << "d: Set dreg to f" << dreg << ".\n";
+        break;
+        ...
+    }
+ 
+    // x-box
+    int X_Out;
+    switch( opc ) {
+    ...
+    }
+
+    // m-box
+    int M_Out;
+    switch( opc ) {
+    ...
+    }
+
+    // w-box
+    switch( opc ){
+    ...
+    }
+
+    std::cout << "\n";
+    ...
+  }                                         // end 'for' loop
+  ...
+}
+/*
+
+f: Fetched instruction: l|124.
+d: Set opc to 'l'.
+d: Set D_Out1 to 105.
+d: Set D_Out2 to 4.
+d: Set dreg to f2.
+x: Set X_Out to 109.
+m: Set M_Out to 19.
+w: Set f2 to 19.
+
+...
+
+*/
+
+
+From probst at cse.concordia.ca  Sun Nov  8 13:56:57 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Sun, 08 Nov 2020 13:56:57 -0500
+Subject: [comp5201-f20] Zoom link: solutions and caches (Tue Nov 10)
+Message-ID: <5fa83f79.Kz+ZG0zL0fvNmpWE%probst@cse.concordia.ca>
+
+
+DAVID K. PROBST is inviting you to a scheduled Zoom meeting.
+
+Topic: DAVID K. PROBST's COMP5201 Zoom Meeting (Corrections)
+Time: Nov 10, 2020 05:45 PM Montreal
+
+Join Zoom Meeting
+https://concordia-ca.zoom.us/j/88200593160?pwd=OWljY0NHNDBkL1hYY0J4UHZhK0FDUT09
+
+Meeting ID: 882 0059 3160
+Passcode: 757211
+
+
+From probst at cse.concordia.ca  Tue Nov 10 16:13:14 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Tue, 10 Nov 2020 16:13:14 -0500
+Subject: [comp5201-f20] notes relevant to today's class
+Message-ID: <5fab026a.tufFE3uyUPIlE2IH%probst@cse.concordia.ca>
+
+
+The Code You Were Given
+_______________________
+
+
+/*
+                                            // this is the 
+  l.d   f2,4(r1)                            // program to be  
+  l.d   f4,8(r3)                            // simulated;
+  mul.d f6,f2,f4                            // no pipelining
+  add.d f8,f4,f6
+  bne   r5,r5,target
+  s.d   f6,8(r3)
+  s.d   f8,4(r5)
+  bne   r7,r9,target
+  l.d   f2,8(r7)
+  s.d   f2,8(r7)
+target:
+
+*/
+
+#include <iostream>  // for std::cout
+
+int main () {
+  // all submissions must contain this prelude, or equivalent
+
+  // register file
+  int Reg[10];
+  Reg[1] = 105; Reg[3] = 203; Reg[5] = 301; // r-register values
+  Reg[7] = 148; Reg[9] = 156;
+
+  // main memory
+  int  Mem[500];
+  char XMem[] = "llmabssbls";               // ten opcodes, and
+  Mem[0] = 124; Mem[1] = 348; Mem[2] = 246; // their ten argument
+  Mem[3] = 468; Mem[4] = 550; Mem[5] = 368; // lists; object code
+  Mem[6] = 584; Mem[7] = 790; Mem[8] = 728; // for ten instructions
+  Mem[9] = 728;
+
+  Mem[109] = 19; Mem[156] = 25;             // assorted data memory
+  Mem[211] = 43;                            // values
+
+  bool branch;                              // for bne results
+  std:: cout << "\n";                       // blank line
+
+  // loop over instructions; pretend next instruction is at PC + 1
+  for( int PC = 0; PC < 10; PC++ ) {
+
+    // f-box
+    char head = XMem[PC];                   // these are shared variables
+    int  tail = Mem[PC];                    // that the d-box will use
+    std::cout << "f: Fetched instruction: " << head << "|" << tail << ".\n";
+
+    // d-box
+    char opc = head;                        // decode instruction
+    int arg3 = tail % 10;                   // into its opcode and
+    tail = tail / 10;                       // its three arguments
+    int arg2 = tail % 10;                   // inst = {opc,arg1,...}
+    tail = tail / 10;
+    int arg1 = tail;
+    std::cout << "d: Set opc to '" << opc << "'.\n";
+    // 'opc' is the next datapath "shared variable" to be initialized;
+    // 'arg1', 'arg2', 'arg3' are d-box local variables
+
+    // all code, or equivalent, above this line is mandatory
+
+    int D_Out1, D_Out2, dreg, sval;         // more shared variables
+    switch( opc ) {                         // You may imitate this style.
+      case 'a':
+      case 'm':
+        D_Out1 = Reg[arg1];                 // localize reg. operand and latch
+        std::cout << "d: Set D_Out1 to " << D_Out1 << ".\n";
+        D_Out2 = Reg[arg2];                 // localize reg. operand and latch
+        std::cout << "d: Set D_Out2 to " << D_Out2 << ".\n";
+        dreg = arg3;                        // latch dest. register designator
+        std::cout << "d: Set dreg to f" << dreg << ".\n";
+        break;
+        ...                                 // case statement not finished
+    }
+    ...                                     // program not finished
+ 
+1) There are ten registers in the register file.  While I pretend that 
+some are f-registers and some are r-registers, in the simulation they 
+are all simply integer registers, namely, Reg : 'array'[0..9] 'of' integer;
+
+2) The object code for the test program has already been generated and
+stored in memory for you.  Recall the instruction formats from Lecture 3.
+
+3) Each of the five boxes generates data/control for subsequent boxes.
+In the simulation, this translates to: Each of the five boxes initializes
+shared variables that are read by subsequent boxes.  Each time a useful
+result is generated, both write the simulation code to generate that result,
+and indicate having done so with a print statement.  To avoid chaos, stick
+with the variable names appearing in the template.  Example: The global d-box
+variables are 'opc', 'D_Out1', 'D_Out2', 'dreg', and 'sval', while the
+local variables are 'arg1', 'arg2', and 'arg3'.  Note that updating the
+register file, updating the memory, or making a branch decision, is a useful
+result, and deserves a print statement.  In the simulation, we transmit both
+data and control by writing certain shared variables, many of which are
+mentioned above.
+
+4) 'bne' has special emulation rules.  If the branch is not taken, continue
+with the next instruction.  If the branch is taken, skip all remaining
+instructions, and terminate the program normally.  The 'for' loop needs to
+be informed about this decision.
+
+5) Although the template code uses case statements, this is not required.
+It is, however, easier to code and to read.  
+
+6) In the code, register designators are decimal digits.  For example, f2
+is really just 2 (the print statements tell white lies!).
+
+7) Full output for the first instruction is shown to give you some idea
+of what kind of output is expected.
+
+8) Submissions must contain all source code and all output (as an appended
+comment) in a _single_ machine-readable ASCII text file.  A formal
+submission requires electronic transmission of the text file to Moodle.
+Call it "Programming Assignment 3".
+
+9) If a box does nothing, print "<box name>: Did nothing."
+
+---
+ 
+    // x-box                                // more of the template     
+    int X_Out;
+    switch( opc ) {
+    ...
+    }
+
+    // m-box
+    int M_Out;
+    switch( opc ) {
+    ...
+    }
+
+    // w-box
+    switch( opc ){
+    ...
+    }
+
+    std::cout << "\n";
+    ...
+  }                                         // end 'for' loop
+  ...
+}
+/*
+
+f: Fetched instruction: l|124.
+d: Set opc to 'l'.
+d: Set D_Out1 to 105.
+d: Set D_Out2 to 4.
+d: Set dreg to f2.
+x: Set X_Out to 109.
+m: Set M_Out to 19.
+w: Set f2 to 19.
+
+...
+
+*/
+
+---end of assignment text---
+
+Hints for Assignment 3
+______________________
+
+1. Instruction Formats (opc, arg1, arg2, arg3)
+
+   l.d   f2,4(r1)  encodes as:  opc, r1, f2, 4
+   l.d   f4,8(r3)  encodes as:  opc, r3, f4, 8
+   mul.d f6,f2,f4  encodes as:  opc, f2, f4, f6
+   add.d f8,f4,f6  encodes as:  opc, f4, f6, f8
+   s.d   f6,8(r3)  encodes as:  opc, r3, f6, 8
+   s.d   f8,4(r5)  encodes as:  opc, r5, f8, 4
+
+Of course, I use decimal digits for arguments because I don't want
+you to do string processing.  They are the digits you see above,
+with no lower-case Roman letters in front.  (I put some letters
+in my print statements).
+
+2. Box Behavior
+
+f-box: Kind of obvious.  By the way, my machine has instruction-addressed
+memory, so the 'for' loop has the correct increment.
+
+d-box: Decode (decompose) instruction.  Set 'opc'.  Localize all
+register operands from the RF.  Set either 'dest' or 'value_to_store'.
+Set the two data outputs to the x-box ('D_Out1' and 'D_Out2').  This
+is a case statement because you need to know the value of 'opc' in
+order to choose the right behavior.  There are no extra marks for the
+elegance of your case statements.
+
+x-box: Calculate the memory address or perform the specified arithmetic
+instruction.  Set 'X_Out'.  Remember: There are only integers in this
+program.
+
+m-box: Either bring in the floating-point value from memory at the
+memory address or use a previously localized operand to push a value
+to memory at the memory address.  Set 'M_Out'.  Ask 'opc'.
+
+w-box: If there is a destination register (ask 'opc'), push the
+appropriate result value to it, perhaps a loaded value, perhaps a
+computed value.
+
+Please note that both the m-box and the w-box may do nothing during
+a cycle, depending on 'opc'.  I finally added the print statement
+"Ddid nothing." to three of my boxes as a default option, because it
+gives a clearer big picture.  Do the same.
+
+You understand that your program's output is an essential window
+into your source code.  That's why I insist on a single, integrated
+plaintext file consisting of your source code, to which your output
+has been appended as a comment.  In that way, we can run your
+program and see if your program _does_ produce that output.
+
+3. Walkthrough of the Assignment-Provided d-box Code
+
+Now, suppose the case is an arithmetic statement.  In this case,
+'arg2' is also the specifier of an operand register that needs
+to be localized.  Hence, we perform the same action as above.
+But now, in addition, we need to set 'dest' to the specifier
+of the destination register, in this case, 'arg3'.
+
+This is all the code I provided.  You finish the d-box code by
+deciding what to do in the case of a load and what to do in
+the case of a store.  For the remaining boxes, you will do
+something similar, but will now take advantage of the global
+variables (all shown in the assignment) that have been given
+a value by earlier boxes.
+
+
+From probst at cse.concordia.ca  Tue Nov 10 16:14:12 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Tue, 10 Nov 2020 16:14:12 -0500
+Subject: [comp5201-f20] more notes relevant to today's class
+Message-ID: <5fab02a4.Q0Z5rFgPvzPXmZKE%probst@cse.concordia.ca>
+
+
+Lecture 8 (continued)
+_________
+
+Cache Rudiments
+_______________
+
+The conventional narrative of the utility and functioning of caches goes
+something like this:
+
+Given the steadily increasing mismatch between processor speeds and memory
+latencies, the need was felt from early on to have a "memory buffer"
+between high-performance CPUs and main memory.  Caches were perhaps the
+first memory buffers introduced for this purpose.  And, as the gap between
+processor and memory performance grew, multilevel caches became the norm.
+
+The goal of a memory hierarchy is to keep all of the code and data that is
+needed, presently and in the near future, close to the processor.  Ideally,
+this information should be reachable in a single cycle, and this dictates
+putting the cache on the processor chip.  However, the capacity of this
+on-chip SRAM memory must not be too large, because the time to access it is
+roughly proportional to its size.  For this reason, modern computers have
+multilevel caches, with the cache size increasing as we go down the cache
+hierarchy.
+
+Alas, cache copies die young.
+
+Caches are much smaller than main memory so, at any moment, they contain
+only a tiny fraction of the executing program's code and data.  When the
+processor issues a memory reference, or the fetch-execute cycle initiates
+a memory access, a cache lookup is performed to determine whether the
+requested code or data item is present in the cache.  If so, we have a
+_cache hit_.  If not, we have a _cache miss_.  Cache hits lead to the rapid
+transfer of information from/to the cache to/from the pipeline (information
+flows in both directions between cache and pipeline just as information
+flows in both directions between memory and processor).  Cache misses
+cause us to recursively query the remaining levels of the cache hierarchy,
+and, in the worst case, make us perform a full memory access.  In the worst
+case, the time spent querying must be _added_ to the memory latency.
+
+For simplicity, in the following paragraphs, we focus on single-level
+D-caches only.
+
+Caches are high-speed buffers between main memory and the CPU.  Because
+their storage capacity is much less than that of main memory, there are
+five basic cache-design questions (we will add a sixth later):
+
+1) When a memory reference (load or store) leads to a cache miss, do we
+_automatically_ make a copy?  (the copy-decision problem)
+
+2) When a copy is made, how many bytes do we copy?  (the cache-line-size
+problem) 
+
+3) When we do make a copy, where do we put it?  (the placement problem)
+
+4) How do we determine whether a copy of a given data item exists?  (the
+lookup problem)
+
+5) What do we do if the cache is "full" (this has two meanings), and there
+is no room for a new data item we wish to bring in?  (the replacement
+problem)
+
+Later, we will consider:
+
+6) What happens on a write?
+
+---
+
+A simplified set of answers, for conventional cache design, is as follows:
+
+1) [Automatically?] Yes, we make a copy of the data item---indeed, a copy of
+the whole line---automatically whenever a memory reference for the item
+results in a cache miss (this is _demand_ copying).
+
+Potential problems: No program information is used by the cache about whether,
+or how soon, or how many times, the data item will be used again.  Also, no
+program information is used by the cache about whether the program has no,
+some, or a lot of interest in nearby memory locations.  The second comment
+concerns the _granularity_ of copies, i.e., the cache-line length.
+
+2) [Granularity?] Say that the memory reference is for one memory word.  Then,
+we might copy just that word, or we might copy a _sequence_ of contiguous
+words that contain the referenced word.  The amount that is copied is called
+a _cache line_.  If the cache line contains few words (say, 1 or 2), the
+cache line is _short_.  If the cache line contains many words (say, 16 or
+32), the cache line is _long_.  Cache designers who believe that all
+programs have spatial locality argue in favor of long cache lines.  Wiser
+computer architects argue in favor of short cache lines as part of a general
+policy to avoid mis-speculation in all its forms.
+
+3) [Placement?] The cache is divided into a number of _cache frames_.  We
+must have some policy to map memory locations into cache frames.  Some
+policies are tight and don't give us much choice; other policies are loose
+and give us more freedom.  We will discuss these policies in detail below.
+
+4) [Lookup?] In a real-world cache, each frame, which has some index
+position, contains a _tag field_ in addition to the data contents.  Whether
+a memory reference leads to a hit or a miss is determined by i) finding the
+right cache frame, and ii) checking the tag.  A variant of this lookup
+strategy is i) finding the right _set_ of frames, and ii) checking the tag
+of each frame in the set. 
+
+5) [Replacement?] If there is a cache miss, and the new data item _collides_
+with a data item already in the cache, then one cache line (the _victim_) must
+be ejected to make room for the new data item.  Victim selection is determined
+by a replacement algorithm.  If the placement policy is tight, the victim is
+already determined.  If the placement policy is loose, we have some choice as
+to which cache line should be evicted.  With a tight policy, you collide with
+some item that maps to the same frame you do.  This is a matter of _conflict_.
+With a loose policy, you collide with a set of cache frames that is completely
+filled.  This is a matter of _capacity_.
+
+A cache is an array.  With the exception of the (somewhat theoretical)
+loosest placement policy, caches are addressed by indices.  When there is
+indexing, each cache entry contains a tag field consisting of some high-order
+bits from the memory address of the copied data item.  We will see how the
+address is divided in just a moment.  The cache capacity is the product of
+the number of cache frames and the size of a cache line.  The tags are extra
+(in fact, they are overhead).
+
+Placement Policy
+________________
+
+There are a range of mapping (placement) policies.  If any cache line can
+be placed into any cache frame, then we have a _fully associative_ cache.
+If a cache line can only be placed in precisely one cache frame, then we
+have a _direct-mapped_ cache.  If a cache line can only be placed in
+precisely one _set_ of cache frames, then we have a _set-associative_ cache.
+
+Large fully associative caches are impractical.  To avoid a lengthy linear
+search in an m-way set-associative cache, which would be too slow, we must
+use either i) some number of comparators, or ii) an associative memory, for
+copy lookup.  An associative memory is an _alternative_ to an indexed array.
+Array elements are located, and retrieved, by indexing.  In contrast,
+elements of an associative memory are located, and retrieved, by
+simultaneously matching a searched-for key against _every_ key in the
+associative memory, which should be thought of as a sequence of <key,value>
+pairs.
+
+Direct mapped and set associative
+_________________________________
+
+Say the cache-line number is 'n' bits long, and there are 2^k cache
+frames.  Then the low-order 'k' bits of the cache-line number determine
+the cache frame.  Obviously, many cache lines map into the same cache
+frame.  They are distinguished by the remaining 'n-k' bits, which are
+stored as a tag field in the cache frame.  To look up a cache line, we
+i) compute the cache-frame number, and ii) compare the tag field (the
+'n-k' bits) with the high-order bits of the address, or number, of the
+cache line.  The cache-frame number is an _index_.  We also need a valid
+bit which indicates whether the cache frame contains genuine data or
+garbage.
+
+2) An m-way set-associative cache consists of a number of frame sets, each
+of which consists of 'm' frames.  Example: A 32-way set-associative cache
+with 4,096 cache frames would give rise to 2^7 sets each containing 2^5
+frames.  During lookup, we would match 32 tags in parallel (this would
+require an associative memory).  Each cache line maps to precisely one of
+the 2^7 sets.  Instead of indexing frames, we now index _sets_ of frames.
+
+Say the cache-line number is 'n' bits long, and there are 2^k cache sets.
+Then the low-order 'k' bits of the cache-line number determine the cache
+set.  Obviously, many cache lines map into the same cache set.  They are
+distinguished by the remaining 'n-k' bits, which are stored as a tag field
+in _each_ occupied cache frame in the cache set.
+
+To look up a cache line, we i) compute the cache-set number, and ii)
+compare all 'm' tag fields ('m' times 'n-k' bits) with the high-order bits
+of the address, or number, of the cache line.  The cache-set number is an
+_index_.  We also need valid bits which indicate whether each cache frame
+in the set of 'm' frames contains genuine data or garbage.
+
+3) In a fully associative cache, there is effectively only one set.  This
+means that there are _no indices_.  To look up a cache line in a fully
+associative cache with 2^k cache frames, each tag field is the whole n-bit
+line number, there is no index field, and we must match the line number we
+seek, in parallel, against all 2^k stored tags.  We also need valid bits
+which indicate whether each cache frame contains genuine data or garbage.
+
+Example: A computer has a byte-addressable memory and 32-bit memory addresses.
+A cache line contains 64 bytes.  A  cache-line number is therefore 26 bits long.
+
+Example: A computer has a 40-bit line number and a direct-mapped cache with 4K
+frames.  The frame number is therefore 12 bits long and the tag field is 28
+bits long.
+
+Example: A computer has	a 40-bit line number and a 4-way set-associative cache
+with 4K frames.  The set-index number is therefore 10 bits long and the tag
+field is 30 bits long.  In general, increasing the wayness by a factor of 2
+decreases the size of the index by 1 bit and increases the size of the tag
+by 1 bit.
+
+Replacement Policy
+__________________
+
+In an m-way set-associative cache, when there is a cache miss, the indexed set
+of 'm' frames may be full.  To make room for a new cache line, a victim line
+must be selected from the set.  The best scheme is _least recently used_ (LRU):
+Replace that cache line that has been unused for the longest time.  If you
+don't want to pay for the bookkeeping, use _random_ replacement.  I have heard
+a suggestion that a cache twice as large with random replacement has a miss
+rate equal to the smaller cache with LRU.
+
+Write Policy
+____________
+
+Consider a store instruction.  If we wrote only into the D-cache, the
+cached copy would differ from the memory original.  We could use _write
+through_ and write the data into both the memory and the cache.  This
+typically has poor performance.  The alternative to write through is
+_write back_.  When a write occurs, the new value is written only to the
+line in the cache.  The modified line is written to the next lower level
+of the hierarchy, which we will always take to be the main memory, when
+it is replaced.  Unmodified lines are simply evicted from the cache when
+they are replaced.
+
+Three C's
+_________
+
+It is useful to classify cache misses into three categories:
+
+1) _Compulsory_ misses occur the first time a cache line is referenced.
+
+2) _Conflict_ misses occur when more than 'm' cache lines compete for
+the same cache frames in an m-way set-associative cache.
+
+3) _Capacity_ misses occur when the working set of the program is too
+large for the cache, even if i) the cache is fully associative, and 
+ii) optimal cache-line replacement is used.
+
+Example: Consider a 1-way set-associative cache (direct-mapped cache).
+If a cache line maps to cache frame 'f', but frame 'f' is occupied by
+another line, then that is a conflict miss.  More precisely, it is a
+conflict miss unless it is a compulsory miss (we check membership in
+the three categories in order).
+
+Example: Consider a 4-way set-associative cache.  If a cache line maps
+to cache set 's', but set 's' is occupied by 4 lines different from the
+line we are looking up, then that is a conflict miss.  The remark about
+checking in order still applies.
+
+Example: Consider a 4-way set-associative cache with 4K cache frames.
+This is 1K sets with 4 frames per set.  Now, double the cache size to
+8K frames.  This is 2K sets with 4 frames per set.  A cache line that
+missed in the smaller cache but hit in the larger cache _appears_ to
+count as a capacity miss.  But order still matters.  That is, a cache
+line that missed in the smaller cache and was categorized as a conflict
+miss would not count as a capacity miss.  Technically, a capacity miss
+requires a fully associative cache, but doubling the cache size did
+make conflict misses half as likely.
+
+Cache-Performance Equations
+___________________________
+
+A. Expected/average/effective memory-access time:
+
+tbar = cache-hit time + miss rate * memory latency
+
+B. Effective memory bandwidth:
+
+effective memory bandwidth = actual delivered operand bandwidth/
+                             miss rate
+
+The first formula calculates the average time to access memory.
+
+The second formula shows the amount of _bandwidth amplification_
+as a function of miss rate.
+
+Little's law reminder
+_____________________
+
+The actual delivered operand bandwidth is the minimum of:
+i) the memory-reference concurrency divided by the memory latency, and
+ii) the hardware bandwidth (the physical upper limit on bandwidth).
+
+Since Little's law is applicable only in steady-state conditions, we may
+observe that concurrency/latency also equals the memory-request bandwidth.
+
+Little's law quantifies the performance benefit of all forms of pipelining,
+from 'fdxmw' pipelines to memory pipelines.
+
+Conclusion
+__________
+
+If a program with a high degree of data reuse runs on a computer with a
+cache, then the cache will be used _temporally_.  If a program with a high
+degree of contiguous, sequential memory accessing runs on a computer with
+long cache lines, then the cache will be used _spatially_.  (A cache with
+single-word cache lines cannot be used spatially).
+
+The principle of _value locality_ is simple:
+
+Hierarchically, using any mechanism you can think of, minimize the wire
+distances that values travel to reach the arithmetic operations that they
+are operands of.
+
+Equivalently, avoid long-range communication whenever possible.
+
+Caches used temporally are one mechanism that can minimize the wire
+distances that values travel to reach the arithmetic operations that need
+them.
+
+Loading a value into the processor from remote memory incurs an enormous
+wire-distance cost, but reusing the value amortizes this cost since cache
+accesses have small wire-distance cost.  Similarly, writing a value into
+the cache and then using the value has a low wire-distance cost, viz., two
+cache accesses.  These are the two ways caches are used temporally.  Note
+that registers can _only_ be used temporally.
+
+Caches are used spatially when a cache miss for a word automatically causes
+the speculative prefetching of a multiword cache line.  A cache used
+spatially does not minimize the wire distances that values travel (the 'n'
+words loaded into the cache travel the same distances over the same wires
+as they would if they were loaded separately).  More precisely, the memory 
+pipelining in cache-line prefetching has some positive effect because it
+tolerates (some) memory latency, but it reduces neither the bandwidth
+requirements nor the power consumption.
+
+In simple English, long cache lines are a parallelism (latency-tolerating)
+trick, not a locality (latency-avoiding) trick.
+
+Speculative prefetching of multiword cache lines is a form of parallelism
+in which the entire line is obtained by memory pipelining.  The amount of
+parallelism is the length of the cache line.  This parallelism tolerates
+some of the latency of accessing local memory.  But so little---the
+concurrency is 16 or 32, not 400 or 500---that it does not really deserve
+the name of "memory pipelining".
+
+
+From probst at cse.concordia.ca  Wed Nov 11 12:50:37 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Wed, 11 Nov 2020 12:50:37 -0500
+Subject: [comp5201-f20] the d-box, stores, and store values
+Message-ID: <202011111750.0ABHobg6034264@poise.encs.concordia.ca>
+
+The d-box knows the store value _precisely_ if the datapath
+is nonpipelined.  Which is the case in Ass. 3.
+
+The exam had no misprints.
+
+All answers provided were 100% correct, assuming there is
+no interesting extra solution to a synthesis exercise.
+
+I strongly doubt this, but I am not infallible.
+
+
+From probst at cse.concordia.ca  Mon Nov 16 12:49:30 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Mon, 16 Nov 2020 12:49:30 -0500
+Subject: [comp5201-f20] Zoom link for lecture 11
+Message-ID: <5fb2bbaa.IYY/BPt17ONBmTEu%probst@cse.concordia.ca>
+
+
+Link 11
+_______
+
+DAVID K. PROBST is inviting you to a scheduled Zoom meeting.
+
+Topic: DAVID K. PROBST's COMP5201 Zoom Meeting
+Time: Nov 17, 2020 05:45 PM Montreal
+
+Join Zoom Meeting
+https://concordia-ca.zoom.us/j/87896870166?pwd=SGxHMlFmTi9XNGJQNWJ1QU4zc3Zjdz09
+
+Meeting ID: 878 9687 0166
+Passcode: 489680
+
+
+From probst at cse.concordia.ca  Tue Nov 17 15:15:37 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Tue, 17 Nov 2020 15:15:37 -0500
+Subject: [comp5201-f20] old & new notes for tonight's class
+Message-ID: <5fb42f69.jqcjwngjW8tQrv/w%probst@cse.concordia.ca>
+
+
+Eleventh class
+______________
+
+A "Cache" Picture
+_________________
+
+Caches work by partitioning a memory address into three fields: an offset
+field, an index field, and a tag field.
+
+   +-----------+-------------+--------------+
+   |           |             |              |
+   | tag field | index field | offset field |
+   |           |             |              |
+   +-----------+-------------+--------------+
+
+   [       line number       ]
+
+These are related by the four fundamental cache laws.  What is interesting is
+that since each field is some number of bits, cache quantities become powers
+of 2.  Let a memory address be 'n' bits.  Let a line contain B = 2^b bytes.
+Then, according to the first equation below, we see that the _offset field_
+is 'b' bits.  A computer determines the byte offset by masking the lower-order
+'b' bits, and then interpreting these bits as a natural number.  Computers
+use masking and shifting because they don't have pocket calculators.
+
+0) byte number   = memory address `mod` the number of bytes
+                   in a line
+
+But the byte offset is of interest to relatively few people.  The cache cares
+far more about the index field and the tag field.  The first step therefore
+is to _discard_ the offset field and focus on the remaining bits.  This too
+is accomplished by masking and shifting.  The remaining bits make up the
+_line number_.  The equation is:
+
+1) line number   = memory address `div` the number of bytes
+                   in a line
+
+We now partition the line number into a (cache) index and a tag value.  To
+do this, we need to know the size of the cache array.  Let the cache contain
+M = 2^m elements.  Then the index field is the lower-order 'm' bits of the
+line number, which itself has 'n - b' bits.  More masking and shifting.
+
+2) element index = line number `mod` the number of elements
+                   in the cache
+
+At this point, we have 't = n - b - m' bits left over, which means that there
+are T = 2^t possible tag values.  Still more masking and shifting.
+
+3) tag value     = line number `div` the number of elements
+                   in the cache
+
+In short, what we have described with the `mod` and `div` operators is just a
+mathematical way of describing these mask and shift operations.
+
+You remember that, in a direct-mapped cache, the array elements are _frames_,
+whereas, in an m-way set-associative cache, the array elements are _sets_ of
+frames.  Both frames and sets have cache indices.
+
+When a line is copied from memory into the cache, it is placed in the cache
+elements with the calculated index.
+
+Because many lines are mapped to the same array element, a tag value is used
+to identify which line got copied.  This is required to be able to look up
+lines in caches that a program has need for.
+
+Tags are space overhead in that a cache must store one t-bit tag value for
+every line they contain.  In an m-way set-associative cache, tags are also
+time overhead during lookup, in that 't' bits from the line being looked up
+must be compared with every tag value stored in the set.
+
+You can imagine that the cache equations give rise to exercises that students
+must solve.  These exercises may be easy or hard.  Here is one from a previous
+tutorial.
+
+Consider a computer with 4,096 Bs of main memory.  It has a direct-mapped
+cache with 32 frames.  Moreover, cache lines contain 16 Bs.  Show the
+partition of a memory address, and calculate the cache index for byte address
+[a53].
+
+Solution: A memory address has 12 bits, since 4,096 = 2^12.  The offset
+field has 4 bits, since 16 = 2^4.  The index field has 5 bits, since
+32 = 2^5.  The partition is therefore: <3,5,4>, which is 12 bits.
+
+Now, let's place the line containing byte [a53].  The line number is [a5]
+= [a53] `div` [10].  The lower-order 5 bits of [a5] are '00101' = [05].
+The cache index is 5 decimal, and the 3-bit tag field is [5], which is
+'101' in binary (note the ambiguity in hex representations).
+
+Note that sometimes it is less work just to write out the bit patterns in
+full, while in larger problems this may not be the case.
+
+I steal one more example from the same tutorial.
+
+Consider a computer with 4,294,967,296 = 2^32 Bs of main memory.  It has
+a 2-way set associative cache with some number of sets.  The cache has
+1,024 = 2^10 frames.  So, there must be 512 = 2^9 sets.  A line is 32 =
+2^5 bytes.  Partition the memory address, and then find the cache index
+of byte [b46d5300].   
+
+By inspection, the partition is <18,9,5>, which is 32 bits.
+
+Byte [b46d5300] is in line number [5a36a98] = [b46d5300] `div` [20].
+The cache index is [098] = [5a36a98] `mod` [200], which is 152.  And the
+tag value is [5a36]101, which is [2d1b5] (or 184,757, in decimal).
+
+Here, I used various calculational tricks. 
+
+The goal of a memory hierarchy is to keep all of the code and data that is
+needed, presently and in the near future, close to the processor.  Ideally,
+this information should be reachable in a single cycle, and this dictates
+putting the cache on the processor chip.  However, the capacity of this
+on-chip SRAM memory must not be too large, because the time to access it is
+roughly proportional to its size.  For this reason, modern computers have
+multilevel caches, with the cache size increasing as we go down the cache
+hierarchy.
+
+Alas, cache copies die young.
+
+Caches are much smaller than main memory so, at any moment, they contain
+only a tiny fraction of the executing program's code and data.  When the
+processor issues a memory reference, or the fetch-execute cycle initiates
+a memory access, a cache lookup is performed to determine whether the
+requested code or data item is present in the cache.  If so, we have a
+_cache hit_.  If not, we have a _cache miss_.  Cache misses cause us to
+recursively query the remaining levels of the cache hierarchy, and, in
+the worst case, force us to perform a full memory access.  In this worst
+case, the time spent querying must be _added_ to the memory latency.
+
+For simplicity, in the following paragraphs, we focus on single-level
+D-caches only.
+
+Caches are high-speed buffers between main memory and the CPU.  Because
+their storage capacity is much less than that of main memory, there are
+five basic cache-design questions (we will add a sixth later):
+
+1) When a memory reference (load or store) leads to a cache miss, do we
+_automatically_ make a copy?  (the copy-decision problem)
+
+2) When a copy is made, how many bytes do we copy?  (the cache-line-size
+problem) 
+
+3) When we do make a copy, where do we put it?  (the placement problem)
+
+4) How do we determine whether a copy of a given data item exists?  (the
+lookup problem)
+
+5) What do we do if the cache is "full" (this has two meanings), and there
+is no room for a new data item we wish to bring in?  (the replacement
+problem)
+
+Later, we will consider:
+
+6) What happens on a write?
+
+---
+
+A simplified set of answers, for conventional cache design, is as follows:
+
+1) [Automatically?] Yes, we make a copy of the data item---indeed, a copy of
+the whole line---automatically whenever a memory reference for the item
+results in a cache miss (this is _demand_ copying).
+
+Potential problems: No program information is used by the cache about whether,
+or how soon, or how many times, the data item will be used again.  Also, no
+program information is used by the cache about whether the program has no,
+some, or a lot of interest in nearby memory locations.  The second comment
+concerns the _granularity_ of copies, i.e., the cache-line length.
+
+2) [Granularity?] Say that the memory reference is for one memory word.  Then,
+we might copy just that word, or we might copy a _sequence_ of contiguous
+words that contain the referenced word.  The amount that is copied is called
+a _cache line_.  If the cache line contains few words (say, 1 or 2), the
+cache line is _short_.  If the cache line contains many words (say, 16 or
+32), the cache line is _long_.  Cache designers who believe that all
+programs have spatial locality argue in favor of long cache lines.  Wiser
+computer architects argue in favor of short cache lines as part of a general
+policy to avoid mis-speculation in all its forms.
+
+3) [Placement?] The cache is divided into a number of _cache frames_.  We
+must have some policy to map memory locations into cache frames.  Some
+policies are tight and don't give us much choice; other policies are loose
+and give us more freedom.  We will discuss these policies in detail below.
+
+4) [Lookup?] In a real-world cache, each frame, which has some index
+position, contains a _tag field_ in addition to the data contents.  Whether
+a memory reference leads to a hit or a miss is determined by i) finding the
+right cache frame, and ii) checking the tag.  A variant of this lookup
+strategy is i) finding the right _set_ of frames, and ii) checking the tag
+of each frame in the set. 
+
+5) [Replacement?] If there is a cache miss, and the new data item _collides_
+with a data item already in the cache, then one cache line (the _victim_) must
+be ejected to make room for the new data item.  Victim selection is determined
+by a replacement algorithm.  If the placement policy is tight, the victim is
+already determined.  If the placement policy is loose, we have some choice as
+to which cache line should be evicted.  With a tight policy, you collide with
+some item that maps to the same frame you do.  This is a matter of _conflict_.
+With a loose policy, you collide with a set of cache frames that is completely
+filled.  This is a matter of _capacity_.
+
+A cache is an array.  With the exception of the (somewhat theoretical)
+loosest placement policy, caches are addressed by indices.  When there is
+indexing, each cache entry contains a tag field consisting of some high-order
+bits from the memory address of the copied data item.  We will see how the
+address is divided in just a moment.  The cache capacity is the product of
+the number of cache frames and the size of a cache line.  The tags are extra
+(in fact, they are overhead).
+
+Placement Policy
+________________
+
+There are a range of mapping (placement) policies.  If any cache line can
+be placed into any cache frame, then we have a _fully associative_ cache.
+If a cache line can only be placed in precisely one cache frame, then we
+have a _direct-mapped_ cache.  If a cache line can only be placed in
+precisely one _set_ of cache frames, then we have a _set-associative_ cache.
+
+Large fully associative caches are impractical.  To avoid a lengthy linear
+search in an m-way set-associative cache, which would be too slow, we must
+use either i) some number of comparators, or ii) an associative memory, for
+copy lookup.  An associative memory is an _alternative_ to an indexed array.
+Array elements are located, and retrieved, by indexing.  In contrast,
+elements of an associative memory are located, and retrieved, by
+simultaneously matching a searched-for key against _every_ key in the
+associative memory, which should be thought of as a sequence of <key,value>
+pairs.
+
+Direct mapped and set associative
+_________________________________
+
+1) A direct-mapped cache consists of a number of frames, each with its 
+own index.  Say the cache-line number is 'n' bits long, and there are
+2^k cache frames.  Then the low-order 'k' bits of the cache-line number
+determine the cache frame.  Obviously, many cache lines map into the same
+cache frame.  They are distinguished by the remaining 'n-k' bits, which
+are stored as a tag field in the cache frame.  To look up a cache line, we
+i) compute the cache index, and ii) compare the tag field (the 'n-k' bits)
+with the high-order bits of the address of the requested cache line.  We
+also need a valid bit which indicates whether the cache frame contains
+genuine data or garbage.
+
+2) An m-way set-associative cache consists of a number of frame sets, each
+of which consists of 'm' frames.  Example: A 32-way set-associative cache
+with 4,096 cache frames would give rise to 2^7 sets each containing 2^5
+frames.  During lookup, we would match 32 tags in parallel (this would
+require an associative memory).  Each cache line maps to precisely one of
+the 2^7 sets.  Instead of indexing frames, we now index _sets_ of frames.
+
+Say the cache-line number is 'n' bits long, and there are 2^k cache sets.
+Then the low-order 'k' bits of the cache-line number determine the cache
+set.  Obviously, many cache lines map into the same cache set.  They are
+distinguished by the remaining 'n-k' bits, which are stored as a tag field
+in each _occupied_ cache frame in the cache set.
+
+To look up a cache line, we i) compute the cache index, and ii) compare all
+'m' tag fields ('m' times 'n-k' bits) with the high-order bits of the address
+of the cache line.  We also need valid bits which indicate whether each cache
+frame in the set of 'm' frames contains genuine data or garbage.
+
+3) In a fully associative cache, there is effectively only one set.  This
+means that there are _no indices_.  To look up a cache line in a fully
+associative cache with 2^k cache frames, each tag field is the whole n-bit
+line number, there is no index field, and we must match the line number we
+seek, in parallel, against all 2^k stored tags.  We also need valid bits
+which indicate whether each cache frame contains genuine data or garbage.
+
+Example: A computer has a byte-addressable memory and 32-bit memory addresses.
+A cache line contains 64 bytes.  A  cache-line number is therefore 26 bits long.
+
+Example: A computer has a 40-bit line number and a direct-mapped cache with 4K
+frames.  The frame number is therefore 12 bits long and the tag field is 28
+bits long.
+
+Example: A computer has	a 40-bit line number and a 4-way set-associative cache
+with 4K frames.  The set-index number is therefore 10 bits long and the tag
+field is 30 bits long.  In general, increasing the wayness by a factor of 2
+decreases the size of the index by 1 bit and increases the size of the tag
+by 1 bit.
+
+Replacement Policy
+__________________
+
+In an m-way set-associative cache, when there is a cache miss, the indexed set
+of 'm' frames may be full.  To make room for a new cache line, a victim line
+must be selected from the set.  The best scheme is _least recently used_ (LRU):
+Replace that cache line that has been unused for the longest time.  If you
+don't want to pay for the bookkeeping, use _random_ replacement.  I have heard
+a suggestion that a cache twice as large with random replacement has a miss
+rate equal to the smaller cache with LRU.
+
+Write Policy
+____________
+
+Consider a store instruction.  If we wrote only into the D-cache, the
+cached copy would differ from the memory original.  We could use _write
+through_ and write the data into both the memory and the cache.  This
+typically has poor performance.  The alternative to write through is
+_write back_.  When a write occurs, the new value is written only to the
+line in the cache.  The modified line is written to the next lower level
+of the hierarchy, which we will always take to be the main memory, when
+it is replaced.  Unmodified lines are simply evicted from the cache when
+they are replaced.
+
+Three C's
+_________
+
+It is useful to classify cache misses into three categories:
+
+1) _Compulsory_ misses occur the first time a cache line is referenced.
+
+2) _Conflict_ misses occur when more than 'm' cache lines compete for
+the same cache frames in an m-way set-associative cache.
+
+3) _Capacity_ misses occur when the working set of the program is too
+large for the cache, even if i) the cache is fully associative, and 
+ii) optimal cache-line replacement is used.
+
+Example: Consider a 1-way set-associative cache (direct-mapped cache).
+If a cache line maps to cache frame 'f', but frame 'f' is occupied by
+another line, then that is a conflict miss.  More precisely, it is a
+conflict miss unless it is a compulsory miss (we check membership in
+the three categories in order).
+
+Example: Consider a 4-way set-associative cache.  If a cache line maps
+to cache set 's', but set 's' is occupied by 4 lines different from the
+line we are looking up, then that is a conflict miss.  The remark about
+checking in order still applies.
+
+Example: Consider a 4-way set-associative cache with 4K cache frames.
+This is 1K sets with 4 frames per set.  Now, double the cache size to
+8K frames.  This is 2K sets with 4 frames per set.  A cache line that
+missed in the smaller cache but hit in the larger cache _appears_ to
+count as a capacity miss.  But order still matters.  That is, a cache
+line that missed in the smaller cache and was categorized as a conflict
+miss would not count as a capacity miss.  Technically, a capacity miss
+requires a fully associative cache, but doubling the cache size did
+make conflict misses half as likely.
+
+Cache-Performance Equations
+___________________________
+
+A. Expected/average/effective memory-access time:
+
+tbar = cache-hit time + miss rate * memory latency
+
+B. Effective memory bandwidth:
+
+effective memory bandwidth = actual delivered operand bandwidth/
+                             miss rate
+
+The first formula calculates the average time to access memory.
+
+The second formula shows the amount of _bandwidth amplification_
+as a function of miss rate.
+
+Little's law reminder
+_____________________
+
+The actual delivered operand bandwidth is the minimum of:
+i) the memory-reference concurrency divided by the memory latency, and
+ii) the hardware bandwidth (the physical upper limit on bandwidth).
+
+Since Little's law is applicable only in steady-state conditions, we may
+observe that concurrency/latency also equals the memory-request bandwidth.
+
+Little's law quantifies the performance benefit of all forms of pipelining,
+from 'fdxmw' pipelines to memory pipelines.
+
+Conclusion
+__________
+
+If a program with a high degree of data reuse runs on a computer with a
+cache, then the cache will be used _temporally_.  If a program with a high
+degree of contiguous, sequential memory accessing runs on a computer with
+long cache lines, then the cache will be used _spatially_.  (A cache with
+single-word cache lines cannot be used spatially).
+
+The principle of _value locality_ is simple:
+
+Hierarchically, using any mechanism you can think of, minimize the wire
+distances that values travel to reach the arithmetic operations that they
+are operands of.
+
+Equivalently, avoid long-range communication whenever possible.
+
+Caches used temporally are one mechanism that can minimize the wire
+distances that values travel to reach the arithmetic operations that need
+them.
+
+Loading a value into the processor from remote memory incurs an enormous
+wire-distance cost, but reusing the value amortizes this cost since cache
+accesses have small wire-distance cost.  Similarly, writing a value into
+the cache and then using the value has a low wire-distance cost, viz., two
+cache accesses.  These are the two ways caches are used temporally.  Note
+that registers can _only_ be used temporally.
+
+Caches are used spatially when a cache miss for a word automatically causes
+the speculative prefetching of a multiword cache line.  A cache used
+spatially does not minimize the wire distances that values travel (the 'n'
+words loaded into the cache travel the same distances over the same wires
+as they would if they were loaded separately).  More precisely, the memory 
+pipelining in cache-line prefetching has some positive effect because it
+tolerates (some) memory latency, but it reduces neither the bandwidth
+requirements nor the power consumption.
+
+In simple English, long cache lines are a parallelism (latency-tolerating)
+trick, not a locality (latency-avoiding) trick.
+
+Speculative prefetching of multiword cache lines is a form of parallelism
+in which the entire line is obtained by memory pipelining.  The amount of
+parallelism is the length of the cache line.  This parallelism tolerates
+some of the latency of accessing local memory.  But so little---the
+concurrency is 16 or 32, not 400 or 500---that it does not really deserve
+the name of "memory pipelining".
+
+
+From probst at cse.concordia.ca  Tue Nov 17 17:31:05 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Tue, 17 Nov 2020 17:31:05 -0500
+Subject: [comp5201-f20] I'm in the right room today :-)
+Message-ID: <202011172231.0AHMV5i1037383@poise.encs.concordia.ca>
+
+
+Topic: DAVID K. PROBST's COMP5201 Zoom Meeting
+Time: Nov 17, 2020 05:45 PM Montreal
+
+Join Zoom Meeting
+https://concordia-ca.zoom.us/j/87896870166?pwd=SGxHMlFmTi9XNGJQNWJ1QU4zc3Zjdz09
+
+Meeting ID: 878 9687 0166
+Passcode: 489680
+
+
+From probst at cse.concordia.ca  Wed Nov 18 12:30:29 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Wed, 18 Nov 2020 12:30:29 -0500
+Subject: [comp5201-f20] assignment 4
+Message-ID: <5fb55a35.VK+XmnG4JEuusEgC%probst@cse.concordia.ca>
+
+
+Name: ___________________                                     ID: ____________
+
+COMP5201                       Assignment 4                          Fall 2020
+Computer Organization & Design                               Prof. D.K. Probst
+Issued: November 10, 2020                                Due: December 1, 2020
+Submit electronically to Moodle.                 No extension will be granted.
+
+1. [20 marks] A program has an 8-instruction loop that is executed many times.
+Only the last instruction is a conditional branch, whose target is the first
+instruction at memory address [3a5c50].  Only the first instruction is a load,
+whose target is a 4-byte integer that resides at a different memory location
+in each iteration.  There are no stores in the program.  The first integer has
+memory address [4b6d30].  These integers are contiguous, and are loaded in
+increasing memory-address order.  The size of an instruction is also 4 bytes.
+A unified, i.e., combined I-cache and D-cache, direct-mapped cache has 16-byte
+lines, and 16 frames.  It is initially empty.  We hope to determine the number
+of cache misses in the first 16 iterations.
+
+a) How many cache misses in the first four iterations?               _____
+
+b) How many cache misses in the second four iterations?              _____
+
+c) How many cache misses in the third four iterations?               _____
+
+d) How many cache misses in the fourth four iterations?              _____
+
+2. [20 marks] We investigate the increase in CPI (clocks per instruction)
+due to cache misses that occur during memory references.  For simplicity,
+we pretend that instruction fetches never miss.
+
+a) Suppose the processor takes an average of 1.3 clock cycles to execute
+an instruction when there are no cache misses.  Assume that the miss penalty
+is 8 cycles, and that there is an average of 1 memory reference per 3
+instructions.  The base CPI (1.3 cycles) _includes_ the cache hit time.
+Suppose the miss rate is 6%.  Using the formula t_ave = ht + mr * mp, what
+is the CPI when cache misses are taken into account?  In English, average
+time = hit time plus miss rate times miss penalty.
+
+b) Consider the same processor with a two-level cache.  The hit rates for
+the L1$ and the L2$ are 95% and 75%, respectively.  The _local_ miss
+penalties are 10 cycles and 80 cycles, respectively.  Assume the same
+frequency of memory references.  If the CPI is 1.3 cycles when there are no
+cache misses, what is the CPI when cache misses are taken into account?
+Hint: Apply the formula recursively to find the effective miss penalty of
+the L1$.
+
+3. [21 marks] Consider a computer with a byte-addressable memory.  A 40-bit
+memory address is divided as follows for cache processing.  First, the 8
+lower-order bits are masked to expose the line number.  Second, the 15
+lower-order bits of the line number are inspected to get the array index.
+Third, the remaining 17 bits encode the tag value.  Any numerical answer
+may contain a cache parameter.  Hint: What do the direct-mapped and
+set-associative placement formulas have in common?
+
+a) What is the cache size in bytes?
+
+b) What is the cache-mapping scheme?
+
+c) For a given byte in the cache, how many different bytes in the main
+memory could possibly be mapped to it?
+
+4. [19 marks] Consider a computer with 32-bit registers.  The memory is
+word addressed.  There is a direct-mapped cache with 4K cache frames.
+Cache lines are 16 words.  Into which cache frame, and with what tag
+value, does 32-bit word address '45677def' go?  Show your work.  Answers
+in hexadecimal.
+
+5. [20 marks] Consider a computer whose memory latency is 800 cycles.  Think
+of this as the time required to traverse a synchronous memory pipeline
+consisting of i) the network from processor to memory, ii) processing inside
+the memory, and iii) the network from memory to processor.  The peak input
+bandwidth of this pipeline is 8 bytes/cycle.  The processor manages to
+sustain 720 outstanding (load) memory references to floating-point operands
+in the pipeline in each and every cycle.
+
+a) Using Little's law, calculate the sustained delivered operand bandwidth
+in bytes/cycle arriving at the processor.  Does the peak input bandwidth
+limit you?  Show your work.
+
+b) The processor has a cache, with a 64-byte cache line, whose hit rate is 
+95%.  Assuming that each floating-point arithmetic operation requires one
+new operand, and that the peak arithmetic performance of the processor is
+35 flops/cycle, what is the sustained arithmetic performance of this
+processor in flops/cycle?  Is there a bottleneck?  If so, identify it.
+Show your work.
+
+
+From probst at cse.concordia.ca  Wed Nov 18 19:19:44 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Wed, 18 Nov 2020 19:19:44 -0500
+Subject: [comp5201-f20] typo in due date; Dec 7 as I agreed to in class
+Message-ID: <5fb5ba20.tkYMhtv3E12nkjn1%probst@cse.concordia.ca>
+
+
+Name: ___________________                                     ID: ____________
+
+COMP5201                       Assignment 4                          Fall 2020
+Computer Organization & Design                               Prof. D.K. Probst
+Issued: November 10, 2020                                Due: December 7, 2020
+Submit electronically to Moodle.                 No extension will be granted.
+
+1. [20 marks] A program has an 8-instruction loop that is executed many times.
+Only the last instruction is a conditional branch, whose target is the first
+instruction at memory address [3a5c50].  Only the first instruction is a load,
+whose target is a 4-byte integer that resides at a different memory location
+in each iteration.  There are no stores in the program.  The first integer has
+memory address [4b6d30].  These integers are contiguous, and are loaded in
+increasing memory-address order.  The size of an instruction is also 4 bytes.
+A unified, i.e., combined I-cache and D-cache, direct-mapped cache has 16-byte
+lines, and 16 frames.  It is initially empty.  We hope to determine the number
+of cache misses in the first 16 iterations.
+
+a) How many cache misses in the first four iterations?               _____
+
+b) How many cache misses in the second four iterations?              _____
+
+c) How many cache misses in the third four iterations?               _____
+
+d) How many cache misses in the fourth four iterations?              _____
+
+2. [20 marks] We investigate the increase in CPI (clocks per instruction)
+due to cache misses that occur during memory references.  For simplicity,
+we pretend that instruction fetches never miss.
+
+a) Suppose the processor takes an average of 1.3 clock cycles to execute
+an instruction when there are no cache misses.  Assume that the miss penalty
+is 8 cycles, and that there is an average of 1 memory reference per 3
+instructions.  The base CPI (1.3 cycles) _includes_ the cache hit time.
+Suppose the miss rate is 6%.  Using the formula t_ave = ht + mr * mp, what
+is the CPI when cache misses are taken into account?  In English, average
+time = hit time plus miss rate times miss penalty.
+
+b) Consider the same processor with a two-level cache.  The hit rates for
+the L1$ and the L2$ are 95% and 75%, respectively.  The _local_ miss
+penalties are 10 cycles and 80 cycles, respectively.  Assume the same
+frequency of memory references.  If the CPI is 1.3 cycles when there are no
+cache misses, what is the CPI when cache misses are taken into account?
+Hint: Apply the formula recursively to find the effective miss penalty of
+the L1$.
+
+3. [21 marks] Consider a computer with a byte-addressable memory.  A 40-bit
+memory address is divided as follows for cache processing.  First, the 8
+lower-order bits are masked to expose the line number.  Second, the 15
+lower-order bits of the line number are inspected to get the array index.
+Third, the remaining 17 bits encode the tag value.  Any numerical answer
+may contain a cache parameter.  Hint: What do the direct-mapped and
+set-associative placement formulas have in common?
+
+a) What is the cache size in bytes?
+
+b) What is the cache-mapping scheme?
+
+c) For a given byte in the cache, how many different bytes in the main
+memory could possibly be mapped to it?
+
+4. [19 marks] Consider a computer with 32-bit registers.  The memory is
+word addressed.  There is a direct-mapped cache with 4K cache frames.
+Cache lines are 16 words.  Into which cache frame, and with what tag
+value, does 32-bit word address '45677def' go?  Show your work.  Answers
+in hexadecimal.
+
+5. [20 marks] Consider a computer whose memory latency is 800 cycles.  Think
+of this as the time required to traverse a synchronous memory pipeline
+consisting of i) the network from processor to memory, ii) processing inside
+the memory, and iii) the network from memory to processor.  The peak input
+bandwidth of this pipeline is 8 bytes/cycle.  The processor manages to
+sustain 720 outstanding (load) memory references to floating-point operands
+in the pipeline in each and every cycle.
+
+a) Using Little's law, calculate the sustained delivered operand bandwidth
+in bytes/cycle arriving at the processor.  Does the peak input bandwidth
+limit you?  Show your work.
+
+b) The processor has a cache, with a 64-byte cache line, whose hit rate is 
+95%.  Assuming that each floating-point arithmetic operation requires one
+new operand, and that the peak arithmetic performance of the processor is
+35 flops/cycle, what is the sustained arithmetic performance of this
+processor in flops/cycle?  Is there a bottleneck?  If so, identify it.
+Show your work.
+
+
+From probst at cse.concordia.ca  Sat Nov 21 18:10:45 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Sat, 21 Nov 2020 18:10:45 -0500
+Subject: [comp5201-f20] Zoom link for Tuesday's class
+Message-ID: <5fb99e75.3F2f9VSbhbY85CmH%probst@cse.concordia.ca>
+
+
+DAVID K. PROBST is inviting you to a scheduled Zoom meeting.
+
+Topic: DAVID K. PROBST's COMP5201 Zoom Meeting
+Time: Nov 24, 2020 05:45 PM Montreal
+
+Join Zoom Meeting
+https://concordia-ca.zoom.us/j/83454814987?pwd=K0o2RjAzRTBldW45RWZaNENaeTlGUT09
+
+Meeting ID: 834 5481 4987
+Passcode: 670843
+
+
+From probst at cse.concordia.ca  Tue Nov 24 11:02:29 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Tue, 24 Nov 2020 11:02:29 -0500
+Subject: [comp5201-f20] bad Moodle instructions
+Message-ID: <202011241602.0AOG2T6i011360@poise.encs.concordia.ca>
+
+I asked you to submit Assignment 3 as a plaintext file that could be
+handed over to a compiler.
+
+This would allow someone---in case of suspicion---to run your program
+to verify that it _does_ generate the output you claim it does.
+
+You have to compile and run your source code anyway.  So, it is trivial
+to append your output as a trailing comment, and then submit your
+augmented source code to Moodle.
+
+However, I hear that Moodle is insisting on pdf.  Did the marker ignore
+my instructions because he prefers eyeballing pdf?
+
+I don't know.
+
+I ask all students and the marker to revert to my original scheme.
+
+
+From probst at cse.concordia.ca  Tue Nov 24 14:54:24 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Tue, 24 Nov 2020 14:54:24 -0500
+Subject: [comp5201-f20] notes for tonight's lecture
+Message-ID: <5fbd64f0.ZGU8ELkY4YXcL/sk%probst@cse.concordia.ca>
+
+
+Notes for Twelfth Lecture (Nov 24)
+_________________________
+
+A Cache Primer
+______________
+
+Q: In hardware terms, what is a cache?
+
+A: A cache is an on-chip storage region, organized as an array, that---unlike
+the register file---is not under program control.  Instead, each cache is
+controlled by its own FSM controller.  In my main narrative, caches are
+specialized.  The I-cache stores instructions and listens to signals from the
+f-box.  The D-cache stores data and listens to signals from the m-box.  There
+exist integrated caches, which store both instructions and data, and listen to
+both boxes.  There also exist multilevel caches.  I find single-level D-caches
+to be pedagogically appropriate for lectures and exams.
+
+Q: What are caches good for?
+
+A: Imagine a processor about to execute a load instruction.  If, by chance,
+there is a copy of the item to be loaded in the D-cache, then it is much less
+expensive to simply abort the load, and retrieve the item from the D-cache.
+Think of memory as being at _great distance_ from the processor.
+
+Q: What is a cache line?
+
+A: Caches prefer to transfer large amounts of data, for example, 128 bytes,
+every time they copy anything.  Logically, if the quantum of cache data
+transfer is B bytes, then that alone partitions all of memory into adjacent
+memory slices, each B bytes in length.  A memory slice is called a cache line
+(or just line), and has a line number.  The first line is number 0.
+
+Q: What are the fundamental cache equations?
+
+A: Well, consider one type of cache, the direct-mapped cache.  It is an array
+of frames.  Each frame is just large enough to store a single cache line.  Let
+F be the number of frames in a direct-mapped cache.
+
+Q: Is there some relation among the memory address, the line number, and the
+index of the frame into which the line is to be put?
+
+A: This takes a multipart answer.  First, since there are B bytes per line,
+the line number is given by:
+
+    line number = memory address `div` B.
+
+By the way, taking the memory address `mod` B gives the byte offset of the
+item in the line.
+
+Second, since there are F frames per direct-mapped cache, the array index (or
+frame number) is given by:
+
+    array index = line number `mod` F.
+
+Q: But some bits are left over.  What are they good for?
+
+A: Draw a picture of a partitioned memory address.
+
+   |---    line number    ---|
+
+   +--------------------------------------+
+   |tag value | frame number | byte offset|
+   +--------------------------------------+
+
+Performing `div` B shortens the memory address to the line number.  Performing
+`mod` F on the line number allows the frame number to be read.  The bits to
+the left of the frame number allow different lines that map to the same frame
+to be distinguished.
+
+Q: What really important thing did you forget to tell us?
+
+A: Well, while computers can perform `mod` and `div` on arbitrary integers,
+they far prefer both divisors B and F to be powers of two.  Say, B = 2^b, and
+F = 2^f.  It is this restriction that allows `mod` and `div` to be calculated
+by simple shifting and masking, without using an arithmetic functional unit.
+Each of the three fields has a defined number of bits, and we can calculate
+their values with simple bit manipulation.  Here, the byte-offset field has
+'b' bits, the index field has 'f' bits, and the tag field has whatever number
+of bits is left over.
+
+Q: Can you show us?
+
+A: Consider a 32-bit address, say, abcd5678.  Suppose b = 8 and f = 16.  Then,
+by visual inspection, we see:
+
+    ab!cd56!78
+
+B = 2^8 = 256.  But suppose B = 251.  In that case, memory address `div` 251
+cannot be calculated by simply removing some number of lower-order bits from
+the memory address.  By the way, b = 7 and f = 15 are fine; the exponents do
+not need to be multiples of four.  The field lengths in the latter case are:
+<10, 15, 7>.
+
+Fundamental Cache Equations
+___________________________
+
+Every cache is an array of _elements_.  What an element is, and how a 
+cache-array index is computed from the relevant memory address, differ 
+between two cache families. Both families will be introduced.  However, 
+the unit of data transfer between memory and cache, for both families, 
+is the _line_.  Memory is byte addressed and a line contains some fixed 
+number of bytes, chosen by the cache designer.  The cache equations 
+below specify which lines---which are actually memory slices---are to be 
+copied into which cache elements.
+
+Generally true (both families)
+______________
+
+0) byte offset   = memory address `mod` the number of bytes
+                   in a line
+
+1) line number   = memory address `div` the number of bytes
+                   in a line
+
+2) array index   = line number `mod` the number of array
+                   elements in the cache
+
+3) tag value     = line number `div` the number of array
+                   elements in the cache
+
+In a direct-mapped cache, the array elements are _frames_, but, in an 
+m-way set-associative cache, the array elements are _sets_ of frames.
+
+When a line is copied from memory into the cache, it is, according to 
+these equations, placed in one of the cache elements.
+
+Because many lines are mapped to the same element, a tag value is used 
+to identify which line got copied.  This is required to be able to look 
+up lines in caches.
+
+This is the punch line.  When you understand these equations, you 
+understand how caches work.
+
+----
+
+I will rewrite the last two equations in a family-specific way.
+
+family 1: direct-mapped cache
+_____________________________
+
+2) frame index   = line number `mod` the number of frames
+                   in the cache
+
+3) tag value     = line number `div` the number of frames
+                   in the cache
+
+family 2: set-associative cache
+_______________________________
+
+2) set index     = line number `mod` the number of sets
+                   in the cache
+
+3) tag value     = line number `div` the number of sets
+
+---
+
+I was contemplating giving you some calculational techniques to compute 
+cache quantities.
+
+We all know that, for cache purposes, a memory address (a natural number)
+must be decomposed into three smaller natural numbers, viz., the tag value,
+the array index, and the byte offset.
+
+Computers blindly follow the fundamental cache equations, first calculating
+the line number, and then calculating the index.  Humans can skip a step
+unless they are specifically asked for the line number.
+
+Both humans and computers have an easier time of it if both B = 2^b and 
+F = 2^f are powers of two.  I stick to direct-mapped caches here---F is 
+the number of frames in the cache---because set-associative caches don't 
+change the math; they just substitute S = 2^s for F, where S is the 
+number of sets per cache.
+
+Consider the 32-bit memory address abcd4567.  Let the offset field be 6 bits
+in length, the index field be 13 bits in lenth, and the tag field be 13 bits
+in length.
+
+The offset depends only on 67, so it is easily done by hand.  offset --> 
+01!10.0111 ==> 0010.0111 = 27.
+
+offset = 27
+
+But x `mod` y = x - (x/y * y), so you may also calculate this as 67 - 40 
+= 27.
+
+The line number is [abcd45]01.  This is mixed binary-hexadecimal 
+notation.  You can reduce this by hand with bits, or use an arithmetical 
+approach.
+
+line number = 2af3515
+
+The index is 0101[45]11 = [545]11.  Again, bits or arithmetic.
+
+index = 1517
+
+The tag is [abc]1.  Again, etc.
+
+tag = 1579
+
+There is a clear trade-off here.  Manipulating bits with your pen is 
+"slow and steady wins the race". This requires patience and good handwriting.
+But use of arithmetical techniques saves time, and may also be used to
+_verify_ a hand calculation.  Arithmetic also converts mixed 
+binary-hexadecimal expressions into pure hexadecimal, which is usually what I
+require on exams.
+
+And, of course, in the above I have combined hand bit manipulation with 
+arithmetic---for notation conversions.
+
+Replacement Policy
+__________________
+
+In a direct-mapped cache, if some line other than you is in your frame 
+when you suffer a cache miss, then there is only one reasonable victim: 
+the guy in your frame.  You should flush him from the cache.
+
+In an m-way set-associative cache, when there is a cache miss, the 
+indexed set of 'm' frames may well be full.  To make room for a new 
+cache line, a victim line must be selected from the set.  The best 
+scheme is _least recently used_ (LRU): Replace that cache line that has 
+been unused for the longest time.  If you don't want to pay for the 
+bookkeeping, use _random_ replacement.  I have heard a suggestion that a 
+cache twice as large with random replacement has a miss rate equal to 
+the smaller cache with LRU.  [This won't be on the test.]
+
+I also wrote:
+
+Write Policy
+____________
+
+Consider a store instruction.  If we wrote only into the D-cache and not 
+into the memory, the cached copy would differ from the memory original.  
+We could use _write through_ and write the data into both the memory and 
+the D-cache.  This typically has poor performance.  The alternative to 
+write through is _write back_.  When a write occurs, the new value is 
+written only to the line in the cache.  The modified line is written to 
+the next lower level of the hierarchy, which we will always take to be 
+the main memory, only when it is replaced.  Unmodified lines are simply 
+evicted from the cache when they are replaced.
+
+---
+
+This deserves a little explanation.  You remember that a memory 
+reference is either a load or a store.  In a memory reference, some data 
+item, which has a memory address, is involved.  The counter-intuitive
+point is that, if you don't currently have a copy of that data item,
+then you can perform _neither_ a load _nor_ a store.
+
+When you issue a load instruction and the item to be loaded is not 
+present in the cache, you retrieve the relevant line from a lower level, 
+extract the item, and present it to the processor.  When you issue a 
+store instruction and the item to be stored into is not present in the 
+cache, you retrieve the relevant line from a lower level, and then 
+overwite the item in the copied line.
+
+So, the cache response to a cache miss, for either a load or a store, is 
+basically the same.  A lot of people miss this symmetry.
+
+Q: What is Little's Law all about? (strictly speaking, not a cache topic)
+
+A: Latency, Bandwidth, and Concurrency (theory of pipelines)
+
+1) In any system that transports items from input to output without creating
+   or destroying them,
+
+   ** latency times bandwidth equals concurrency ** [c = b * t]
+
+2) Queueing theory calls this result Little's Law:
+
+                          pipeline
+
+                     +-----------------+
+                -->  |  -->  -->  -->  |  -->
+bandwidth = 2        | concurrency = 6 |        bandwidth = 2
+                -->  |  -->  -->  -->  |  -->
+                     +-----------------+
+ 
+                       latency = 3
+
+3) Import: There are transparent and opaque pipelines.  In the figure, we
+probably assume that the (limiting) hardware bandwidth is two operations
+per cycle.  The user of the pipeline must continually supply new operations,
+ideally, two new operations per cycle.  We can, equivalently, speak of
+operation-insertion bandwidth, or of the concurrency that results.  This is
+just different language for describing the same thing.
+
+---
+
+Again, some explanation is required.  We have studied the 'fdxmw' 
+instruction-execution pipeline.  We promised to supply one new instruction in
+every cycle.  The pipeline was willing to accept that much input bandwidth.
+If we keep our promise, the pipeline delivers a speedup of 5.  And a full
+'fdxmw' pipeline has a concurrency of five instructions.  c = b * t : 5 = 1 * 5
+
+However, if we tried to push in two new instructions per cycle, the pipeline
+would strenuously object (we couldn't do it!). If we pushed in one new
+instruction every two cycles, both the output bandwidth and the pipeline
+concurrency would be cut in half.
+
+We don't need queueing theory to understand the 'fdxmw' pipeline.  But there
+are many other pipelines, such as the roundtrip pipeline from processor to
+memory, that are very important and that explain why RISC CPUs are so bad at
+tolerating network/memory latency, and consequently depend so critically on
+their caches.
+
+Cache Notation
+______________
+
+I change my notation more often than I change my shirt.  But good notation
+makes calculation easy.
+
+Consider a computer with 28-bit memory addresses, and a direct-mapped cache.
+Let the offset width be 6 bits, the index width 16 bits, and the tag width
+6 bits.
+
+Pictorily, +--------------------------------------------------+
+           | tag = 6 bits | index = 16 bits | offset = 6 bits |
+           +--------------------------------------------------+
+
+16 bits trivializes the calculation, but I'm only showing you notation.  
+Specifically, I am reminding you of mixed binary-hexadecimal notation.
+
+Let the memory address be aebcddf.  With the hex table in front of us, 
+we count over 6 bits from the right and the left to get:
+
+[a]11!10[bcd]11!01[f]
+
+Now, if you're a computer, you calculate:
+
+line number = 2baf37
+
+and then
+
+frame number = af37.  [This calculation is trivial for a human.]
+
+But a human could go:
+
+tag    = [a]11 = 2b
+
+index  = 10[bcd]11 = [2bcd]11 = af37
+
+offset = 01[f] = 1f
+
+for a final partition of:
+
+2b!af37!1f
+
+End of sales pitch for this notation.
+
+Mixed bin/hex notation (some calculations)
+______________________
+
+It always useful to have the following nearby:
+
+   Hex table:                                  
+
+   0   0000   4   0100   8   1000   c   1100   
+   1   0001   5   0101   9   1001   d   1101   
+   2   0010   6   0110   a   1010   e   1110   
+   3   0011   7   0111   b   1011   f   1111
+
+Sometimes we need to calculate the tag value, the index value, and the offset
+value, from large memory addresses represented in hexadecimal.  Often, it is
+easier to combine "finger" calculations with only occasional use of a pocket
+calculator.  Of course, this is a matter of personal taste.
+  
+Consider the address:
+
+   abcdabcdabcdabcdabcdabcd  (24 * 4 = 96-bit memory address)
+
+We break this apart once we have a partition of 96.  Some partitions are
+ridiculously easy.  Consider <20, 56, 20>.  By inspection, the three values
+are:
+  
+   abcda ! bcdabcdabcdabc ! dabcd  (24 * 4 = 96-bit memory address)
+
+But what about <22, 52, 22>?  In mixed bin/hex notation, this is:
+
+   [abcda]10 ! 11[cdabcdabcdab]11 ! 00[dabcd]
+
+We want to recover a pure hexadecimal representation.  (6 hexits > 22 bits)
+
+   [abcda]10 =  [2af36a]   00[dabcd] = [0dabcd] (or [dabcd])
+
+   11[cdabcdabcdab]11 = [f36af36af36af] (13 hexits = 52 bits)
+
+The last calculation was a bit of a stretch (I actually guessed it!).
+
+More down to Earth:
+
+   01[dabcd] = [1dabcd]
+
+   10[dabcd] = [2dabcd]
+
+   11[dabcd] = [3dabcd]
+
+As long as there are not too many hexits in [...], it's not too hard.  Let's
+do three more:
+
+   101[dabcd] = [5dabcd] (6 hexits > 23 bits)
+
+   [dabcd]110 = [6d5e6e] (6 hexits > 23 bits)
+
+   11[dabcd]111 = [3dabcd]111 = [1ed5e6f] (7 hexits > 25 bits)
+
+
+From probst at cse.concordia.ca  Tue Nov 24 17:29:37 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Tue, 24 Nov 2020 17:29:37 -0500
+Subject: [comp5201-f20] Zoom link for today's class
+Message-ID: <5fbd8951.CvUTn0K9dvCS/mux%probst@cse.concordia.ca>
+
+
+DAVID K. PROBST is inviting you to a scheduled Zoom meeting.
+
+Topic: DAVID K. PROBST's COMP5201 Zoom Meeting
+Time: Nov 24, 2020 05:45 PM Montreal
+
+Join Zoom Meeting
+https://concordia-ca.zoom.us/j/83454814987?pwd=K0o2RjAzRTBldW45RWZaNENaeTlGUT09
+
+Meeting ID: 834 5481 4987
+Passcode: 670843
+
+
+From probst at cse.concordia.ca  Sat Nov 28 17:37:17 2020
+From: probst at cse.concordia.ca (David K. Probst)
+Date: Sat, 28 Nov 2020 17:37:17 -0500
+Subject: [comp5201-f20] Zoom link for Tuesday's meeting (Dec 1)
+Message-ID: <5fc2d11d.b9gaDZhkNdALfHzL%probst@cse.concordia.ca>
+
+ 
+DAVID K. PROBST is inviting you to a scheduled Zoom meeting.
+
+Topic: DAVID K. PROBST's Zoom Meeting
+Time: Dec 1, 2020 05:45 PM Montreal
+
+Join Zoom Meeting
+https://concordia-ca.zoom.us/j/86133932358?pwd=UnNFSGwxb0ROdzI5SDh4ODl0QWpZQT09
+
+Meeting ID: 861 3393 2358
+Passcode: 940073
+
